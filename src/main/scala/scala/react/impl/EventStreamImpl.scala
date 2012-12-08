@@ -1,0 +1,248 @@
+package scala.react.impl
+
+import scala.react._
+
+import java.util.concurrent.atomic.{AtomicBoolean, AtomicReference}
+
+private [react] 
+class FlatMappedEventStream[A, B]
+(base: EventStream[A], f: A => EventStream[B])(implicit obs: Observer) 
+extends EventSource[B] {
+
+	private val bStreamAtomic = new AtomicReference[CancellableEventStream[B]]
+
+	//when base fires an event, subscribe to the resulting event stream, until base fires another event
+
+	base observe {
+		case Stop =>
+			stop
+			false
+		case Fire(e) =>
+			val bStream = new CancellableEventStream( f(e) )
+			
+			//cancel the old stream
+			bStreamAtomic getAndSet(bStream) match {
+				case null => //no op
+				case oldStream => 
+					oldStream.cancel
+			}
+			
+			bStream observe {
+				case Stop =>
+					false
+				case Fire(x) =>
+					fire(x)
+					true
+			}
+			
+			true
+	}
+
+}
+
+private [react] 
+class CancellableEventStream[A]
+(base: EventStream[A])(implicit obs: Observer) 
+extends EventSource[A] {
+
+	private val canceledAtomic = new AtomicBoolean(false)
+	private val stoppedAtomic = new AtomicBoolean(false)
+	
+	def isCancelled: Boolean = canceledAtomic.get
+	
+	def cancel: Unit = canceledAtomic.set(true)
+	
+	private def tryStop = if(stoppedAtomic.compareAndSet(false, true)) stop
+	
+	base observe {
+		case Stop =>
+			tryStop
+			false
+		case Fire(e) =>
+			if(isCancelled){
+				tryStop
+				false
+			}
+			else {
+				fire(e)
+				true
+			}
+	}
+}
+
+private [react]
+class WithFilterEventStream[A]
+(base: EventStream[A], f: A => Boolean)(implicit obs: Observer) 
+extends EventSource[A] {
+
+	base observe {
+		case Fire(e) =>
+			if( f(e) ) fire(e)
+			true
+		case Stop =>
+			stop
+			false
+	}
+	
+	override def withFilter(p: A => Boolean)(implicit obs: Observer): EventStream[A] = {
+		val mergedFilter = (e: A) => { f(e) && p(e) }
+		new WithFilterEventStream(this, mergedFilter)
+	}
+
+}
+
+private [react]
+class MappedEventStream[A, B]
+(base: EventStream[A], f: A => B)(implicit obs: Observer) 
+extends EventSource[B] {
+	
+	base observe {
+		case Fire(e) => 
+			fire( f(e) )
+			true
+		case Stop =>
+			stop
+			false
+	}
+	
+}
+
+private [react]
+class TakeWhileEventStream[A]
+(base: EventStream[A], p: A => Boolean)(implicit obs: Observer) 
+extends EventSource[A] {
+
+	base observe {
+		case Stop =>
+			stop
+			false
+		case Fire(e) =>
+			if( p(e) ){
+				fire(e)
+				true
+			} else {
+				stop
+				false
+			}
+	}
+
+}
+
+private [react]
+class TakeCountEventStream[A]
+(base: EventStream[A], count: Int)(implicit obs: Observer) 
+extends EventSource[A] {
+
+	private var numSeen = 0
+
+	base observe {
+		case Stop =>
+			stop
+			false
+		case Fire(e) =>
+			numSeen += 1
+			fire(e)
+			
+			if (numSeen >= count){
+				stop
+				false
+			} else {
+				true
+			}
+	}
+	
+}
+
+private [react]
+class DropWhileEventStream[A]
+(base: EventStream[A], p: A => Boolean)(implicit obs: Observer)
+extends EventSource[A] {
+	private var dropping = true
+	
+	base observe {
+		case Stop => 
+			stop
+			false
+		case Fire(e) => 
+			if(dropping && !p(e)){
+				dropping = false
+				fire(e)
+			} else if (!dropping){
+				fire(e)
+			}
+			true
+	}
+}
+
+private [react]
+class DropCountEventStream[A]
+(base: EventStream[A], count: Int)(implicit obs: Observer)
+extends EventSource[A] {
+	
+	private var numSeen = 0
+	
+	base observe {
+		case Stop =>
+			stop
+			false
+		case Fire(e) =>
+			numSeen += 1
+			if(numSeen > count) fire(e)
+			true
+	}
+	
+}
+
+private [react]
+class ConcatenatedEventStream[A]
+(left: EventStream[A], right: EventStream[A])(implicit obs: Observer)
+extends EventSource[A] {
+	
+	left observe {
+		case Stop =>
+			right observe {
+				case Stop =>
+					stop
+					false
+				case Fire(e) =>
+					fire(e)
+					true
+			}
+			false
+		case Fire(e) =>
+			fire(e)
+			true
+	}
+	
+}
+
+private [react]
+class TakeUntilEventStream[A]
+(base: EventStream[A], end: EventStream[_])(implicit obs: Observer)
+extends CancellableEventStream[A](base) {
+
+	end observe {
+		case Stop => false
+		case Fire(_) =>
+			cancel
+			false
+	}
+
+}
+
+private [react]
+class UnionEventStream[A]
+(left: EventStream[A], right: EventStream[A])(implicit obs: Observer)
+extends EventSource[A] {
+
+	val eventHandler = (e: Event[A]) => e match {
+		case Stop => false
+		case Fire(x) =>
+			fire(x)
+			true
+	}
+
+	left observe eventHandler
+	right observe eventHandler
+
+}
