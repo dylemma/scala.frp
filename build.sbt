@@ -1,4 +1,4 @@
-name := "React"
+name := "scala.frp"
 
 version := "1.0"
 
