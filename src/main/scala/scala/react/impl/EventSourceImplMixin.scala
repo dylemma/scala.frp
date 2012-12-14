@@ -1,6 +1,7 @@
 package scala.react.impl
 
 import scala.react._
+import scala.concurrent.duration.{Deadline, Duration, FiniteDuration}
 
 private [react] trait EventSourceImplMixin[A] { self: EventSource[A] =>
 	
@@ -46,5 +47,18 @@ private [react] trait EventSourceImplMixin[A] { self: EventSource[A] =>
 	
 	def ||[A1 >: A](that: EventStream[A1])(implicit obs: Observer): EventStream[A1] = {
 		new UnionEventStream(this, that)
+	}
+	
+	def within(duration: Duration)(implicit obs: Observer): EventStream[A] = duration match {
+		case d: FiniteDuration =>
+			new DeadlinedEventStream(this, Deadline.now + d)
+		case d if (d > Duration.Zero) => //infinite and positive
+			this
+		case _ =>
+			EventStream.Nil
+	}
+	
+	def before(deadline: Deadline)(implicit obs: Observer): EventStream[A] = {
+		new DeadlinedEventStream(this, deadline)
 	}
 }

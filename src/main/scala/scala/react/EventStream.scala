@@ -3,11 +3,13 @@ package scala.react
 import impl._
 import java.util.concurrent.atomic.AtomicBoolean
 import java.lang.ref.WeakReference
+import scala.concurrent.duration._
 
 trait EventStream[+A] extends Observable[A]{
 	def foreach[U](f: A => U)(implicit obs: Observer): Unit = {
 		Observe.events(this) { e => f(e) }
 	}
+	def isStopped: Boolean
 	
 	def map[B](f: A => B)(implicit obs: Observer): EventStream[B] 
 	def flatMap[B](f: A => EventStream[B])(implicit obs: Observer): EventStream[B] 
@@ -19,6 +21,21 @@ trait EventStream[+A] extends Observable[A]{
 	def dropWhile(p: A => Boolean)(implicit obs: Observer): EventStream[A]
 	def ++[A1 >: A](that: EventStream[A1])(implicit obs: Observer): EventStream[A1]
 	def until(end: EventStream[_])(implicit obs: Observer): EventStream[A]
+	def ||[A1 >: A](that: EventStream[A1])(implicit obs: Observer): EventStream[A1]
+	def within(duration: Duration)(implicit obs: Observer): EventStream[A]
+	def before(deadline: Deadline)(implicit obs: Observer): EventStream[A]
+	
+	//todo: def next: Future[A]
+	//todo: def grouped(size: Int): EventStream[List[A]]
+	//todo: def either[B](that: EventStream[B]): EventStream[Either[A,B]]
+}
+
+object EventStream {
+	val Nil = {
+		val s = new EventSource[Nothing]
+		s.stop
+		s
+	}
 }
 
 object EventSource {
@@ -46,8 +63,8 @@ class EventSource[A] extends EventStream[A] with EventSourceImplMixin[A] {
 	}
 	
 	def stop: Unit = {
-		stoppedAtomic.set(false)
-		send( Stop )
+		if(!stoppedAtomic.getAndSet(false))
+			send( Stop )
 	}
 	
 	private def send(event: Event[A]): Unit = {

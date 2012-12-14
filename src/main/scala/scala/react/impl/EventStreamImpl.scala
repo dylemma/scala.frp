@@ -2,7 +2,8 @@ package scala.react.impl
 
 import scala.react._
 
-import java.util.concurrent.atomic.{AtomicBoolean, AtomicReference}
+import java.util.concurrent.atomic.{AtomicBoolean, AtomicInteger, AtomicReference}
+import scala.concurrent.duration._
 
 private [react] 
 class FlatMappedEventStream[A, B]
@@ -222,7 +223,8 @@ class TakeUntilEventStream[A]
 extends CancellableEventStream[A](base) {
 
 	end observe {
-		case Stop => false
+		case Stop => 
+			false
 		case Fire(_) =>
 			cancel
 			false
@@ -235,8 +237,13 @@ class UnionEventStream[A]
 (left: EventStream[A], right: EventStream[A])(implicit obs: Observer)
 extends EventSource[A] {
 
+	val stopCounter = new AtomicInteger(0)
+
 	val eventHandler = (e: Event[A]) => e match {
-		case Stop => false
+		case Stop => 
+			val stopCount = stopCounter.incrementAndGet
+			if (stopCount == 2) stop
+			false
 		case Fire(x) =>
 			fire(x)
 			true
@@ -244,5 +251,26 @@ extends EventSource[A] {
 
 	left observe eventHandler
 	right observe eventHandler
+
+}
+
+private [react]
+class DeadlinedEventStream[A]
+(base: EventStream[A], deadline: Deadline)(implicit obs: Observer)
+extends EventSource[A] {
+
+	TimeBasedFutures.after(deadline, stop)
+
+	base observe {
+		case Stop => 
+			stop
+			false
+		case Fire(_) if deadline.isOverdue => 
+			stop
+			false
+		case Fire(e) =>
+			fire(e)
+			true
+	}
 
 }
