@@ -2,7 +2,7 @@ import org.scalatest._
 import scala.react._
 import collection.mutable.ListBuffer
 
-class Playground extends FunSuite {
+class ObserveTests extends FunSuite {
 
 	implicit object observer extends Observer
 	
