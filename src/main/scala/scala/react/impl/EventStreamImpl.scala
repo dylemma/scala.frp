@@ -259,14 +259,19 @@ class DeadlinedEventStream[A]
 (base: EventStream[A], deadline: Deadline)(implicit obs: Observer)
 extends EventSource[A] {
 
-	TimeBasedFutures.after(deadline, stop)
+	private def stopinate = {
+		println("Stopping " + this)
+		stop
+	}
+
+	TimeBasedFutures.after(deadline, stopinate)
 
 	base observe {
 		case Stop => 
-			stop
+			stopinate
 			false
 		case Fire(_) if deadline.isOverdue => 
-			stop
+			stopinate
 			false
 		case Fire(e) =>
 			fire(e)

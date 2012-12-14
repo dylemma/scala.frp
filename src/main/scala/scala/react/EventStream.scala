@@ -63,7 +63,7 @@ class EventSource[A] extends EventStream[A] with EventSourceImplMixin[A] {
 	}
 	
 	def stop: Unit = {
-		if(!stoppedAtomic.getAndSet(false))
+		if(!stoppedAtomic.getAndSet(true))
 			send( Stop )
 	}
 	
