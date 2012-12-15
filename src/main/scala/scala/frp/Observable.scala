@@ -10,6 +10,8 @@ trait Observer {
 	private val references = collection.mutable.ListBuffer[Any]()
 	
 	def add(ref: Any): Unit = references += ref
+	
+	implicit def observer: Observer = this
 }
 
 trait Observable[+A] {
