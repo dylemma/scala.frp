@@ -22,6 +22,8 @@ There are two main classes that you will want to interact with. `EventStream` is
 
 The implicit `Observer` is needed for nearly every method while working with `EventStream`s. It keeps references to your event handlers (and the `EventStream` only keeps weak references) so that your event handlers can be garbage-collected once the `Observer` gets garbage-collected.
 
+For more details, [check out the docs](http://dylemma.github.com/scala.frp/)
+
 ###How to Use it
 
 Start by making an `EventSource`, which is itself an `EventStream`.
