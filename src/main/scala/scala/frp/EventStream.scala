@@ -1,4 +1,4 @@
-package scala.react
+package scala.frp
 
 import impl._
 import java.util.concurrent.atomic.AtomicBoolean

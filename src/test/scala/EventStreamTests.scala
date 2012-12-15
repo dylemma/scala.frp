@@ -1,8 +1,7 @@
 import org.scalatest._
-import scala.react._
-import collection.mutable.ListBuffer
+import scala.frp._
 
-class EventStreamTests extends FunSuite {
+class EventStreamTests extends FunSuite with TestHelpers {
 
 	implicit object observer extends Observer
 	
@@ -10,14 +9,13 @@ class EventStreamTests extends FunSuite {
 	
 		val s = new EventSource[Int]
 		val t = new EventSource[Int]
-		val results = new ListBuffer[(Int, Int)]
 		
 		val x = for {
 			i <- s
 			j <- t
 		} yield i->j 
 		
-		for(e <- x) results += e
+		val results = accumulateEvents(x)
 		
 		s fire 1
 		
@@ -33,11 +31,8 @@ class EventStreamTests extends FunSuite {
 	
 	test("EventStream.map") {
 		val s = new EventSource[Int]
-		val results = new ListBuffer[Int]
 		
-		for {
-			i <- s.map(_ * 2)
-		} results += i
+		val results = accumulateEvents(s.map{_*2})
 		
 		s fire 1
 		s fire 2
@@ -49,12 +44,13 @@ class EventStreamTests extends FunSuite {
 	test("EventStream.withFilter") {
 		val s = new EventSource[Int]
 		val t = new EventSource[Int]
-		val results = new ListBuffer[(Int, Int)]
+		//val results = new ListBuffer[(Int, Int)]
 		val x = for {
 			i <- s if i % 2 == 0
 			j <- t
 		} yield i->j
-		x foreach { results += _ }
+		
+		val results = accumulateEvents(x)
 		
 		s fire 2
 		t fire 1 // yield 2 -> 1
@@ -71,19 +67,17 @@ class EventStreamTests extends FunSuite {
 
 	test("EventStream.take") {
 		val s = new EventSource[Int]
-		val results = new ListBuffer[Int]
-		var gotEnd = false
 		val x = s.take(3)
 		
-		for (e <- x) results += e
-		Observe.end(x){ gotEnd = true }
+		val results = accumulateEvents(x)
+		val gotEnd = awaitStop(x)
 		
 		s fire 1
 		s fire 2
 		s fire 3
 
 		assert(results.toList == List(1,2,3))
-		assert(gotEnd)
+		assert(gotEnd())
 		
 		s fire 4
 		
@@ -92,29 +86,20 @@ class EventStreamTests extends FunSuite {
 	
 	test("EventStream.takeWhile") {
 		val s = new EventSource[Int]
-		val results = new ListBuffer[Int]
-		var gotEnd = false
 		val x = s takeWhile {_ < 4}
+		val results = accumulateEvents(x)
+		val gotEnd = awaitStop(x)
 		
-		for(e <- x) results += e
-		Observe.end(x){ gotEnd = true }
-		
-		s fire 1
-		s fire 2
-		s fire 3
-		s fire 4
-		s fire 5
+		for(i <- 1 to 5) s fire i
 		
 		assert( results.toList == List(1,2,3) )
-		assert(gotEnd)
+		assert( gotEnd() )
 	}
 	
 	test("EventStream.dropWhile") {
 		val s = new EventSource[Int]
-		val results = new ListBuffer[Int]
 		val x = s dropWhile {_ < 3}
-		
-		for(e <- x) results += e
+		val results = accumulateEvents(x)
 		
 		s fire 1
 		s fire 2
@@ -127,16 +112,10 @@ class EventStreamTests extends FunSuite {
 	
 	test("EventStream.drop") {
 		val s = new EventSource[Int]
-		val results = new ListBuffer[Int]
 		val x = s drop 3
+		val results = accumulateEvents(x)
 		
-		for(e <- x) results += e
-		
-		s fire 1
-		s fire 2
-		s fire 3
-		s fire 4
-		s fire 5
+		for(i <- 1 to 5) s fire i
 		
 		assert( results.toList == List(4,5) )	
 	}
@@ -144,9 +123,7 @@ class EventStreamTests extends FunSuite {
 	test("EventStream.++") {
 		val s = new EventSource[Int]
 		val t = new EventSource[Int]
-		val results = new ListBuffer[Int]
-		
-		for(e <- s ++ t) results += e
+		val results = accumulateEvents(s ++ t)
 		
 		s fire 1
 		t fire 2 //ignored because s isn't done
@@ -176,9 +153,7 @@ class EventStreamTests extends FunSuite {
 	test("EventStream.until") {
 		val s = new EventSource[Int]
 		val end = new EventSource[String]
-		val results = new ListBuffer[Int]
-		
-		for(e <- s until end) results += e
+		val results = accumulateEvents(s until end)
 		
 		s fire 1
 		s fire 2
@@ -193,9 +168,7 @@ class EventStreamTests extends FunSuite {
 	test("EventStream.||") {
 		val s = new EventSource[Int]
 		val t = new EventSource[Int]
-		val results = new ListBuffer[Int]
-		
-		for(e <- s || t) results += e
+		val results = accumulateEvents(s || t)
 		
 		s fire 1
 		t fire 2

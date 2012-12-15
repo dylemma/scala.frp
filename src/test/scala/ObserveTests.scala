@@ -1,5 +1,5 @@
 import org.scalatest._
-import scala.react._
+import scala.frp._
 import collection.mutable.ListBuffer
 
 class ObserveTests extends FunSuite {

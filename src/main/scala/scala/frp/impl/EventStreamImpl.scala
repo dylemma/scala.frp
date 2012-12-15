@@ -1,11 +1,11 @@
-package scala.react.impl
+package scala.frp.impl
 
-import scala.react._
+import scala.frp._
 
 import java.util.concurrent.atomic.{AtomicBoolean, AtomicInteger, AtomicReference}
 import scala.concurrent.duration._
 
-private [react] 
+private [frp] 
 class FlatMappedEventStream[A, B]
 (base: EventStream[A], f: A => EventStream[B])(implicit obs: Observer) 
 extends EventSource[B] {
@@ -41,7 +41,7 @@ extends EventSource[B] {
 
 }
 
-private [react] 
+private [frp] 
 class CancellableEventStream[A]
 (base: EventStream[A])(implicit obs: Observer) 
 extends EventSource[A] {
@@ -71,7 +71,7 @@ extends EventSource[A] {
 	}
 }
 
-private [react]
+private [frp]
 class WithFilterEventStream[A]
 (base: EventStream[A], f: A => Boolean)(implicit obs: Observer) 
 extends EventSource[A] {
@@ -92,7 +92,7 @@ extends EventSource[A] {
 
 }
 
-private [react]
+private [frp]
 class MappedEventStream[A, B]
 (base: EventStream[A], f: A => B)(implicit obs: Observer) 
 extends EventSource[B] {
@@ -108,7 +108,7 @@ extends EventSource[B] {
 	
 }
 
-private [react]
+private [frp]
 class TakeWhileEventStream[A]
 (base: EventStream[A], p: A => Boolean)(implicit obs: Observer) 
 extends EventSource[A] {
@@ -129,7 +129,7 @@ extends EventSource[A] {
 
 }
 
-private [react]
+private [frp]
 class TakeCountEventStream[A]
 (base: EventStream[A], count: Int)(implicit obs: Observer) 
 extends EventSource[A] {
@@ -154,7 +154,7 @@ extends EventSource[A] {
 	
 }
 
-private [react]
+private [frp]
 class DropWhileEventStream[A]
 (base: EventStream[A], p: A => Boolean)(implicit obs: Observer)
 extends EventSource[A] {
@@ -175,7 +175,7 @@ extends EventSource[A] {
 	}
 }
 
-private [react]
+private [frp]
 class DropCountEventStream[A]
 (base: EventStream[A], count: Int)(implicit obs: Observer)
 extends EventSource[A] {
@@ -194,7 +194,7 @@ extends EventSource[A] {
 	
 }
 
-private [react]
+private [frp]
 class ConcatenatedEventStream[A]
 (left: EventStream[A], right: EventStream[A])(implicit obs: Observer)
 extends EventSource[A] {
@@ -217,7 +217,7 @@ extends EventSource[A] {
 	
 }
 
-private [react]
+private [frp]
 class TakeUntilEventStream[A]
 (base: EventStream[A], end: EventStream[_])(implicit obs: Observer)
 extends CancellableEventStream[A](base) {
@@ -232,7 +232,7 @@ extends CancellableEventStream[A](base) {
 
 }
 
-private [react]
+private [frp]
 class UnionEventStream[A]
 (left: EventStream[A], right: EventStream[A])(implicit obs: Observer)
 extends EventSource[A] {
@@ -254,7 +254,7 @@ extends EventSource[A] {
 
 }
 
-private [react]
+private [frp]
 class DeadlinedEventStream[A]
 (base: EventStream[A], deadline: Deadline)(implicit obs: Observer)
 extends EventSource[A] {

@@ -1,9 +1,9 @@
-package scala.react.impl
+package scala.frp.impl
 
-import scala.react._
+import scala.frp._
 import scala.concurrent.duration.{Deadline, Duration, FiniteDuration}
 
-private [react] trait EventSourceImplMixin[A] { self: EventSource[A] =>
+private [frp] trait EventSourceImplMixin[A] { self: EventSource[A] =>
 	
 	def map[B](f: A => B)(implicit obs: Observer): EventStream[B] = {
 		new MappedEventStream(this, f) 

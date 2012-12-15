@@ -1,4 +1,4 @@
-package scala.react
+package scala.frp
 
 import java.lang.ref.WeakReference
 

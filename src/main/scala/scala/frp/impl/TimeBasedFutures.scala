@@ -1,4 +1,4 @@
-package scala.react.impl
+package scala.frp.impl
 
 import java.util.concurrent.{ThreadFactory, Executors}
 import scala.concurrent._
@@ -6,7 +6,7 @@ import scala.concurrent.duration._
 import scala.util.control.NonFatal
 import scala.util.{Try, Success, Failure}
 
-private [react] object TimeBasedFutures {
+private [frp] object TimeBasedFutures {
 
 	private object DaemonThreadFactory extends ThreadFactory {
 		def newThread(r: Runnable) = {
