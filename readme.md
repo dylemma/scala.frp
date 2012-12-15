@@ -3,31 +3,68 @@ Scala FRP
 
 ###Background
 
-Scala FRP (**F**unctional **R**eactive **P**rogramming) is a library inspired by [Ingo Maier's](http://lampwww.epfl.ch/~imaier/) paper, [Deprecating the Observer Pattern](http://lampwww.epfl.ch/~imaier/pub/DeprecatingObserversTR2010.pdf). Ingo Maier made an implementation of his "scala.react" framework which is available [on Github](https://github.com/ingoem/scala-react) in its original form. I also made a version of the same library that works with SBT to manage its dependencies, available [here](https://github.com/dylemma/scala.react).
+Scala FRP (stands for **F**unctional **R**eactive **P**rogramming) is a library inspired by [Ingo Maier's](http://lampwww.epfl.ch/~imaier/) paper, [Deprecating the Observer Pattern](http://lampwww.epfl.ch/~imaier/pub/DeprecatingObserversTR2010.pdf). Ingo Maier made an implementation of his "scala.react" framework which is available [on Github](https://github.com/ingoem/scala-react) in its original form. I also made a version of the same library that works with SBT to manage its dependencies, available [here](https://github.com/dylemma/scala.react).
 
 ###What it Does
 
 Functional Reactive Programming is an alternative approach to the Publisher/Subscriber Pattern. It replaces the idea of a `Publisher` with an `EventStream`, and replaces the idea of a `Subscriber` with the fact that `EventStream`s can be composed and observed in a functional style.
 
-Another thing that comes with the library is some semi-automatic memory management. A problem with the PubSub pattern was that it was easy to create a situation where the Publisher and Subscriber had a cyclical reference path between each other, preventing either from ever being garbage-collected. This library provides an `Observer` trait that manages references between an `EventStream` and any handlers, so that there won't be any cyclical references.
+###Getting Started
+
+Currently the only way for you to use this library is to build it from source. I'll eventually start publishing things on a Maven repository. 
+
+Once you've got some binary version of Scala FRP, the bare minimum you should do is
+
+	import scala.frp._
+	implicit object observer extends Observer
+
+There are two main classes that you will want to interact with. `EventStream` is a read-only class that you can attach event handlers to, and create mappings and combinations with. `EventSource` is a subclass of `EventStream` that also exposes `fire` and `stop` methods.
+
+The implicit `Observer` is needed for nearly every method while working with `EventStream`s. It keeps references to your event handlers (and the `EventStream` only keeps weak references) so that your event handlers can be garbage-collected once the `Observer` gets garbage-collected.
 
 ###How to Use it
 
-Make an `EventStream`. `EventSource` is an implementation of `EventStream` that also has a `fire` method, so use that:
+Start by making an `EventSource`, which is itself an `EventStream`.
 
 	val ints = new EventSource[Int]
 
-Make an implicit `Observer`. You can either explicitly define one or mix it into the containing class. Once the `Observer` instance gets garbage-collected, any attached event handlers are fair game for garbage collection.
+Now, `ints` can either `fire` events or `stop`. Once a stream has `stop`ped, it can't `fire` any more events. Stopping an event stream isn't mandatory, but sometimes you need to know when a stream has stopped (e.g. `EventStream` concatenation). You can hook directly into the stream by using
 
-	implicit object obs extends Observer
+	ints observe {
+		case Fire(e) => 
+			//handle event `e`
+			true
+		case Stop =>
+			//handle stop
+			false
+	}
 
-At this point you can set up handlers and modified versions of the stream.
+If using the `observe` method, your handler should return `true` if you want it to continue listening for new events, or `false` if it should stop listening. The `Observe` object provides some convenience methods:
 
-	Observe.events(ints){ i => println("Event: " + i) }
-	//alternate syntax
-	for(i <- ints) println("Event: " + i)
+	//listen to only the `Fire(i)` events
+	Observe.events(ints){ i => println("Saw event: " + i) }
 
-	//make a mapped event stream
-	val intsTimesTwo: EventStream[Int] = ints.map(_ * 2)
-	//or use 'for' syntax
-	val intsTimesTwo: EventStream[Int] = for(i <- ints) yield i * 2
+	//Using `foreach` is equivalent to this
+	ints.foreach{ i => println("Saw event: " + i) }
+
+	//or with syntax sugar
+	for(i <- ints) println("Saw event: " + i)
+
+	//listen for the `Stop` event
+	Observe.end(ints){ println("Found the end of the stream!") }
+
+	//listen to only the next `Fire` event
+	Observe.next(ints){ i => println("It was " + i) }
+
+There are a bunch of combinators that you can use with `EventStream`s.
+
+	val intsTimesTwo: EventStream[Int] = ints.map { _ * 2 }
+	val eventInts: EventStream[Int] = ints.filter{ _ % 2 == 0 }
+	val firstThreeInts: EventStream[Int] = ints.take(3)
+	val theRestOfThoseInts = ints.drop(3)
+
+	import scala.concurrent.duration._
+	val intsOnTime = ints.before(2 seconds fromNow)
+	val intsInTime = ints.within(2.seconds)
+
+There are even more, but until I get the documentation up and hosted, you'll just have to check out the [EventStream source](src/main/scala/scala/frp/EventStream.scala).
