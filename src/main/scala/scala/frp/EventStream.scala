@@ -1,15 +1,12 @@
 package scala.frp
 
-import impl._
-import java.util.concurrent.atomic.AtomicBoolean
-import java.lang.ref.WeakReference
 import scala.concurrent.duration._
 
-trait EventStream[+A] extends Observable[A]{
+trait EventStream[+A] extends Stream[Event[A]] {
 	def foreach[U](f: A => U)(implicit obs: Observer): Unit = {
-		Observe.events(this) { e => f(e) }
+		Sink.events(this) { e => f(e) }
 	}
-	def isStopped: Boolean
+	def stopped: Boolean
 	
 	def map[B](f: A => B)(implicit obs: Observer): EventStream[B] 
 	def flatMap[B](f: A => EventStream[B])(implicit obs: Observer): EventStream[B] 
@@ -35,56 +32,5 @@ object EventStream {
 		val s = new EventSource[Nothing]
 		s.stop
 		s
-	}
-}
-
-object EventSource {
-	val purgeThreshold = 5
-}
-
-class EventSource[A] extends EventStream[A] with EventSourceImplMixin[A] {
-
-	private var listeners: List[WeakReference[Event[A] => Boolean]] = Nil
-	private val stoppedAtomic = new AtomicBoolean(false)
-	
-	def isStopped: Boolean = stoppedAtomic.get
-
-	def observe(thunk: Event[A] => Boolean)(implicit o: Observer): Unit = {
-		o add thunk
-		o add this
-		synchronized {
-			listeners ::= new WeakReference(thunk)
-		}
-	}
-
-	def fire(event: A): Unit = {
-		if(isStopped) throw new IllegalStateException("Cannot fire events from a stopped EventSource")
-		else send( Fire(event) )	
-	}
-	
-	def stop: Unit = {
-		if(!stoppedAtomic.getAndSet(true))
-			send( Stop )
-	}
-	
-	private def send(event: Event[A]): Unit = {
-		var deadCount = 0
-		
-		//run the thunks. count the dead or dying ones
-		for (tRef <- listeners) tRef.get match {
-			case null => deadCount += 1
-			case thunk =>
-				if (!thunk(event)){
-					tRef.clear
-					deadCount += 1
-				}
-		}
-		
-		//if there are a lot of dead thunks, remove them
-		if (deadCount > EventSource.purgeThreshold){
-			synchronized {
-				listeners = listeners filterNot { _.get == null }
-			}
-		}
 	}
 }

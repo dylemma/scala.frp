@@ -140,7 +140,7 @@ class EventStreamTests extends FunSuite with TestHelpers {
 		val t = new EventSource[Int]
 		var gotEnd = false
 		
-		Observe.end(s++t){ gotEnd = true }
+		Sink.end(s++t){ gotEnd = true }
 		
 		s fire 1
 		s.stop

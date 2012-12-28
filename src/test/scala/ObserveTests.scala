@@ -6,10 +6,10 @@ class ObserveTests extends FunSuite {
 
 	implicit object observer extends Observer
 	
-	test("Observe.next") {
+	test("Sink.next") {
 		val s = new EventSource[Int]
 		val ints = new ListBuffer[Int]
-		Observe.next(s){ ints += _ }
+		Sink.next(s){ ints += _ }
 		
 		s fire 1
 		s fire 2
@@ -17,10 +17,10 @@ class ObserveTests extends FunSuite {
 		assert(ints.toList == List(1))
 	}
 	
-	test("Observe.end not encountered") {
+	test("Sink.end not encountered") {
 		val s = new EventSource[Int]
 		var gotEnd = false
-		Observe.end(s){ gotEnd = true }
+		Sink.end(s){ gotEnd = true }
 		
 		s fire 1
 		s fire 2
@@ -28,10 +28,10 @@ class ObserveTests extends FunSuite {
 		assert(!gotEnd)
 	}
 	
-	test("Observe.end") {
+	test("Sink.end") {
 		val s = new EventSource[Int]
 		var gotEnd = false
-		Observe.end(s){ gotEnd = true }
+		Sink.end(s){ gotEnd = true }
 		
 		s fire 1
 		s fire 2
@@ -40,10 +40,10 @@ class ObserveTests extends FunSuite {
 		assert(gotEnd)
 	}
 	
-	test("Observe.events") {
+	test("Sink.events") {
 		val s = new EventSource[Int]
 		val ints = new ListBuffer[Int]
-		Observe.events(s){ ints += _ }
+		Sink.events(s){ ints += _ }
 		
 		s fire 1
 		s fire 2

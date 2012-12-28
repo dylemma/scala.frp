@@ -5,6 +5,10 @@ import scala.frp._
 import java.util.concurrent.atomic.{AtomicBoolean, AtomicInteger, AtomicReference}
 import scala.concurrent.duration._
 
+//todo: create a "DerivedEventStream" that handles the logic for hooking up to parent streams
+// with the *goal* of removing the Observer requirement for all of the combinators.
+
+
 private [frp] 
 class FlatMappedEventStream[A, B]
 (base: EventStream[A], f: A => EventStream[B])(implicit obs: Observer) 
@@ -14,7 +18,7 @@ extends EventSource[B] {
 
 	//when base fires an event, subscribe to the resulting event stream, until base fires another event
 
-	base observe {
+	base sink {
 		case Stop =>
 			stop
 			false
@@ -28,7 +32,7 @@ extends EventSource[B] {
 					oldStream.cancel
 			}
 			
-			bStream observe {
+			bStream sink {
 				case Stop =>
 					false
 				case Fire(x) =>
@@ -55,7 +59,7 @@ extends EventSource[A] {
 	
 	private def tryStop = if(stoppedAtomic.compareAndSet(false, true)) stop
 	
-	base observe {
+	base sink {
 		case Stop =>
 			tryStop
 			false
@@ -76,7 +80,7 @@ class WithFilterEventStream[A]
 (base: EventStream[A], f: A => Boolean)(implicit obs: Observer) 
 extends EventSource[A] {
 
-	base observe {
+	base sink {
 		case Fire(e) =>
 			if( f(e) ) fire(e)
 			true
@@ -97,7 +101,7 @@ class MappedEventStream[A, B]
 (base: EventStream[A], f: A => B)(implicit obs: Observer) 
 extends EventSource[B] {
 	
-	base observe {
+	base sink {
 		case Fire(e) => 
 			fire( f(e) )
 			true
@@ -113,7 +117,7 @@ class TakeWhileEventStream[A]
 (base: EventStream[A], p: A => Boolean)(implicit obs: Observer) 
 extends EventSource[A] {
 
-	base observe {
+	base sink {
 		case Stop =>
 			stop
 			false
@@ -136,7 +140,7 @@ extends EventSource[A] {
 
 	private var numSeen = 0
 
-	base observe {
+	base sink {
 		case Stop =>
 			stop
 			false
@@ -160,7 +164,7 @@ class DropWhileEventStream[A]
 extends EventSource[A] {
 	private var dropping = true
 	
-	base observe {
+	base sink {
 		case Stop => 
 			stop
 			false
@@ -182,7 +186,7 @@ extends EventSource[A] {
 	
 	private var numSeen = 0
 	
-	base observe {
+	base sink {
 		case Stop =>
 			stop
 			false
@@ -199,9 +203,9 @@ class ConcatenatedEventStream[A]
 (left: EventStream[A], right: EventStream[A])(implicit obs: Observer)
 extends EventSource[A] {
 	
-	left observe {
+	left sink {
 		case Stop =>
-			right observe {
+			right sink {
 				case Stop =>
 					stop
 					false
@@ -222,7 +226,7 @@ class TakeUntilEventStream[A]
 (base: EventStream[A], end: EventStream[_])(implicit obs: Observer)
 extends CancellableEventStream[A](base) {
 
-	end observe {
+	end sink {
 		case Stop => 
 			false
 		case Fire(_) =>
@@ -249,8 +253,8 @@ extends EventSource[A] {
 			true
 	}
 
-	left observe eventHandler
-	right observe eventHandler
+	left sink eventHandler
+	right sink eventHandler
 
 }
 
@@ -266,7 +270,7 @@ extends EventSource[A] {
 
 	TimeBasedFutures.after(deadline, stopinate)
 
-	base observe {
+	base sink {
 		case Stop => 
 			stopinate
 			false

@@ -6,7 +6,7 @@ import scala.concurrent.duration.{Deadline, Duration, FiniteDuration}
 private [frp] trait EventSourceImplMixin[A] { self: EventSource[A] =>
 	
 	def map[B](f: A => B)(implicit obs: Observer): EventStream[B] = {
-		new MappedEventStream(this, f) 
+		new MappedEventStream[A, B](this, f) 
 	}
 	
 	def flatMap[B](f: A => EventStream[B])(implicit obs: Observer): EventStream[B] = {
@@ -61,4 +61,5 @@ private [frp] trait EventSourceImplMixin[A] { self: EventSource[A] =>
 	def before(deadline: Deadline)(implicit obs: Observer): EventStream[A] = {
 		new DeadlinedEventStream(this, deadline)
 	}
+	
 }
