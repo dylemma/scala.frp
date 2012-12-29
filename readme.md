@@ -20,7 +20,7 @@ Once you've got some binary version of Scala FRP, the bare minimum you should do
 
 There are two main classes that you will want to interact with. `EventStream` is a read-only class that you can attach event handlers to, and create mappings and combinations with. `EventSource` is a subclass of `EventStream` that also exposes `fire` and `stop` methods.
 
-The implicit `Observer` is needed for nearly every method while working with `EventStream`s. It keeps references to your event handlers (and the `EventStream` only keeps weak references) so that your event handlers can be garbage-collected once the `Observer` gets garbage-collected.
+The implicit `Observer` is needed to attach event handlers to an `EventStream`s. It keeps references to your event handlers (and the `EventStream` only keeps weak references) so that your event handlers can be garbage-collected once the `Observer` gets garbage-collected.
 
 For more details, [check out the docs](http://dylemma.github.com/scala.frp/)
 
@@ -28,11 +28,12 @@ For more details, [check out the docs](http://dylemma.github.com/scala.frp/)
 
 Start by making an `EventSource`, which is itself an `EventStream`.
 
-	val ints = new EventSource[Int]
+	val ints = EventSource[Int]
 
-Now, `ints` can either `fire` events or `stop`. Once a stream has `stop`ped, it can't `fire` any more events. Stopping an event stream isn't mandatory, but sometimes you need to know when a stream has stopped (e.g. `EventStream` concatenation). You can hook directly into the stream by using
+Now, `ints` can either `fire` events or `stop`. Once a stream has stopped, it can't fire any more events. Stopping an event stream isn't mandatory, but sometimes you need to know when a stream has stopped (e.g. `EventStream` concatenation). You can hook directly into the stream by using
 
-	ints observe {
+	//requires an implicit Observer
+	ints sink {
 		case Fire(e) => 
 			//handle event `e`
 			true
@@ -44,19 +45,16 @@ Now, `ints` can either `fire` events or `stop`. Once a stream has `stop`ped, it 
 If using the `observe` method, your handler should return `true` if you want it to continue listening for new events, or `false` if it should stop listening. The `Observe` object provides some convenience methods:
 
 	//listen to only the `Fire(i)` events
-	Observe.events(ints){ i => println("Saw event: " + i) }
-
-	//Using `foreach` is equivalent to this
-	ints.foreach{ i => println("Saw event: " + i) }
+	ints foreach { i => println("Saw event: " + i) }
 
 	//or with syntax sugar
 	for(i <- ints) println("Saw event: " + i)
 
 	//listen for the `Stop` event
-	Observe.end(ints){ println("Found the end of the stream!") }
+	ints onEnd { println("Found the end of the stream!") }
 
 	//listen to only the next `Fire` event
-	Observe.next(ints){ i => println("It was " + i) }
+	ints onNext { i => println("It was " + i) }
 
 There are a bunch of combinators that you can use with `EventStream`s.
 
@@ -69,4 +67,4 @@ There are a bunch of combinators that you can use with `EventStream`s.
 	val intsOnTime = ints.before(2 seconds fromNow)
 	val intsInTime = ints.within(2.seconds)
 
-There are even more, but until I get the documentation up and hosted, you'll just have to check out the [EventStream source](src/main/scala/scala/frp/EventStream.scala).
+There are even more, so check them out in the [docs](http://dylemma.github.com/scala.frp/api/current/index.html#scala.frp.EventStream)
