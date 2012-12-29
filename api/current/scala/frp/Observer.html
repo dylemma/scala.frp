@@ -44,7 +44,15 @@
       </span>
       </h4>
       
-          <div id="comment" class="fullcommenttop"><div class="toggleContainer block">
+          <div id="comment" class="fullcommenttop"><div class="comment cmt"><p>A memory management assistant. The expected usage is that an <code>Observer</code>
+instance will be the only thing that holds strong references to some
+collection of objects; once the <code>Observer</code> instance is no longer
+strongly-reachable (can be garbage collected), then neither will the
+collection of objects that it references.</p><p>An implicit <code>Observer</code> is required when interacting with <code>Source</code>s, to
+facilitate &quot;automatic&quot; memory management. To create an <code>Observer</code>, either
+explicitly do so:</p><pre><span class="kw">implicit</span> <span class="kw">object</span> myObserver <span class="kw">extends</span> Observer</pre><p>or mix one into the containing class:</p><pre><span class="kw">class</span> Worker <span class="kw">extends</span> Observer {
+<span class="cmt">//do things that require an implicit Observer</span>
+}</pre></div><div class="toggleContainer block">
           <span class="toggle">Linear Supertypes</span>
           <div class="superTypes hiddenContent"><a href="../package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a>, <span class="extype" name="scala.Any">Any</span></div>
         </div></div>

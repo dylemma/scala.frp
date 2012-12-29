@@ -2,9 +2,9 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
 <html>
         <head>
-          <title>EventStream - scala.frp.EventStream</title>
-          <meta name="description" content="EventStream - scala.frp.EventStream" />
-          <meta name="keywords" content="EventStream scala.frp.EventStream" />
+          <title>Source - scala.frp.Source</title>
+          <meta name="description" content="Source - scala.frp.Source" />
+          <meta name="keywords" content="Source scala.frp.Source" />
           <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
           
       <link href="../../lib/template.css" media="screen" type="text/css" rel="stylesheet" />
@@ -17,7 +17,7 @@
       <script type="text/javascript">
          if(top === self) {
             var url = '../../index.html';
-            var hash = 'scala.frp.EventStream';
+            var hash = 'scala.frp.Source';
             var anchor = window.location.hash;
             var anchor_opt = '';
             if (anchor.length >= 1)
@@ -29,9 +29,9 @@
         </head>
         <body class="type">
       <div id="definition">
-        <a href="EventStream$.html" title="Go to companion"><img src="../../lib/trait_to_object_big.png" /></a>
+        <img src="../../lib/trait_big.png" />
         <p id="owner"><a href="../package.html" class="extype" name="scala">scala</a>.<a href="package.html" class="extype" name="scala.frp">frp</a></p>
-        <h1><a href="EventStream$.html" title="Go to companion">EventStream</a></h1>
+        <h1>Source</h1>
       </div>
 
       <h4 id="signature" class="signature">
@@ -40,16 +40,20 @@
         <span class="kind">trait</span>
       </span>
       <span class="symbol">
-        <span class="name">EventStream</span><span class="tparams">[<span name="A">+A</span>]</span><span class="result"> extends <a href="Stream.html" class="extype" name="scala.frp.Stream">Stream</a>[<a href="Event.html" class="extype" name="scala.frp.Event">Event</a>[<span class="extype" name="scala.frp.EventStream.A">A</span>]]</span>
+        <span class="name">Source</span><span class="tparams">[<span name="A">A</span>]</span><span class="result"> extends <a href="Stream.html" class="extype" name="scala.frp.Stream">Stream</a>[<span class="extype" name="scala.frp.Source.A">A</span>]</span>
       </span>
       </h4>
       
-          <div id="comment" class="fullcommenttop"><div class="toggleContainer block">
+          <div id="comment" class="fullcommenttop"><div class="comment cmt"><p>A Source of data. Data can be produced with the <code>produce</code> method (which is <code>protected</code>), and will be
+sent to any number of &quot;Sinks&quot;. Sinks can be created by specifying a <code>handler</code>
+function with the <code>sink</code> method.
+</p></div><dl class="paramcmts block"><dt class="tparam">A</dt><dd class="cmt"><p>The type of the items stored.
+</p></dd></dl><div class="toggleContainer block">
           <span class="toggle">Linear Supertypes</span>
-          <div class="superTypes hiddenContent"><a href="Stream.html" class="extype" name="scala.frp.Stream">Stream</a>[<a href="Event.html" class="extype" name="scala.frp.Event">Event</a>[<span class="extype" name="scala.frp.EventStream.A">A</span>]], <a href="../package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a>, <span class="extype" name="scala.Any">Any</span></div>
+          <div class="superTypes hiddenContent"><a href="Stream.html" class="extype" name="scala.frp.Stream">Stream</a>[<span class="extype" name="scala.frp.Source.A">A</span>], <a href="../package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a>, <span class="extype" name="scala.Any">Any</span></div>
         </div><div class="toggleContainer block">
           <span class="toggle">Known Subclasses</span>
-          <div class="subClasses hiddenContent"><a href="EventJoin.html" class="extype" name="scala.frp.EventJoin">EventJoin</a>, <a href="EventPipe.html" class="extype" name="scala.frp.EventPipe">EventPipe</a>, <a href="EventSource.html" class="extype" name="scala.frp.EventSource">EventSource</a></div>
+          <div class="subClasses hiddenContent"><a href="EventJoin.html" class="extype" name="scala.frp.EventJoin">EventJoin</a>, <a href="EventPipe.html" class="extype" name="scala.frp.EventPipe">EventPipe</a>, <a href="EventSource.html" class="extype" name="scala.frp.EventSource">EventSource</a>, <a href="Join.html" class="extype" name="scala.frp.Join">Join</a>, <a href="Pipe.html" class="extype" name="scala.frp.Pipe">Pipe</a></div>
         </div></div>
         
 
@@ -67,7 +71,7 @@
                 <span class="filtertype">Inherited<br />
                 </span>
                 <ol id="linearization">
-                  <li class="in" name="scala.frp.EventStream"><span>EventStream</span></li><li class="in" name="scala.frp.Stream"><span>Stream</span></li><li class="in" name="scala.AnyRef"><span>AnyRef</span></li><li class="in" name="scala.Any"><span>Any</span></li>
+                  <li class="in" name="scala.frp.Source"><span>Source</span></li><li class="in" name="scala.frp.Stream"><span>Stream</span></li><li class="in" name="scala.AnyRef"><span>AnyRef</span></li><li class="in" name="scala.Any"><span>Any</span></li>
                 </ol>
               </div><div id="ancestors">
             <span class="filtertype"></span>
@@ -89,208 +93,10 @@
 
         
 
-        <div id="values" class="values members">
-              <h3>Abstract Value Members</h3>
-              <ol><li name="scala.frp.EventStream#++" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
-      <a id="++[A1&gt;:A](that:scala.frp.EventStream[A1]):scala.frp.EventStream[A1]"></a>
-      <a id="++[A1&gt;:A](EventStream[A1]):EventStream[A1]"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier">abstract </span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span title="gt4s: $plus$plus" class="name">++</span><span class="tparams">[<span name="A1">A1 &gt;: <span class="extype" name="scala.frp.EventStream.A">A</span></span>]</span><span class="params">(<span name="that">that: <a href="" class="extype" name="scala.frp.EventStream">EventStream</a>[<span class="extype" name="scala.frp.EventStream.++.A1">A1</span>]</span>)</span><span class="result">: <a href="" class="extype" name="scala.frp.EventStream">EventStream</a>[<span class="extype" name="scala.frp.EventStream.++.A1">A1</span>]</span>
-      </span>
-      </h4>
-      
-    </li><li name="scala.frp.EventStream#before" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
-      <a id="before(deadline:scala.concurrent.duration.Deadline):scala.frp.EventStream[A]"></a>
-      <a id="before(Deadline):EventStream[A]"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier">abstract </span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span class="name">before</span><span class="params">(<span name="deadline">deadline: <span class="extype" name="scala.concurrent.duration.Deadline">Deadline</span></span>)</span><span class="result">: <a href="" class="extype" name="scala.frp.EventStream">EventStream</a>[<span class="extype" name="scala.frp.EventStream.A">A</span>]</span>
-      </span>
-      </h4>
-      
-    </li><li name="scala.frp.EventStream#drop" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
-      <a id="drop(count:Int):scala.frp.EventStream[A]"></a>
-      <a id="drop(Int):EventStream[A]"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier">abstract </span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span class="name">drop</span><span class="params">(<span name="count">count: <span class="extype" name="scala.Int">Int</span></span>)</span><span class="result">: <a href="" class="extype" name="scala.frp.EventStream">EventStream</a>[<span class="extype" name="scala.frp.EventStream.A">A</span>]</span>
-      </span>
-      </h4>
-      
-    </li><li name="scala.frp.EventStream#dropWhile" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
-      <a id="dropWhile(p:A=&gt;Boolean):scala.frp.EventStream[A]"></a>
-      <a id="dropWhile((A)⇒Boolean):EventStream[A]"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier">abstract </span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span class="name">dropWhile</span><span class="params">(<span name="p">p: (<span class="extype" name="scala.frp.EventStream.A">A</span>) ⇒ <span class="extype" name="scala.Boolean">Boolean</span></span>)</span><span class="result">: <a href="" class="extype" name="scala.frp.EventStream">EventStream</a>[<span class="extype" name="scala.frp.EventStream.A">A</span>]</span>
-      </span>
-      </h4>
-      
-    </li><li name="scala.frp.EventStream#filter" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
-      <a id="filter(p:A=&gt;Boolean):scala.frp.EventStream[A]"></a>
-      <a id="filter((A)⇒Boolean):EventStream[A]"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier">abstract </span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span class="name">filter</span><span class="params">(<span name="p">p: (<span class="extype" name="scala.frp.EventStream.A">A</span>) ⇒ <span class="extype" name="scala.Boolean">Boolean</span></span>)</span><span class="result">: <a href="" class="extype" name="scala.frp.EventStream">EventStream</a>[<span class="extype" name="scala.frp.EventStream.A">A</span>]</span>
-      </span>
-      </h4>
-      
-    </li><li name="scala.frp.EventStream#flatMap" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
-      <a id="flatMap[B](f:A=&gt;scala.frp.EventStream[B]):scala.frp.EventStream[B]"></a>
-      <a id="flatMap[B]((A)⇒EventStream[B]):EventStream[B]"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier">abstract </span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span class="name">flatMap</span><span class="tparams">[<span name="B">B</span>]</span><span class="params">(<span name="f">f: (<span class="extype" name="scala.frp.EventStream.A">A</span>) ⇒ <a href="" class="extype" name="scala.frp.EventStream">EventStream</a>[<span class="extype" name="scala.frp.EventStream.flatMap.B">B</span>]</span>)</span><span class="result">: <a href="" class="extype" name="scala.frp.EventStream">EventStream</a>[<span class="extype" name="scala.frp.EventStream.flatMap.B">B</span>]</span>
-      </span>
-      </h4>
-      
-    </li><li name="scala.frp.EventStream#map" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
-      <a id="map[B](f:A=&gt;B):scala.frp.EventStream[B]"></a>
-      <a id="map[B]((A)⇒B):EventStream[B]"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier">abstract </span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span class="name">map</span><span class="tparams">[<span name="B">B</span>]</span><span class="params">(<span name="f">f: (<span class="extype" name="scala.frp.EventStream.A">A</span>) ⇒ <span class="extype" name="scala.frp.EventStream.map.B">B</span></span>)</span><span class="result">: <a href="" class="extype" name="scala.frp.EventStream">EventStream</a>[<span class="extype" name="scala.frp.EventStream.map.B">B</span>]</span>
-      </span>
-      </h4>
-      
-    </li><li name="scala.frp.Stream#sink" visbl="pub" data-isabs="true" fullComment="yes" group="Ungrouped">
-      <a id="sink(handler:A=&gt;Boolean)(implicitobs:scala.frp.Observer):Unit"></a>
-      <a id="sink((Event[A])⇒Boolean)(Observer):Unit"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier">abstract </span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span class="name">sink</span><span class="params">(<span name="handler">handler: (<a href="Event.html" class="extype" name="scala.frp.Event">Event</a>[<span class="extype" name="scala.frp.EventStream.A">A</span>]) ⇒ <span class="extype" name="scala.Boolean">Boolean</span></span>)</span><span class="params">(<span class="implicit">implicit </span><span name="obs">obs: <a href="Observer.html" class="extype" name="scala.frp.Observer">Observer</a></span>)</span><span class="result">: <span class="extype" name="scala.Unit">Unit</span></span>
-      </span>
-      </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="Stream.html" class="extype" name="scala.frp.Stream">Stream</a></dd></dl></div>
-    </li><li name="scala.frp.EventStream#stopped" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
-      <a id="stopped:Boolean"></a>
-      <a id="stopped:Boolean"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier">abstract </span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span class="name">stopped</span><span class="result">: <span class="extype" name="scala.Boolean">Boolean</span></span>
-      </span>
-      </h4>
-      
-    </li><li name="scala.frp.EventStream#take" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
-      <a id="take(count:Int):scala.frp.EventStream[A]"></a>
-      <a id="take(Int):EventStream[A]"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier">abstract </span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span class="name">take</span><span class="params">(<span name="count">count: <span class="extype" name="scala.Int">Int</span></span>)</span><span class="result">: <a href="" class="extype" name="scala.frp.EventStream">EventStream</a>[<span class="extype" name="scala.frp.EventStream.A">A</span>]</span>
-      </span>
-      </h4>
-      
-    </li><li name="scala.frp.EventStream#takeWhile" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
-      <a id="takeWhile(p:A=&gt;Boolean):scala.frp.EventStream[A]"></a>
-      <a id="takeWhile((A)⇒Boolean):EventStream[A]"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier">abstract </span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span class="name">takeWhile</span><span class="params">(<span name="p">p: (<span class="extype" name="scala.frp.EventStream.A">A</span>) ⇒ <span class="extype" name="scala.Boolean">Boolean</span></span>)</span><span class="result">: <a href="" class="extype" name="scala.frp.EventStream">EventStream</a>[<span class="extype" name="scala.frp.EventStream.A">A</span>]</span>
-      </span>
-      </h4>
-      
-    </li><li name="scala.frp.EventStream#until" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
-      <a id="until(end:scala.frp.EventStream[_]):scala.frp.EventStream[A]"></a>
-      <a id="until(EventStream[_]):EventStream[A]"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier">abstract </span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span class="name">until</span><span class="params">(<span name="end">end: <a href="" class="extype" name="scala.frp.EventStream">EventStream</a>[_]</span>)</span><span class="result">: <a href="" class="extype" name="scala.frp.EventStream">EventStream</a>[<span class="extype" name="scala.frp.EventStream.A">A</span>]</span>
-      </span>
-      </h4>
-      
-    </li><li name="scala.frp.EventStream#withFilter" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
-      <a id="withFilter(p:A=&gt;Boolean):scala.frp.EventStream[A]"></a>
-      <a id="withFilter((A)⇒Boolean):EventStream[A]"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier">abstract </span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span class="name">withFilter</span><span class="params">(<span name="p">p: (<span class="extype" name="scala.frp.EventStream.A">A</span>) ⇒ <span class="extype" name="scala.Boolean">Boolean</span></span>)</span><span class="result">: <a href="" class="extype" name="scala.frp.EventStream">EventStream</a>[<span class="extype" name="scala.frp.EventStream.A">A</span>]</span>
-      </span>
-      </h4>
-      
-    </li><li name="scala.frp.EventStream#within" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
-      <a id="within(duration:scala.concurrent.duration.Duration):scala.frp.EventStream[A]"></a>
-      <a id="within(Duration):EventStream[A]"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier">abstract </span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span class="name">within</span><span class="params">(<span name="duration">duration: <span class="extype" name="scala.concurrent.duration.Duration">Duration</span></span>)</span><span class="result">: <a href="" class="extype" name="scala.frp.EventStream">EventStream</a>[<span class="extype" name="scala.frp.EventStream.A">A</span>]</span>
-      </span>
-      </h4>
-      
-    </li><li name="scala.frp.EventStream#||" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
-      <a id="||[A1&gt;:A](that:scala.frp.EventStream[A1]):scala.frp.EventStream[A1]"></a>
-      <a id="||[A1&gt;:A](EventStream[A1]):EventStream[A1]"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier">abstract </span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span title="gt4s: $bar$bar" class="name">||</span><span class="tparams">[<span name="A1">A1 &gt;: <span class="extype" name="scala.frp.EventStream.A">A</span></span>]</span><span class="params">(<span name="that">that: <a href="" class="extype" name="scala.frp.EventStream">EventStream</a>[<span class="extype" name="scala.frp.EventStream.||.A1">A1</span>]</span>)</span><span class="result">: <a href="" class="extype" name="scala.frp.EventStream">EventStream</a>[<span class="extype" name="scala.frp.EventStream.||.A1">A1</span>]</span>
-      </span>
-      </h4>
-      
-    </li></ol>
-            </div>
+        
 
         <div id="values" class="values members">
-              <h3>Concrete Value Members</h3>
+              <h3>Value Members</h3>
               <ol><li name="scala.AnyRef#!=" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="!=(x$1:AnyRef):Boolean"></a>
       <a id="!=(AnyRef):Boolean"></a>
@@ -427,19 +233,6 @@
                 <span class="name">@throws</span><span class="args">()</span>
               
         </dd></dl></div>
-    </li><li name="scala.frp.EventStream#foreach" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="foreach[U](f:A=&gt;U)(implicitobs:scala.frp.Observer):Unit"></a>
-      <a id="foreach[U]((A)⇒U)(Observer):Unit"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span class="name">foreach</span><span class="tparams">[<span name="U">U</span>]</span><span class="params">(<span name="f">f: (<span class="extype" name="scala.frp.EventStream.A">A</span>) ⇒ <span class="extype" name="scala.frp.EventStream.foreach.U">U</span></span>)</span><span class="params">(<span class="implicit">implicit </span><span name="obs">obs: <a href="Observer.html" class="extype" name="scala.frp.Observer">Observer</a></span>)</span><span class="result">: <span class="extype" name="scala.Unit">Unit</span></span>
-      </span>
-      </h4>
-      
     </li><li name="scala.AnyRef#getClass" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="getClass():Class[_]"></a>
       <a id="getClass():Class[_]"></a>
@@ -518,32 +311,65 @@
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
-    </li><li name="scala.frp.EventStream#onEnd" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="onEnd(f:=&gt;Unit)(implicitobs:scala.frp.Observer):Unit"></a>
-      <a id="onEnd(⇒Unit)(Observer):Unit"></a>
+    </li><li name="scala.frp.Source#produce" visbl="prt" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="produce(item:A):Unit"></a>
+      <a id="produce(A):Unit"></a>
       <h4 class="signature">
       <span class="modifier_kind">
         <span class="modifier"></span>
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">onEnd</span><span class="params">(<span name="f">f: ⇒ <span class="extype" name="scala.Unit">Unit</span></span>)</span><span class="params">(<span class="implicit">implicit </span><span name="obs">obs: <a href="Observer.html" class="extype" name="scala.frp.Observer">Observer</a></span>)</span><span class="result">: <span class="extype" name="scala.Unit">Unit</span></span>
+        <span class="name">produce</span><span class="params">(<span name="item">item: <span class="extype" name="scala.frp.Source.A">A</span></span>)</span><span class="result">: <span class="extype" name="scala.Unit">Unit</span></span>
       </span>
       </h4>
-      
-    </li><li name="scala.frp.EventStream#onNext" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="onNext(f:A=&gt;Unit)(implicitobs:scala.frp.Observer):Unit"></a>
-      <a id="onNext((A)⇒Unit)(Observer):Unit"></a>
+      <p class="shortcomment cmt">Produce a new item.</p><div class="fullcomment"><div class="comment cmt"><p>Produce a new item. All <code>handler</code> functions will be called with <code>item</code> as
+the argument. There is no guarantee of the order in which the <code>handler</code>
+functions will be called.
+</p></div><dl class="paramcmts block"><dt class="param">item</dt><dd class="cmt"><p>The item to be sent to all <code>handler</code>s (sinks).
+</p></dd></dl><dl class="attributes block"> <dt>Attributes</dt><dd>protected </dd></dl></div>
+    </li><li name="scala.frp.Source#purgeThreshold" visbl="prt" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="purgeThreshold:Int"></a>
+      <a id="purgeThreshold:Int"></a>
       <h4 class="signature">
       <span class="modifier_kind">
         <span class="modifier"></span>
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">onNext</span><span class="params">(<span name="f">f: (<span class="extype" name="scala.frp.EventStream.A">A</span>) ⇒ <span class="extype" name="scala.Unit">Unit</span></span>)</span><span class="params">(<span class="implicit">implicit </span><span name="obs">obs: <a href="Observer.html" class="extype" name="scala.frp.Observer">Observer</a></span>)</span><span class="result">: <span class="extype" name="scala.Unit">Unit</span></span>
+        <span class="name">purgeThreshold</span><span class="result">: <span class="extype" name="scala.Int">Int</span></span>
       </span>
       </h4>
-      
+      <p class="shortcomment cmt">A number indicating the minimum number of cleared references
+that must be encountered before purging all cleared references from the list.</p><div class="fullcomment"><div class="comment cmt"><p>A number indicating the minimum number of cleared references
+that must be encountered before purging all cleared references from the list.
+This method may be overridden - the default value is 5.
+</p></div><dl class="attributes block"> <dt>Attributes</dt><dd>protected </dd></dl></div>
+    </li><li name="scala.frp.Source#sink" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="sink(handler:A=&gt;Boolean)(implicitobs:scala.frp.Observer):Unit"></a>
+      <a id="sink((A)⇒Boolean)(Observer):Unit"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">sink</span><span class="params">(<span name="handler">handler: (<span class="extype" name="scala.frp.Source.A">A</span>) ⇒ <span class="extype" name="scala.Boolean">Boolean</span></span>)</span><span class="params">(<span class="implicit">implicit </span><span name="obs">obs: <a href="Observer.html" class="extype" name="scala.frp.Observer">Observer</a></span>)</span><span class="result">: <span class="extype" name="scala.Unit">Unit</span></span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">Add a handler function that acts as a <code>sink</code> for items produced by this
+<code>Source</code>.</p><div class="fullcomment"><div class="comment cmt"><p>Add a handler function that acts as a <code>sink</code> for items produced by this
+<code>Source</code>. The <code>handler</code> is expected to return <code>true</code> as long as it remains
+active. Once the <code>handler</code> function returns <code>false</code> in response to some
+produced item, it will be deactivated and will no longer receive new items.
+There is no guarantee of the order that handlers will be called.
+</p></div><dl class="paramcmts block"><dt class="param">handler</dt><dd class="cmt"><p>The handler function to receive items produced by this <code>Source</code>.
+Once the <code>handler</code> returns <code>false</code> in response to some produced item, it will
+be deactivated and will no longer receive new items.
+</p></dd><dt class="param">obs</dt><dd class="cmt"><p>An implicit <code>Observer</code> which is required in order to properly
+manage references between this <code>Source</code> and any <code>handler</code>s, avoiding
+reference loops.
+</p></dd></dl><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="" class="extype" name="scala.frp.Source">Source</a> → <a href="Stream.html" class="extype" name="scala.frp.Stream">Stream</a></dd></dl></div>
     </li><li name="scala.AnyRef#synchronized" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="synchronized[T0](x$1:=&gt;T0):T0"></a>
       <a id="synchronized[T0](⇒T0):T0"></a>
@@ -628,7 +454,7 @@
 
         <div id="inheritedMembers">
         <div class="parent" name="scala.frp.Stream">
-              <h3>Inherited from <a href="Stream.html" class="extype" name="scala.frp.Stream">Stream</a>[<a href="Event.html" class="extype" name="scala.frp.Event">Event</a>[<span class="extype" name="scala.frp.EventStream.A">A</span>]]</h3>
+              <h3>Inherited from <a href="Stream.html" class="extype" name="scala.frp.Stream">Stream</a>[<span class="extype" name="scala.frp.Source.A">A</span>]</h3>
             </div><div class="parent" name="scala.AnyRef">
               <h3>Inherited from <a href="../package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></h3>
             </div><div class="parent" name="scala.Any">
