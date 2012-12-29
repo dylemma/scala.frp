@@ -177,6 +177,5 @@ class EventStreamTests extends FunSuite with TestHelpers {
 		
 		assert( results.toList == List(1,2,3,4) )
 	}
-	
-	//todo: test `EventStream.within` and `EventStream.before`
+
 }

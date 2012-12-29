@@ -268,19 +268,14 @@ class DeadlinedEventStream[A]
 (val parent: EventStream[A], deadline: Deadline)
 extends EventPipe[A, A] {
 
-	private def stopinate = {
-		println("Stopping " + this)
-		stop
-	}
-
-	TimeBasedFutures.after(deadline, stopinate)
+	TimeBasedFutures.after(deadline, stop)
 
 	def consume(event: Event[A]) = event match {
 		case Stop => 
-			stopinate
+			stop
 			false
 		case Fire(_) if deadline.isOverdue => 
-			stopinate
+			stop
 			false
 		case Fire(e) =>
 			fire(e)
