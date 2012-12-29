@@ -77,7 +77,7 @@
       </h4>
       <p class="comment cmt">Represents an event emitted by a <code>Publisher</code> class.</p>
     </li><li name="scala.frp.EventJoin" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
-      <a id="EventJoin[A,B,C]extendsJoin[scala.frp.Event[A],scala.frp.Event[B],scala.frp.Event[C]]withEventSource[C]"></a>
+      <a id="EventJoin[A,B,C]extendsEventSource[C]"></a>
       <a id="EventJoin[A,B,C]:EventJoin[A,B,C]"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -85,12 +85,12 @@
         <span class="kind">trait</span>
       </span>
       <span class="symbol">
-        <a href="EventJoin.html"><span class="name">EventJoin</span></a><span class="tparams">[<span name="A">A</span>, <span name="B">B</span>, <span name="C">C</span>]</span><span class="result"> extends <a href="Join.html" class="extype" name="scala.frp.Join">Join</a>[<a href="Event.html" class="extype" name="scala.frp.Event">Event</a>[<span class="extype" name="scala.frp.EventJoin.A">A</span>], <a href="Event.html" class="extype" name="scala.frp.Event">Event</a>[<span class="extype" name="scala.frp.EventJoin.B">B</span>], <a href="Event.html" class="extype" name="scala.frp.Event">Event</a>[<span class="extype" name="scala.frp.EventJoin.C">C</span>]] with <a href="EventSource.html" class="extype" name="scala.frp.EventSource">EventSource</a>[<span class="extype" name="scala.frp.EventJoin.C">C</span>]</span>
+        <a href="EventJoin.html"><span class="name">EventJoin</span></a><span class="tparams">[<span name="A">A</span>, <span name="B">B</span>, <span name="C">C</span>]</span><span class="result"> extends <a href="EventSource.html" class="extype" name="scala.frp.EventSource">EventSource</a>[<span class="extype" name="scala.frp.EventJoin.C">C</span>]</span>
       </span>
       </h4>
       
     </li><li name="scala.frp.EventPipe" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
-      <a id="EventPipe[A,B]extendsPipe[scala.frp.Event[A],scala.frp.Event[B]]withEventSource[B]"></a>
+      <a id="EventPipe[A,B]extendsEventSource[B]"></a>
       <a id="EventPipe[A,B]:EventPipe[A,B]"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -98,12 +98,12 @@
         <span class="kind">trait</span>
       </span>
       <span class="symbol">
-        <a href="EventPipe.html"><span class="name">EventPipe</span></a><span class="tparams">[<span name="A">A</span>, <span name="B">B</span>]</span><span class="result"> extends <a href="Pipe.html" class="extype" name="scala.frp.Pipe">Pipe</a>[<a href="Event.html" class="extype" name="scala.frp.Event">Event</a>[<span class="extype" name="scala.frp.EventPipe.A">A</span>], <a href="Event.html" class="extype" name="scala.frp.Event">Event</a>[<span class="extype" name="scala.frp.EventPipe.B">B</span>]] with <a href="EventSource.html" class="extype" name="scala.frp.EventSource">EventSource</a>[<span class="extype" name="scala.frp.EventPipe.B">B</span>]</span>
+        <a href="EventPipe.html"><span class="name">EventPipe</span></a><span class="tparams">[<span name="A">A</span>, <span name="B">B</span>]</span><span class="result"> extends <a href="EventSource.html" class="extype" name="scala.frp.EventSource">EventSource</a>[<span class="extype" name="scala.frp.EventPipe.B">B</span>]</span>
       </span>
       </h4>
       
     </li><li name="scala.frp.EventSource" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
-      <a id="EventSource[A]extendsEventStream[A]withSource[scala.frp.Event[A]]withEventSourceImplMixin[A]"></a>
+      <a id="EventSource[A]extendsEventStream[A]withEventSourceImplMixin[A]"></a>
       <a id="EventSource[A]:EventSource[A]"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -111,12 +111,12 @@
         <span class="kind">trait</span>
       </span>
       <span class="symbol">
-        <a href="EventSource.html"><span class="name">EventSource</span></a><span class="tparams">[<span name="A">A</span>]</span><span class="result"> extends <a href="EventStream.html" class="extype" name="scala.frp.EventStream">EventStream</a>[<span class="extype" name="scala.frp.EventSource.A">A</span>] with <a href="Source.html" class="extype" name="scala.frp.Source">Source</a>[<a href="Event.html" class="extype" name="scala.frp.Event">Event</a>[<span class="extype" name="scala.frp.EventSource.A">A</span>]] with <span class="extype" name="scala.frp.impl.EventSourceImplMixin">EventSourceImplMixin</span>[<span class="extype" name="scala.frp.EventSource.A">A</span>]</span>
+        <a href="EventSource.html"><span class="name">EventSource</span></a><span class="tparams">[<span name="A">A</span>]</span><span class="result"> extends <a href="EventStream.html" class="extype" name="scala.frp.EventStream">EventStream</a>[<span class="extype" name="scala.frp.EventSource.A">A</span>] with <span class="extype" name="scala.frp.impl.EventSourceImplMixin">EventSourceImplMixin</span>[<span class="extype" name="scala.frp.EventSource.A">A</span>]</span>
       </span>
       </h4>
       
     </li><li name="scala.frp.EventStream" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
-      <a id="EventStream[+A]extendsStream[scala.frp.Event[A]]"></a>
+      <a id="EventStream[+A]extendsObject"></a>
       <a id="EventStream[+A]:EventStream[A]"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -124,7 +124,7 @@
         <span class="kind">trait</span>
       </span>
       <span class="symbol">
-        <a href="EventStream.html"><span class="name">EventStream</span></a><span class="tparams">[<span name="A">+A</span>]</span><span class="result"> extends <a href="Stream.html" class="extype" name="scala.frp.Stream">Stream</a>[<a href="Event.html" class="extype" name="scala.frp.Event">Event</a>[<span class="extype" name="scala.frp.EventStream.A">A</span>]]</span>
+        <a href="EventStream.html"><span class="name">EventStream</span></a><span class="tparams">[<span name="A">+A</span>]</span><span class="result"> extends <a href="../package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></span>
       </span>
       </h4>
       
@@ -141,19 +141,6 @@
       </span>
       </h4>
       <p class="comment cmt">Represents a single item from a stream of events.</p>
-    </li><li name="scala.frp.Join" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
-      <a id="Join[A,B,C]extendsSource[C]"></a>
-      <a id="Join[A,B,C]:Join[A,B,C]"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">trait</span>
-      </span>
-      <span class="symbol">
-        <a href="Join.html"><span class="name">Join</span></a><span class="tparams">[<span name="A">A</span>, <span name="B">B</span>, <span name="C">C</span>]</span><span class="result"> extends <a href="Source.html" class="extype" name="scala.frp.Source">Source</a>[<span class="extype" name="scala.frp.Join.C">C</span>]</span>
-      </span>
-      </h4>
-      
     </li><li name="scala.frp.Observer" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
       <a id="ObserverextendsObject"></a>
       <a id="Observer:Observer"></a>
@@ -167,45 +154,6 @@
       </span>
       </h4>
       <p class="comment cmt">A memory management assistant.</p>
-    </li><li name="scala.frp.Pipe" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
-      <a id="Pipe[A,B]extendsSource[B]"></a>
-      <a id="Pipe[A,B]:Pipe[A,B]"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">trait</span>
-      </span>
-      <span class="symbol">
-        <a href="Pipe.html"><span class="name">Pipe</span></a><span class="tparams">[<span name="A">A</span>, <span name="B">B</span>]</span><span class="result"> extends <a href="Source.html" class="extype" name="scala.frp.Source">Source</a>[<span class="extype" name="scala.frp.Pipe.B">B</span>]</span>
-      </span>
-      </h4>
-      
-    </li><li name="scala.frp.Source" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
-      <a id="Source[A]extendsStream[A]"></a>
-      <a id="Source[A]:Source[A]"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">trait</span>
-      </span>
-      <span class="symbol">
-        <a href="Source.html"><span class="name">Source</span></a><span class="tparams">[<span name="A">A</span>]</span><span class="result"> extends <a href="Stream.html" class="extype" name="scala.frp.Stream">Stream</a>[<span class="extype" name="scala.frp.Source.A">A</span>]</span>
-      </span>
-      </h4>
-      <p class="comment cmt">A Source of data.</p>
-    </li><li name="scala.frp.Stream" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
-      <a id="Stream[+A]extendsObject"></a>
-      <a id="Stream[+A]:Stream[A]"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">trait</span>
-      </span>
-      <span class="symbol">
-        <a href="Stream.html"><span class="name">Stream</span></a><span class="tparams">[<span name="A">+A</span>]</span><span class="result"> extends <a href="../package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></span>
-      </span>
-      </h4>
-      
     </li></ol>
             </div>
 

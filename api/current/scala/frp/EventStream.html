@@ -40,13 +40,13 @@
         <span class="kind">trait</span>
       </span>
       <span class="symbol">
-        <span class="name">EventStream</span><span class="tparams">[<span name="A">+A</span>]</span><span class="result"> extends <a href="Stream.html" class="extype" name="scala.frp.Stream">Stream</a>[<a href="Event.html" class="extype" name="scala.frp.Event">Event</a>[<span class="extype" name="scala.frp.EventStream.A">A</span>]]</span>
+        <span class="name">EventStream</span><span class="tparams">[<span name="A">+A</span>]</span><span class="result"> extends <a href="../package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></span>
       </span>
       </h4>
       
           <div id="comment" class="fullcommenttop"><div class="toggleContainer block">
           <span class="toggle">Linear Supertypes</span>
-          <div class="superTypes hiddenContent"><a href="Stream.html" class="extype" name="scala.frp.Stream">Stream</a>[<a href="Event.html" class="extype" name="scala.frp.Event">Event</a>[<span class="extype" name="scala.frp.EventStream.A">A</span>]], <a href="../package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a>, <span class="extype" name="scala.Any">Any</span></div>
+          <div class="superTypes hiddenContent"><a href="../package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a>, <span class="extype" name="scala.Any">Any</span></div>
         </div><div class="toggleContainer block">
           <span class="toggle">Known Subclasses</span>
           <div class="subClasses hiddenContent"><a href="EventJoin.html" class="extype" name="scala.frp.EventJoin">EventJoin</a>, <a href="EventPipe.html" class="extype" name="scala.frp.EventPipe">EventPipe</a>, <a href="EventSource.html" class="extype" name="scala.frp.EventSource">EventSource</a></div>
@@ -67,7 +67,7 @@
                 <span class="filtertype">Inherited<br />
                 </span>
                 <ol id="linearization">
-                  <li class="in" name="scala.frp.EventStream"><span>EventStream</span></li><li class="in" name="scala.frp.Stream"><span>Stream</span></li><li class="in" name="scala.AnyRef"><span>AnyRef</span></li><li class="in" name="scala.Any"><span>Any</span></li>
+                  <li class="in" name="scala.frp.EventStream"><span>EventStream</span></li><li class="in" name="scala.AnyRef"><span>AnyRef</span></li><li class="in" name="scala.Any"><span>Any</span></li>
                 </ol>
               </div><div id="ancestors">
             <span class="filtertype"></span>
@@ -182,19 +182,6 @@
       </span>
       </h4>
       
-    </li><li name="scala.frp.Stream#sink" visbl="pub" data-isabs="true" fullComment="yes" group="Ungrouped">
-      <a id="sink(handler:A=&gt;Boolean)(implicitobs:scala.frp.Observer):Unit"></a>
-      <a id="sink((Event[A])⇒Boolean)(Observer):Unit"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier">abstract </span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span class="name">sink</span><span class="params">(<span name="handler">handler: (<a href="Event.html" class="extype" name="scala.frp.Event">Event</a>[<span class="extype" name="scala.frp.EventStream.A">A</span>]) ⇒ <span class="extype" name="scala.Boolean">Boolean</span></span>)</span><span class="params">(<span class="implicit">implicit </span><span name="obs">obs: <a href="Observer.html" class="extype" name="scala.frp.Observer">Observer</a></span>)</span><span class="result">: <span class="extype" name="scala.Unit">Unit</span></span>
-      </span>
-      </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="Stream.html" class="extype" name="scala.frp.Stream">Stream</a></dd></dl></div>
     </li><li name="scala.frp.EventStream#stopped" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
       <a id="stopped:Boolean"></a>
       <a id="stopped:Boolean"></a>
@@ -544,6 +531,31 @@
       </span>
       </h4>
       
+    </li><li name="scala.frp.EventStream#sink" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="sink(handler:scala.frp.Event[A]=&gt;Boolean)(implicitobs:scala.frp.Observer):Unit"></a>
+      <a id="sink((Event[A])⇒Boolean)(Observer):Unit"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">sink</span><span class="params">(<span name="handler">handler: (<a href="Event.html" class="extype" name="scala.frp.Event">Event</a>[<span class="extype" name="scala.frp.EventStream.A">A</span>]) ⇒ <span class="extype" name="scala.Boolean">Boolean</span></span>)</span><span class="params">(<span class="implicit">implicit </span><span name="obs">obs: <a href="Observer.html" class="extype" name="scala.frp.Observer">Observer</a></span>)</span><span class="result">: <span class="extype" name="scala.Unit">Unit</span></span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">Add a handler function that acts as a <code>sink</code> for items produced by this
+<code>Source</code>.</p><div class="fullcomment"><div class="comment cmt"><p>Add a handler function that acts as a <code>sink</code> for items produced by this
+<code>Source</code>. The <code>handler</code> is expected to return <code>true</code> as long as it remains
+active. Once the <code>handler</code> function returns <code>false</code> in response to some
+produced item, it will be deactivated and will no longer receive new items.
+There is no guarantee of the order that handlers will be called.
+</p></div><dl class="paramcmts block"><dt class="param">handler</dt><dd class="cmt"><p>The handler function to receive items produced by this <code>Source</code>.
+Once the <code>handler</code> returns <code>false</code> in response to some produced item, it will
+be deactivated and will no longer receive new items.
+</p></dd><dt class="param">obs</dt><dd class="cmt"><p>An implicit <code>Observer</code> which is required in order to properly
+manage references between this <code>Source</code> and any <code>handler</code>s, avoiding
+reference loops.
+</p></dd></dl></div>
     </li><li name="scala.AnyRef#synchronized" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="synchronized[T0](x$1:=&gt;T0):T0"></a>
       <a id="synchronized[T0](⇒T0):T0"></a>
@@ -627,9 +639,7 @@
         </div>
 
         <div id="inheritedMembers">
-        <div class="parent" name="scala.frp.Stream">
-              <h3>Inherited from <a href="Stream.html" class="extype" name="scala.frp.Stream">Stream</a>[<a href="Event.html" class="extype" name="scala.frp.Event">Event</a>[<span class="extype" name="scala.frp.EventStream.A">A</span>]]</h3>
-            </div><div class="parent" name="scala.AnyRef">
+        <div class="parent" name="scala.AnyRef">
               <h3>Inherited from <a href="../package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></h3>
             </div><div class="parent" name="scala.Any">
               <h3>Inherited from <span class="extype" name="scala.Any">Any</span></h3>
