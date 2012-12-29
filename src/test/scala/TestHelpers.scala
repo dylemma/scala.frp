@@ -5,13 +5,13 @@ trait TestHelpers {
 	
 	def accumulateEvents[A](e: EventStream[A])(implicit obs: Observer): ListBuffer[A] = {
 		val lb = new ListBuffer[A]
-		Sink.events(e){ lb += _ }
+		e foreach { lb += _ }
 		lb
 	}
 	
 	class StopCollector(e: EventStream[_])(implicit obs: Observer) {
 		private var gotStop = false
-		Sink.end(e){ gotStop = true }
+		e onEnd { gotStop = true }
 		
 		def apply() = gotStop
 	}

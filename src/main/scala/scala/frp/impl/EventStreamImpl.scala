@@ -8,41 +8,38 @@ import scala.concurrent.duration._
 //todo: create a "DerivedEventStream" that handles the logic for hooking up to parent streams
 // with the *goal* of removing the Observer requirement for all of the combinators.
 
-
-private [frp] 
-class FlatMappedEventStream[A, B]
-(base: EventStream[A], f: A => EventStream[B])(implicit obs: Observer) 
-extends EventSource[B] {
-
-	private val bStreamAtomic = new AtomicReference[CancellableEventStream[B]]
-
-	//when base fires an event, subscribe to the resulting event stream, until base fires another event
-
-	base sink {
+private [frp] class FlatMappedEventStream[A, B]
+(val parent: EventStream[A], f: A => EventStream[B])
+extends EventPipe[A, B] {
+	
+	private val _b = new AtomicReference[EventStream[B]] //initially null
+	
+	private val handler = (event: Event[B]) => event match {
+		case _ if stopped => false
+		case Fire(e) =>
+			fire(e)
+			true
+		case Stop =>
+			stop
+			false
+	}
+	
+	def consume(event: Event[A]) = event match {
 		case Stop =>
 			stop
 			false
 		case Fire(e) =>
-			val bStream = new CancellableEventStream( f(e) )
+			val b = f(e)
 			
 			//cancel the old stream
-			bStreamAtomic getAndSet(bStream) match {
+			_b getAndSet(b) match {
 				case null => //no op
-				case oldStream => 
-					oldStream.cancel
+				case old => old removeHandler handler
 			}
 			
-			bStream sink {
-				case Stop =>
-					false
-				case Fire(x) =>
-					fire(x)
-					true
-			}
-			
+			b addHandler handler
 			true
 	}
-
 }
 
 private [frp] 
@@ -77,10 +74,9 @@ extends EventSource[A] {
 
 private [frp]
 class WithFilterEventStream[A]
-(base: EventStream[A], f: A => Boolean)(implicit obs: Observer) 
-extends EventSource[A] {
-
-	base sink {
+(protected val parent: EventStream[A], f: A => Boolean)
+extends EventPipe[A, A] {
+	protected def consume(item: Event[A]) = item match {
 		case Fire(e) =>
 			if( f(e) ) fire(e)
 			true
@@ -89,35 +85,31 @@ extends EventSource[A] {
 			false
 	}
 	
-	override def withFilter(p: A => Boolean)(implicit obs: Observer): EventStream[A] = {
+	override def withFilter(p: A => Boolean): EventStream[A] = {
 		val mergedFilter = (e: A) => { f(e) && p(e) }
 		new WithFilterEventStream(this, mergedFilter)
 	}
-
 }
 
-private [frp]
-class MappedEventStream[A, B]
-(base: EventStream[A], f: A => B)(implicit obs: Observer) 
-extends EventSource[B] {
-	
-	base sink {
-		case Fire(e) => 
+private [frp] class MappedEventStream[A,B]
+(protected val parent: EventStream[A], f: A => B)
+extends EventPipe[A, B] {
+	protected def consume(item: Event[A]) = item match {
+		case Fire(e) =>
 			fire( f(e) )
 			true
 		case Stop =>
 			stop
 			false
 	}
-	
 }
 
 private [frp]
 class TakeWhileEventStream[A]
-(base: EventStream[A], p: A => Boolean)(implicit obs: Observer) 
-extends EventSource[A] {
+(protected val parent: EventStream[A], p: A => Boolean)
+extends EventPipe[A, A] {
 
-	base sink {
+	protected def consume(event: Event[A]) = event match {
 		case Stop =>
 			stop
 			false
@@ -135,12 +127,12 @@ extends EventSource[A] {
 
 private [frp]
 class TakeCountEventStream[A]
-(base: EventStream[A], count: Int)(implicit obs: Observer) 
-extends EventSource[A] {
+(protected val parent: EventStream[A], count: Int)
+extends EventPipe[A, A] {
 
 	private var numSeen = 0
 
-	base sink {
+	protected def consume(event: Event[A]) = event match {
 		case Stop =>
 			stop
 			false
@@ -160,11 +152,11 @@ extends EventSource[A] {
 
 private [frp]
 class DropWhileEventStream[A]
-(base: EventStream[A], p: A => Boolean)(implicit obs: Observer)
-extends EventSource[A] {
+(protected val parent: EventStream[A], p: A => Boolean)
+extends EventPipe[A, A] {
 	private var dropping = true
 	
-	base sink {
+	protected def consume(event: Event[A]) = event match {
 		case Stop => 
 			stop
 			false
@@ -181,12 +173,12 @@ extends EventSource[A] {
 
 private [frp]
 class DropCountEventStream[A]
-(base: EventStream[A], count: Int)(implicit obs: Observer)
-extends EventSource[A] {
+(protected val parent: EventStream[A], count: Int)
+extends EventPipe[A, A] {
 	
 	private var numSeen = 0
 	
-	base sink {
+	protected def consume(event: Event[A]) = event match {
 		case Stop =>
 			stop
 			false
@@ -198,52 +190,65 @@ extends EventSource[A] {
 	
 }
 
-private [frp]
-class ConcatenatedEventStream[A]
-(left: EventStream[A], right: EventStream[A])(implicit obs: Observer)
-extends EventSource[A] {
+private [frp] class ConcatenatedEventStream[A]
+(protected val parentA: EventStream[A], protected val parentB: EventStream[A])
+extends EventJoin[A, A, A] {
 	
-	left sink {
+	private var advanced = parentA.stopped
+	
+	protected def consumeA(event: Event[A]) = event match {
+		case _ if advanced => false
+		case Fire(e) =>
+			fire(e)
+			true
 		case Stop =>
-			right sink {
-				case Stop =>
-					stop
-					false
-				case Fire(e) =>
-					fire(e)
-					true
-			}
+			advanced = true
+			false
+	}
+	
+	protected def consumeB(event: Event[A]) = event match {
+		case _ if !advanced => true
+		case Fire(e) =>
+			fire(e)
+			true
+		case Stop =>
+			stop
+			false
+	}
+}
+
+/**
+  * @param parentA the 'source' stream
+  * @param parentB the 'end' stream
+  */
+private [frp] class TakeUntilEventStream[A]
+(val parentA: EventStream[A], val parentB: EventStream[_])
+extends EventJoin[A, Any, A] {
+	
+	def consumeA(event: Event[A]) = event match {
+		case _ if stopped => false
+		case Stop =>
+			stop
 			false
 		case Fire(e) =>
 			fire(e)
 			true
 	}
 	
-}
-
-private [frp]
-class TakeUntilEventStream[A]
-(base: EventStream[A], end: EventStream[_])(implicit obs: Observer)
-extends CancellableEventStream[A](base) {
-
-	end sink {
-		case Stop => 
-			false
-		case Fire(_) =>
-			cancel
-			false
+	def consumeB(event: Event[Any]) = {
+		stop
+		false
 	}
-
 }
 
 private [frp]
 class UnionEventStream[A]
-(left: EventStream[A], right: EventStream[A])(implicit obs: Observer)
-extends EventSource[A] {
+(val parentA: EventStream[A], val parentB: EventStream[A])
+extends EventJoin[A, A, A] {
 
 	val stopCounter = new AtomicInteger(0)
 
-	val eventHandler = (e: Event[A]) => e match {
+	private val handle = (e: Event[A]) => e match {
 		case Stop => 
 			val stopCount = stopCounter.incrementAndGet
 			if (stopCount == 2) stop
@@ -253,15 +258,15 @@ extends EventSource[A] {
 			true
 	}
 
-	left sink eventHandler
-	right sink eventHandler
+	def consumeA(event: Event[A]) = handle(event)
+	def consumeB(event: Event[A]) = handle(event)
 
 }
 
 private [frp]
 class DeadlinedEventStream[A]
-(base: EventStream[A], deadline: Deadline)(implicit obs: Observer)
-extends EventSource[A] {
+(val parent: EventStream[A], deadline: Deadline)
+extends EventPipe[A, A] {
 
 	private def stopinate = {
 		println("Stopping " + this)
@@ -270,7 +275,7 @@ extends EventSource[A] {
 
 	TimeBasedFutures.after(deadline, stopinate)
 
-	base sink {
+	def consume(event: Event[A]) = event match {
 		case Stop => 
 			stopinate
 			false

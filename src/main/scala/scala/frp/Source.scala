@@ -3,10 +3,6 @@ package scala.frp
 import collection.parallel.mutable.ParHashSet
 import java.lang.ref.WeakReference
 
-trait Stream[+A] {
-	def sink(handler: A => Boolean)(implicit obs: Observer): Unit 
-}
-
 /** A Source of data. Data can be produced with the `produce` method (which is `protected`), and will be
   * sent to any number of "Sinks". Sinks can be created by specifying a `handler` 
   * function with the `sink` method.
@@ -49,7 +45,15 @@ trait Source[A] extends Stream[A]{
 		 * reference, we ensure that this `Source` won't force the handler to
 		 * stay in memory.
 		 */
+		//refs += new WeakReference(handler)
+		addHandler(handler)
+	}
+	
+	private [frp] def addHandler(handler: A => Boolean): Unit = {
 		refs += new WeakReference(handler)
+	}
+	private [frp] def removeHandler(handler: A => Boolean): Unit = {
+		for( ref <- refs.find(_.get == handler) ) refs -= ref
 	}
 	
 	/** Produce a new item. All `handler` functions will be called with `item` as

@@ -3,24 +3,40 @@ package scala.frp
 import scala.concurrent.duration._
 
 trait EventStream[+A] extends Stream[Event[A]] {
-	def foreach[U](f: A => U)(implicit obs: Observer): Unit = {
-		Sink.events(this) { e => f(e) }
+	def foreach[U](f: A => U)(implicit obs: Observer): Unit = sink {
+		case Fire(e) =>
+			f(e)
+			true
+		case Stop =>
+			false
 	}
-	def stopped: Boolean
+	def onEnd(f: => Unit)(implicit obs: Observer): Unit = sink {
+		case Fire(_) => true
+		case Stop =>
+			f
+			false
+	}
+	def onNext(f: A => Unit)(implicit obs: Observer): Unit = sink {
+		case Fire(e) =>
+			f(e)
+			false
+		case Stop => false
+	}
 	
-	def map[B](f: A => B)(implicit obs: Observer): EventStream[B] 
-	def flatMap[B](f: A => EventStream[B])(implicit obs: Observer): EventStream[B] 
-	def withFilter(p: A => Boolean)(implicit obs: Observer): EventStream[A]
-	def filter(p: A => Boolean)(implicit obs: Observer): EventStream[A]
-	def take(count: Int)(implicit obs: Observer): EventStream[A]
-	def takeWhile(p: A => Boolean)(implicit obs: Observer): EventStream[A]
-	def drop(count: Int)(implicit obs: Observer): EventStream[A] 
-	def dropWhile(p: A => Boolean)(implicit obs: Observer): EventStream[A]
-	def ++[A1 >: A](that: EventStream[A1])(implicit obs: Observer): EventStream[A1]
-	def until(end: EventStream[_])(implicit obs: Observer): EventStream[A]
-	def ||[A1 >: A](that: EventStream[A1])(implicit obs: Observer): EventStream[A1]
-	def within(duration: Duration)(implicit obs: Observer): EventStream[A]
-	def before(deadline: Deadline)(implicit obs: Observer): EventStream[A]
+	def stopped: Boolean
+	def map[B](f: A => B): EventStream[B] 
+	def flatMap[B](f: A => EventStream[B]): EventStream[B] 
+	def withFilter(p: A => Boolean): EventStream[A]
+	def filter(p: A => Boolean): EventStream[A]
+	def take(count: Int): EventStream[A]
+	def takeWhile(p: A => Boolean): EventStream[A]
+	def drop(count: Int): EventStream[A] 
+	def dropWhile(p: A => Boolean): EventStream[A]
+	def ++[A1 >: A](that: EventStream[A1]): EventStream[A1]
+	def until(end: EventStream[_]): EventStream[A]
+	def ||[A1 >: A](that: EventStream[A1]): EventStream[A1]
+	def within(duration: Duration): EventStream[A]
+	def before(deadline: Deadline): EventStream[A]
 	
 	//todo: def next: Future[A]
 	//todo: def grouped(size: Int): EventStream[List[A]]
@@ -29,7 +45,7 @@ trait EventStream[+A] extends Stream[Event[A]] {
 
 object EventStream {
 	val Nil = {
-		val s = new EventSource[Nothing]
+		val s = EventSource[Nothing]
 		s.stop
 		s
 	}

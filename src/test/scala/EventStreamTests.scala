@@ -5,10 +5,10 @@ class EventStreamTests extends FunSuite with TestHelpers {
 
 	implicit object observer extends Observer
 	
-	test("EventStream.flatMap") {
+	test("EventStream.flatMap basic functionality") {
 	
-		val s = new EventSource[Int]
-		val t = new EventSource[Int]
+		val s = EventSource[Int]
+		val t = EventSource[Int]
 		
 		val x = for {
 			i <- s
@@ -29,8 +29,8 @@ class EventStreamTests extends FunSuite with TestHelpers {
 		assert(results.toList == List(2->1, 2->2, 3->4))
 	}
 	
-	test("EventStream.map") {
-		val s = new EventSource[Int]
+	test("EventStream.map basic functionality") {
+		val s = EventSource[Int]
 		
 		val results = accumulateEvents(s.map{_*2})
 		
@@ -41,9 +41,9 @@ class EventStreamTests extends FunSuite with TestHelpers {
 		assert( results.toList == List(2,4,6) )
 	}
 	
-	test("EventStream.withFilter") {
-		val s = new EventSource[Int]
-		val t = new EventSource[Int]
+	test("EventStream.withFilter basic functionality") {
+		val s = EventSource[Int]
+		val t = EventSource[Int]
 		//val results = new ListBuffer[(Int, Int)]
 		val x = for {
 			i <- s if i % 2 == 0
@@ -65,8 +65,8 @@ class EventStreamTests extends FunSuite with TestHelpers {
 		assert( results == List(2->1, 2->2, 4->3, 4->4) )
 	}
 
-	test("EventStream.take") {
-		val s = new EventSource[Int]
+	test("EventStream.take basic functionality") {
+		val s = EventSource[Int]
 		val x = s.take(3)
 		
 		val results = accumulateEvents(x)
@@ -84,8 +84,8 @@ class EventStreamTests extends FunSuite with TestHelpers {
 		assert(results.size == 3)
 	}
 	
-	test("EventStream.takeWhile") {
-		val s = new EventSource[Int]
+	test("EventStream.takeWhile basic functionality") {
+		val s = EventSource[Int]
 		val x = s takeWhile {_ < 4}
 		val results = accumulateEvents(x)
 		val gotEnd = awaitStop(x)
@@ -96,8 +96,8 @@ class EventStreamTests extends FunSuite with TestHelpers {
 		assert( gotEnd() )
 	}
 	
-	test("EventStream.dropWhile") {
-		val s = new EventSource[Int]
+	test("EventStream.dropWhile basic functionality") {
+		val s = EventSource[Int]
 		val x = s dropWhile {_ < 3}
 		val results = accumulateEvents(x)
 		
@@ -110,8 +110,8 @@ class EventStreamTests extends FunSuite with TestHelpers {
 		assert( results.toList == List(3,2,1) )
 	}
 	
-	test("EventStream.drop") {
-		val s = new EventSource[Int]
+	test("EventStream.drop basic functionality") {
+		val s = EventSource[Int]
 		val x = s drop 3
 		val results = accumulateEvents(x)
 		
@@ -120,9 +120,9 @@ class EventStreamTests extends FunSuite with TestHelpers {
 		assert( results.toList == List(4,5) )	
 	}
 	
-	test("EventStream.++") {
-		val s = new EventSource[Int]
-		val t = new EventSource[Int]
+	test("EventStream.++ basic functionality") {
+		val s = EventSource[Int]
+		val t = EventSource[Int]
 		val results = accumulateEvents(s ++ t)
 		
 		s fire 1
@@ -135,12 +135,12 @@ class EventStreamTests extends FunSuite with TestHelpers {
 		assert( results.toList == List(1,3,4,5) )
 	}
 	
-	test("EventStream.++.end") {
-		val s = new EventSource[Int]
-		val t = new EventSource[Int]
+	test("EventStream.++ encounters end when both parents end") {
+		val s = EventSource[Int]
+		val t = EventSource[Int]
 		var gotEnd = false
 		
-		Sink.end(s++t){ gotEnd = true }
+		s++t onEnd { gotEnd = true }
 		
 		s fire 1
 		s.stop
@@ -150,9 +150,9 @@ class EventStreamTests extends FunSuite with TestHelpers {
 		assert( gotEnd )
 	}
 	
-	test("EventStream.until") {
-		val s = new EventSource[Int]
-		val end = new EventSource[String]
+	test("EventStream.until basic functionality") {
+		val s = EventSource[Int]
+		val end = EventSource[String]
 		val results = accumulateEvents(s until end)
 		
 		s fire 1
@@ -165,9 +165,9 @@ class EventStreamTests extends FunSuite with TestHelpers {
 		assert( results.toList == List(1,2,3) )
 	}
 	
-	test("EventStream.||") {
-		val s = new EventSource[Int]
-		val t = new EventSource[Int]
+	test("EventStream.|| basic functionality") {
+		val s = EventSource[Int]
+		val t = EventSource[Int]
 		val results = accumulateEvents(s || t)
 		
 		s fire 1
