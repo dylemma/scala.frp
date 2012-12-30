@@ -20,7 +20,6 @@ class EventStreamTests extends FunSuite with TestHelpers {
 	test("EventStream.withFilter basic functionality") {
 		val s = EventSource[Int]
 		val t = EventSource[Int]
-		//val results = new ListBuffer[(Int, Int)]
 		val x = for {
 			i <- s if i % 2 == 0
 			j <- t
@@ -32,13 +31,41 @@ class EventStreamTests extends FunSuite with TestHelpers {
 		t fire 1 // yield 2 -> 1
 
 		s fire 3
-		t fire 2 // yields 2 -> 2 ?
+		t fire 2 // yields 2 -> 2
 
 		s fire 4
 		t fire 3 // yields 4 -> 3
 		t fire 4 // yields 4 -> 4
 
 		assert(results == List(2 -> 1, 2 -> 2, 4 -> 3, 4 -> 4))
+	}
+
+	test("EventStream.collect basic functionality") {
+		val s = EventSource[Int]
+		val x = s collect {
+			case i if i % 2 == 0 => i / 2
+		}
+		val results = accumulateEvents(x)
+
+		s fire 1
+		s fire 2 // yield 1
+		s fire 3
+		s fire 4 // yield 2
+
+		assert(results == List(1, 2))
+	}
+
+	test("EventStream.foldLeft basic functionality") {
+		val s = EventSource[Int]
+		val x = s.foldLeft(0) { _ + _ } //accumulate a sum
+		val results = accumulateEvents(x)
+
+		s fire 1 // yield 1
+		s fire 2 // yield 3
+		s fire 3 // yield 6
+		s fire 4 // yield 10
+
+		assert(results == List(1, 3, 6, 10))
 	}
 
 	test("EventStream.take basic functionality") {
@@ -154,4 +181,16 @@ class EventStreamTests extends FunSuite with TestHelpers {
 		assert(results.toList == List(1, 2, 3, 4))
 	}
 
+	test("EventStream.either basic functionality") {
+		val s = EventSource[Int]
+		val t = EventSource[String]
+		val results = accumulateEvents(s either t)
+
+		s fire 1
+		t fire "a"
+		t fire "b"
+		s fire 2
+
+		assert(results.toList == List(Left(1), Right("a"), Right("b"), Left(2)))
+	}
 }

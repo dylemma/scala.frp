@@ -9,6 +9,10 @@ private[frp] trait EventSourceImpl[A] { self: EventSource[A] =>
 		new MappedEventStream[A, B](this, f)
 	}
 
+	def collect[B](pf: PartialFunction[A, B]): EventStream[B] = {
+		new CollectedEventStream(this, pf)
+	}
+
 	def flatMap[B](f: A => EventStream[B]): EventStream[B] = {
 		new FlatMappedEventStream(this, f)
 	}
@@ -19,6 +23,10 @@ private[frp] trait EventSourceImpl[A] { self: EventSource[A] =>
 
 	def filter(p: A => Boolean): EventStream[A] = {
 		new WithFilterEventStream(this, p)
+	}
+
+	def foldLeft[B](z: B)(op: (B, A) => B): EventStream[B] = {
+		new FoldLeftEventStream(this, z, op)
 	}
 
 	def take(count: Int): EventStream[A] = {
@@ -47,6 +55,10 @@ private[frp] trait EventSourceImpl[A] { self: EventSource[A] =>
 
 	def ||[A1 >: A](that: EventStream[A1]): EventStream[A1] = {
 		new UnionEventStream(this, that)
+	}
+
+	def either[B](that: EventStream[B]): EventStream[Either[A, B]] = {
+		new EitherEventStream(this, that)
 	}
 
 	def within(duration: Duration): EventStream[A] = duration match {

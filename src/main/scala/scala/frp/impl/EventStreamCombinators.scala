@@ -54,6 +54,22 @@ private[frp] class WithFilterEventStream[A](protected val parent: EventStream[A]
 	}
 }
 
+private[frp] class FoldLeftEventStream[A, B](protected val parent: EventStream[A], init: B, op: (B, A) => B)
+	extends EventPipe[A, B] {
+
+	private var accum = init
+
+	protected def handle(item: Event[A]) = item match {
+		case Stop =>
+			stop
+			false
+		case Fire(e) =>
+			accum = op(accum, e)
+			fire(accum)
+			true
+	}
+}
+
 private[frp] class MappedEventStream[A, B](protected val parent: EventStream[A], f: A => B)
 	extends EventPipe[A, B] {
 
@@ -64,6 +80,19 @@ private[frp] class MappedEventStream[A, B](protected val parent: EventStream[A],
 		case Stop =>
 			stop
 			false
+	}
+}
+
+private[frp] class CollectedEventStream[A, B](protected val parent: EventStream[A], f: PartialFunction[A, B])
+	extends EventPipe[A, B] {
+
+	protected def handle(item: Event[A]) = item match {
+		case Stop =>
+			stop
+			false
+		case Fire(e) =>
+			if (f isDefinedAt e) fire(f(e))
+			true
 	}
 }
 
@@ -168,26 +197,6 @@ private[frp] class ConcatenatedEventStream[A](protected val leftParent: EventStr
 			stop
 			false
 	}
-
-	protected def handleA(event: Event[A]) = event match {
-		case _ if advanced => false
-		case Fire(e) =>
-			fire(e)
-			true
-		case Stop =>
-			advanced = true
-			false
-	}
-
-	protected def handleB(event: Event[A]) = event match {
-		case _ if !advanced => true
-		case Fire(e) =>
-			fire(e)
-			true
-		case Stop =>
-			stop
-			false
-	}
 }
 
 /** @param parentA the 'source' stream
@@ -226,6 +235,22 @@ private[frp] class UnionEventStream[A](val leftParent: EventStream[A], val right
 			true
 	}
 
+}
+
+private[frp] class EitherEventStream[A, B](val leftParent: EventStream[A], val rightParent: EventStream[B])
+	extends EventJoin[A, B, Either[A, B]] {
+
+	def handle(event: Either[Event[A], Event[B]]) = event match {
+		case Left(Stop) | Right(Stop) =>
+			if (parentsStopped) stop
+			false
+		case Left(Fire(x)) =>
+			fire(Left(x))
+			true
+		case Right(Fire(x)) =>
+			fire(Right(x))
+			true
+	}
 }
 
 private[frp] class DeadlinedEventStream[A](val parent: EventStream[A], deadline: Deadline)

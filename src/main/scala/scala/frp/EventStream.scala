@@ -137,6 +137,15 @@ trait EventStream[+A] {
 	  */
 	def map[B](f: A => B): EventStream[B]
 
+	/** Creates a new EventStream by applying a partial function to all events fired
+	  * by this stream on which the function is defined. The resulting stream will stop
+	  * when this stream stops.
+	  *
+	  * @param pf The partial function to apply to events from this stream
+	  * @return A new stream that fires events transformed by `pf`
+	  */
+	def collect[B](pf: PartialFunction[A, B]): EventStream[B]
+
 	/** Creates a new EventStream with the following behavior: for every event
 	  * fired by this stream, a new stream will be created by applying `f` to that
 	  * event; events from the new stream will be fired by the resulting stream until
@@ -160,6 +169,17 @@ trait EventStream[+A] {
 
 	/** Alias for `withFilter` */
 	def filter(p: A => Boolean): EventStream[A]
+
+	/** Creates a new EventStream that updates its state for each new event fired by
+	  * this stream. The state starts at `z` and updates along the lines of
+	  * `state = op(state, event)` for every `event` fired by this stream. Each time
+	  * the state is updated, the new stream fires an event containing the state.
+	  *
+	  * @param z The initial state for the fold
+	  * @param op The update function, of the form `(state, next) => newState`
+	  * @return A new stream that fires events as its state updates according to `op`
+	  */
+	def foldLeft[B](z: B)(op: (B, A) => B): EventStream[B]
 
 	/** Creates a new EventStream that takes the first `count` events from this stream
 	  * and fires them, then stops. The resulting stream will also stop if this stream
@@ -232,6 +252,16 @@ trait EventStream[+A] {
 	  */
 	def ||[A1 >: A](that: EventStream[A1]): EventStream[A1]
 
+	/** Creates a new EventStream that fires all events from this stream as `Left`s, and all
+	  * events from `that` stream as `Right`s. It is essentially the same as a union, but
+	  * appropriate for when `this` and `that` are streams of different types. The resulting
+	  * stream will stop once both parent streams are stopped.
+	  *
+	  * @param that Any EventStream to be joined with this stream in an "Either" Union.
+	  * @return A new stream that fires events from `this` and `that` as `Either`s.
+	  */
+	def either[B](that: EventStream[B]): EventStream[Either[A, B]]
+
 	/** Creates a new EventStream that re-fires events from this stream that happen within
 	  * the given `duration` from the time of creation. The resulting stream will stop
 	  * when this stream stops, or when the `duration` runs out. Time-based expiration will
@@ -256,7 +286,6 @@ trait EventStream[+A] {
 
 	//TODO: def next: Future[A]
 	//TODO: def grouped(size: Int): EventStream[List[A]]
-	//TODO: def either[B](that: EventStream[B]): EventStream[Either[A,B]]
 }
 
 object EventStream {
