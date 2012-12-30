@@ -217,17 +217,17 @@ private[frp] class ConcatenatedEventStream[A](protected val leftParent: EventStr
 	}
 }
 
-/**
- * @param parentA the 'source' stream
- * @param parentB the 'end' stream
- */
+/** @param parentA the 'source' stream
+  * @param parentB the 'end' stream
+  */
 private[frp] class TakeUntilEventStream[A](val leftParent: EventStream[A], val rightParent: EventStream[_])
 	extends EventJoin[A, Any, A] {
 
 	def handle(event: Either[Event[A], Event[Any]]): Boolean = event match {
-		case Right(_) =>
+		case Right(Fire(_)) =>
 			stop
 			false
+		case Right(Stop) => false
 		case Left(_) if stopped => false
 		case Left(Stop) =>
 			stop

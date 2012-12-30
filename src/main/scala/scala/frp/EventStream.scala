@@ -103,16 +103,19 @@ trait EventStream[+A] {
 			false
 	}
 
-	/** Assign a block of code that will run when this stream `stop`s.
+	/** Assign a block of code that will run when this stream `stop`s. If this stream
+	  * is already stopped, the block of code will run immediately.
 	  * @param f A block of code that will run when this stream sends a `Stop` event.
 	  */
-	def onEnd(f: => Unit)(implicit obs: Observer): Unit = sink {
-		//TODO: should it run the `f` if this stream is already stopped?
-		case Fire(_) => true
-		case Stop =>
+	def onEnd(f: => Unit)(implicit obs: Observer): Unit =
+		if (stopped) {
 			f
-			false
-	}
+		} else sink {
+			case Fire(_) => true
+			case Stop =>
+				f
+				false
+		}
 
 	/** Assign a handler for the next event fired by this stream.
 	  * @param f A function that takes in an event data and performs side effects.
@@ -158,31 +161,97 @@ trait EventStream[+A] {
 	/** Alias for `withFilter` */
 	def filter(p: A => Boolean): EventStream[A]
 
-	//TODO: scaladoc
+	/** Creates a new EventStream that takes the first `count` events from this stream
+	  * and fires them, then stops. The resulting stream will also stop if this stream
+	  * stops anytime before it fires `count` new events.
+	  *
+	  * @param count The number of events that the resulting stream will re-fire
+	  * @return A new stream that re-fires the first `count` events from this stream.
+	  */
 	def take(count: Int): EventStream[A]
 
-	//TODO: scaladoc
+	/** Creates a new EventStream that re-fires events from this stream as long as the
+	  * event data satisfies `p`, the filter predicate. The first event `e` that causes
+	  * `p(e)` to be `false` will cause the resulting stream to stop. The new stream will
+	  * also stop if this stream is already stopped, or becomes stopped at any time.
+	  *
+	  * @param p The filter predicate function. Events fired by this stream will be passed
+	  * into `p`. As soon as the result is `false`, the new stream will stop.
+	  * @return A new stream that re-fires events from this stream until the filter
+	  * predicate fails for an event.
+	  */
 	def takeWhile(p: A => Boolean): EventStream[A]
 
-	//TODO: scaladoc
+	/** Creates a new EventStream that ignores the first `count` events fired by this stream,
+	  * then re-fires all events afterward. The resulting stream will stop when this stream does.
+	  *
+	  * @param count The number of events to ignore.
+	  * @return A new stream that fires all events from this stream after having ignored
+	  * `count` of them.
+	  */
 	def drop(count: Int): EventStream[A]
 
-	//TODO: scaladoc
+	/** Creates a new EventStream that will re-fire all events fired by this stream, starting
+	  * as soon as the predicate function `p` returns `true` in response to one of the events.
+	  * All events prior to the first "passed" event will be ignored. The resulting stream
+	  * will stop when this stream stops.
+	  *
+	  * @param p The filter predicate function to evaluate events. Once this function returns
+	  * `true`, all events (including the current one) will be re-fired.
+	  * @return A new stream that ignores events until one of them causes `p` to return `true`.
+	  */
 	def dropWhile(p: A => Boolean): EventStream[A]
 
-	//TODO: scaladoc
+	/** Creates a new EventStream that represents the concatenation of this stream and `that`.
+	  * The resulting stream will re-fire all events from this stream at first. Once this stream
+	  * stops, the new stream will begin re-firing events from `that` stream, up until that one
+	  * stops as well. If both `this` and `that` streams are stopped at the time of creation,
+	  * the resulting stream will also be stopped.
+	  *
+	  * @param that Another EventStream whose events will be re-fired after this stream has stopped.
+	  * @return The concatenation of `this` and `that` event stream.
+	  */
 	def ++[A1 >: A](that: EventStream[A1]): EventStream[A1]
 
-	//TODO: scaladoc
+	/** Creates a new EventStream that will re-fire all events from this stream until the `end`
+	  * stream fires an event. The `end` stream stopping does not count as a fired event in this case.
+	  * The resulting stream will also stop when and if this stream stops.
+	  *
+	  * @param end An EventStream whose first event marks the end of the resulting stream
+	  * @return A new stream that re-fires events from this stream until the first event
+	  * from the `end` stream.
+	  */
 	def until(end: EventStream[_]): EventStream[A]
 
-	//TODO: scaladoc
+	/** Creates a new EventStream that represents the union of `this` and `that` stream.
+	  * All events from both streams will be re-fired in the order that they are encountered.
+	  * The resulting stream will stop once both parent streams are stopped.
+	  *
+	  * @param that Any EventStream, to be joined with this stream in a Union.
+	  * @return The Union of this stream and `that` stream.
+	  */
 	def ||[A1 >: A](that: EventStream[A1]): EventStream[A1]
 
-	//TODO: scaladoc
+	/** Creates a new EventStream that re-fires events from this stream that happen within
+	  * the given `duration` from the time of creation. The resulting stream will stop
+	  * when this stream stops, or when the `duration` runs out. Time-based expiration will
+	  * generally happen on another thread, as it is handled by a `ScheduledExecutorService`.
+	  *
+	  * @param duration The amount of time before the resulting stream stops automatically.
+	  * @return A new stream that represents all events fired by this stream, within the
+	  * given `duration` from the time of creation.
+	  */
 	def within(duration: Duration): EventStream[A]
 
-	//TODO: scaladoc
+	/** Creates a new EventStream that re-fires events from this stream that happen before
+	  * the given `deadline`. The resulting stream will stop automatically when the deadline
+	  * expires, or when this stream stops. Time-based expiration will generally happen on
+	  * another thread, as it is handled by a `ScheduledExecutorService`.
+	  *
+	  * @param `deadline` A timestamp that tells when the resulting stream should stop.
+	  * @param A new stream that represents all events from this stream that happen before
+	  * the `deadline`.
+	  */
 	def before(deadline: Deadline): EventStream[A]
 
 	//TODO: def next: Future[A]
