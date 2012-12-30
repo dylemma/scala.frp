@@ -129,7 +129,7 @@ mapping, and concatenation.</p><p>Below is a working example of EventStream usag
 
         <div id="values" class="values members">
               <h3>Abstract Value Members</h3>
-              <ol><li name="scala.frp.EventStream#++" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
+              <ol><li name="scala.frp.EventStream#++" visbl="pub" data-isabs="true" fullComment="yes" group="Ungrouped">
       <a id="++[A1&gt;:A](that:scala.frp.EventStream[A1]):scala.frp.EventStream[A1]"></a>
       <a id="++[A1&gt;:A](EventStream[A1]):EventStream[A1]"></a>
       <h4 class="signature">
@@ -141,8 +141,14 @@ mapping, and concatenation.</p><p>Below is a working example of EventStream usag
         <span title="gt4s: $plus$plus" class="name">++</span><span class="tparams">[<span name="A1">A1 &gt;: <span class="extype" name="scala.frp.EventStream.A">A</span></span>]</span><span class="params">(<span name="that">that: <a href="" class="extype" name="scala.frp.EventStream">EventStream</a>[<span class="extype" name="scala.frp.EventStream.++.A1">A1</span>]</span>)</span><span class="result">: <a href="" class="extype" name="scala.frp.EventStream">EventStream</a>[<span class="extype" name="scala.frp.EventStream.++.A1">A1</span>]</span>
       </span>
       </h4>
-      
-    </li><li name="scala.frp.EventStream#before" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
+      <p class="shortcomment cmt">Creates a new EventStream that represents the concatenation of this stream and <code>that</code>.</p><div class="fullcomment"><div class="comment cmt"><p>Creates a new EventStream that represents the concatenation of this stream and <code>that</code>.
+The resulting stream will re-fire all events from this stream at first. Once this stream
+stops, the new stream will begin re-firing events from <code>that</code> stream, up until that one
+stops as well. If both <code>this</code> and <code>that</code> streams are stopped at the time of creation,
+the resulting stream will also be stopped.
+</p></div><dl class="paramcmts block"><dt class="param">that</dt><dd class="cmt"><p>Another EventStream whose events will be re-fired after this stream has stopped.</p></dd><dt>returns</dt><dd class="cmt"><p>The concatenation of <code>this</code> and <code>that</code> event stream.
+</p></dd></dl></div>
+    </li><li name="scala.frp.EventStream#before" visbl="pub" data-isabs="true" fullComment="yes" group="Ungrouped">
       <a id="before(deadline:scala.concurrent.duration.Deadline):scala.frp.EventStream[A]"></a>
       <a id="before(Deadline):EventStream[A]"></a>
       <h4 class="signature">
@@ -154,8 +160,31 @@ mapping, and concatenation.</p><p>Below is a working example of EventStream usag
         <span class="name">before</span><span class="params">(<span name="deadline">deadline: <span class="extype" name="scala.concurrent.duration.Deadline">Deadline</span></span>)</span><span class="result">: <a href="" class="extype" name="scala.frp.EventStream">EventStream</a>[<span class="extype" name="scala.frp.EventStream.A">A</span>]</span>
       </span>
       </h4>
-      
-    </li><li name="scala.frp.EventStream#drop" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
+      <p class="shortcomment cmt">Creates a new EventStream that re-fires events from this stream that happen before
+the given <code>deadline</code>.</p><div class="fullcomment"><div class="comment cmt"><p>Creates a new EventStream that re-fires events from this stream that happen before
+the given <code>deadline</code>. The resulting stream will stop automatically when the deadline
+expires, or when this stream stops. Time-based expiration will generally happen on
+another thread, as it is handled by a <code>ScheduledExecutorService</code>.
+</p></div></div>
+    </li><li name="scala.frp.EventStream#collect" visbl="pub" data-isabs="true" fullComment="yes" group="Ungrouped">
+      <a id="collect[B](pf:PartialFunction[A,B]):scala.frp.EventStream[B]"></a>
+      <a id="collect[B](PartialFunction[A,B]):EventStream[B]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">abstract </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">collect</span><span class="tparams">[<span name="B">B</span>]</span><span class="params">(<span name="pf">pf: <span class="extype" name="scala.PartialFunction">PartialFunction</span>[<span class="extype" name="scala.frp.EventStream.A">A</span>, <span class="extype" name="scala.frp.EventStream.collect.B">B</span>]</span>)</span><span class="result">: <a href="" class="extype" name="scala.frp.EventStream">EventStream</a>[<span class="extype" name="scala.frp.EventStream.collect.B">B</span>]</span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">Creates a new EventStream by applying a partial function to all events fired
+by this stream on which the function is defined.</p><div class="fullcomment"><div class="comment cmt"><p>Creates a new EventStream by applying a partial function to all events fired
+by this stream on which the function is defined. The resulting stream will stop
+when this stream stops.
+</p></div><dl class="paramcmts block"><dt class="param">pf</dt><dd class="cmt"><p>The partial function to apply to events from this stream</p></dd><dt>returns</dt><dd class="cmt"><p>A new stream that fires events transformed by <code>pf</code>
+</p></dd></dl></div>
+    </li><li name="scala.frp.EventStream#drop" visbl="pub" data-isabs="true" fullComment="yes" group="Ungrouped">
       <a id="drop(count:Int):scala.frp.EventStream[A]"></a>
       <a id="drop(Int):EventStream[A]"></a>
       <h4 class="signature">
@@ -167,8 +196,13 @@ mapping, and concatenation.</p><p>Below is a working example of EventStream usag
         <span class="name">drop</span><span class="params">(<span name="count">count: <span class="extype" name="scala.Int">Int</span></span>)</span><span class="result">: <a href="" class="extype" name="scala.frp.EventStream">EventStream</a>[<span class="extype" name="scala.frp.EventStream.A">A</span>]</span>
       </span>
       </h4>
-      
-    </li><li name="scala.frp.EventStream#dropWhile" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
+      <p class="shortcomment cmt">Creates a new EventStream that ignores the first <code>count</code> events fired by this stream,
+then re-fires all events afterward.</p><div class="fullcomment"><div class="comment cmt"><p>Creates a new EventStream that ignores the first <code>count</code> events fired by this stream,
+then re-fires all events afterward. The resulting stream will stop when this stream does.
+</p></div><dl class="paramcmts block"><dt class="param">count</dt><dd class="cmt"><p>The number of events to ignore.</p></dd><dt>returns</dt><dd class="cmt"><p>A new stream that fires all events from this stream after having ignored
+<code>count</code> of them.
+</p></dd></dl></div>
+    </li><li name="scala.frp.EventStream#dropWhile" visbl="pub" data-isabs="true" fullComment="yes" group="Ungrouped">
       <a id="dropWhile(p:A=&gt;Boolean):scala.frp.EventStream[A]"></a>
       <a id="dropWhile((A)⇒Boolean):EventStream[A]"></a>
       <h4 class="signature">
@@ -180,7 +214,33 @@ mapping, and concatenation.</p><p>Below is a working example of EventStream usag
         <span class="name">dropWhile</span><span class="params">(<span name="p">p: (<span class="extype" name="scala.frp.EventStream.A">A</span>) ⇒ <span class="extype" name="scala.Boolean">Boolean</span></span>)</span><span class="result">: <a href="" class="extype" name="scala.frp.EventStream">EventStream</a>[<span class="extype" name="scala.frp.EventStream.A">A</span>]</span>
       </span>
       </h4>
-      
+      <p class="shortcomment cmt">Creates a new EventStream that will re-fire all events fired by this stream, starting
+as soon as the predicate function <code>p</code> returns <code>true</code> in response to one of the events.</p><div class="fullcomment"><div class="comment cmt"><p>Creates a new EventStream that will re-fire all events fired by this stream, starting
+as soon as the predicate function <code>p</code> returns <code>true</code> in response to one of the events.
+All events prior to the first &quot;passed&quot; event will be ignored. The resulting stream
+will stop when this stream stops.
+</p></div><dl class="paramcmts block"><dt class="param">p</dt><dd class="cmt"><p>The filter predicate function to evaluate events. Once this function returns
+<code>true</code>, all events (including the current one) will be re-fired.</p></dd><dt>returns</dt><dd class="cmt"><p>A new stream that ignores events until one of them causes <code>p</code> to return <code>true</code>.
+</p></dd></dl></div>
+    </li><li name="scala.frp.EventStream#either" visbl="pub" data-isabs="true" fullComment="yes" group="Ungrouped">
+      <a id="either[B](that:scala.frp.EventStream[B]):scala.frp.EventStream[Either[A,B]]"></a>
+      <a id="either[B](EventStream[B]):EventStream[Either[A,B]]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">abstract </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">either</span><span class="tparams">[<span name="B">B</span>]</span><span class="params">(<span name="that">that: <a href="" class="extype" name="scala.frp.EventStream">EventStream</a>[<span class="extype" name="scala.frp.EventStream.either.B">B</span>]</span>)</span><span class="result">: <a href="" class="extype" name="scala.frp.EventStream">EventStream</a>[<a href="../package.html#Either[+A,+B]=scala.util.Either[A,B]" class="extmbr" name="scala.Either">Either</a>[<span class="extype" name="scala.frp.EventStream.A">A</span>, <span class="extype" name="scala.frp.EventStream.either.B">B</span>]]</span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">Creates a new EventStream that fires all events from this stream as <code>Left</code>s, and all
+events from <code>that</code> stream as <code>Right</code>s.</p><div class="fullcomment"><div class="comment cmt"><p>Creates a new EventStream that fires all events from this stream as <code>Left</code>s, and all
+events from <code>that</code> stream as <code>Right</code>s. It is essentially the same as a union, but
+appropriate for when <code>this</code> and <code>that</code> are streams of different types. The resulting
+stream will stop once both parent streams are stopped.
+</p></div><dl class="paramcmts block"><dt class="param">that</dt><dd class="cmt"><p>Any EventStream to be joined with this stream in an &quot;Either&quot; Union.</p></dd><dt>returns</dt><dd class="cmt"><p>A new stream that fires events from <code>this</code> and <code>that</code> as <code>Either</code>s.
+</p></dd></dl></div>
     </li><li name="scala.frp.EventStream#filter" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
       <a id="filter(p:A=&gt;Boolean):scala.frp.EventStream[A]"></a>
       <a id="filter((A)⇒Boolean):EventStream[A]"></a>
@@ -217,6 +277,25 @@ will stop when this stream stops.
 </p></div><dl class="paramcmts block"><dt class="param">f</dt><dd class="cmt"><p>A function that returns a new EventStream for every event fired by this stream.</p></dd><dt>returns</dt><dd class="cmt"><p>A new EventStream that fires events from the mapped streams, resetting the
 mapped stream every time this stream fires a new event.
 </p></dd></dl></div>
+    </li><li name="scala.frp.EventStream#foldLeft" visbl="pub" data-isabs="true" fullComment="yes" group="Ungrouped">
+      <a id="foldLeft[B](z:B)(op:(B,A)=&gt;B):scala.frp.EventStream[B]"></a>
+      <a id="foldLeft[B](B)((B,A)⇒B):EventStream[B]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">abstract </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">foldLeft</span><span class="tparams">[<span name="B">B</span>]</span><span class="params">(<span name="z">z: <span class="extype" name="scala.frp.EventStream.foldLeft.B">B</span></span>)</span><span class="params">(<span name="op">op: (<span class="extype" name="scala.frp.EventStream.foldLeft.B">B</span>, <span class="extype" name="scala.frp.EventStream.A">A</span>) ⇒ <span class="extype" name="scala.frp.EventStream.foldLeft.B">B</span></span>)</span><span class="result">: <a href="" class="extype" name="scala.frp.EventStream">EventStream</a>[<span class="extype" name="scala.frp.EventStream.foldLeft.B">B</span>]</span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">Creates a new EventStream that updates its state for each new event fired by
+this stream.</p><div class="fullcomment"><div class="comment cmt"><p>Creates a new EventStream that updates its state for each new event fired by
+this stream. The state starts at <code>z</code> and updates along the lines of
+<code>state = op(state, event)</code> for every <code>event</code> fired by this stream. Each time
+the state is updated, the new stream fires an event containing the state.
+</p></div><dl class="paramcmts block"><dt class="param">z</dt><dd class="cmt"><p>The initial state for the fold</p></dd><dt class="param">op</dt><dd class="cmt"><p>The update function, of the form <code>(state, next) =&gt; newState</code></p></dd><dt>returns</dt><dd class="cmt"><p>A new stream that fires events as its state updates according to <code>op</code>
+</p></dd></dl></div>
     </li><li name="scala.frp.EventStream#map" visbl="pub" data-isabs="true" fullComment="yes" group="Ungrouped">
       <a id="map[B](f:A=&gt;B):scala.frp.EventStream[B]"></a>
       <a id="map[B]((A)⇒B):EventStream[B]"></a>
@@ -249,7 +328,7 @@ to <code>f(e)</code>. The mapped stream will stop with this stream stops.
       <p class="shortcomment cmt">Marks whether or not this stream is stopped.</p><div class="fullcomment"><div class="comment cmt"><p>Marks whether or not this stream is stopped. A stopped stream will not
 produce any more events.</p></div><dl class="paramcmts block"><dt>returns</dt><dd class="cmt"><p><code>true</code> if this stream is stopped, <code>false</code> otherwise.
 </p></dd></dl></div>
-    </li><li name="scala.frp.EventStream#take" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
+    </li><li name="scala.frp.EventStream#take" visbl="pub" data-isabs="true" fullComment="yes" group="Ungrouped">
       <a id="take(count:Int):scala.frp.EventStream[A]"></a>
       <a id="take(Int):EventStream[A]"></a>
       <h4 class="signature">
@@ -261,8 +340,13 @@ produce any more events.</p></div><dl class="paramcmts block"><dt>returns</dt><d
         <span class="name">take</span><span class="params">(<span name="count">count: <span class="extype" name="scala.Int">Int</span></span>)</span><span class="result">: <a href="" class="extype" name="scala.frp.EventStream">EventStream</a>[<span class="extype" name="scala.frp.EventStream.A">A</span>]</span>
       </span>
       </h4>
-      
-    </li><li name="scala.frp.EventStream#takeWhile" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
+      <p class="shortcomment cmt">Creates a new EventStream that takes the first <code>count</code> events from this stream
+and fires them, then stops.</p><div class="fullcomment"><div class="comment cmt"><p>Creates a new EventStream that takes the first <code>count</code> events from this stream
+and fires them, then stops. The resulting stream will also stop if this stream
+stops anytime before it fires <code>count</code> new events.
+</p></div><dl class="paramcmts block"><dt class="param">count</dt><dd class="cmt"><p>The number of events that the resulting stream will re-fire</p></dd><dt>returns</dt><dd class="cmt"><p>A new stream that re-fires the first <code>count</code> events from this stream.
+</p></dd></dl></div>
+    </li><li name="scala.frp.EventStream#takeWhile" visbl="pub" data-isabs="true" fullComment="yes" group="Ungrouped">
       <a id="takeWhile(p:A=&gt;Boolean):scala.frp.EventStream[A]"></a>
       <a id="takeWhile((A)⇒Boolean):EventStream[A]"></a>
       <h4 class="signature">
@@ -274,8 +358,16 @@ produce any more events.</p></div><dl class="paramcmts block"><dt>returns</dt><d
         <span class="name">takeWhile</span><span class="params">(<span name="p">p: (<span class="extype" name="scala.frp.EventStream.A">A</span>) ⇒ <span class="extype" name="scala.Boolean">Boolean</span></span>)</span><span class="result">: <a href="" class="extype" name="scala.frp.EventStream">EventStream</a>[<span class="extype" name="scala.frp.EventStream.A">A</span>]</span>
       </span>
       </h4>
-      
-    </li><li name="scala.frp.EventStream#until" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
+      <p class="shortcomment cmt">Creates a new EventStream that re-fires events from this stream as long as the
+event data satisfies <code>p</code>, the filter predicate.</p><div class="fullcomment"><div class="comment cmt"><p>Creates a new EventStream that re-fires events from this stream as long as the
+event data satisfies <code>p</code>, the filter predicate. The first event <code>e</code> that causes
+<code>p(e)</code> to be <code>false</code> will cause the resulting stream to stop. The new stream will
+also stop if this stream is already stopped, or becomes stopped at any time.
+</p></div><dl class="paramcmts block"><dt class="param">p</dt><dd class="cmt"><p>The filter predicate function. Events fired by this stream will be passed
+into <code>p</code>. As soon as the result is <code>false</code>, the new stream will stop.</p></dd><dt>returns</dt><dd class="cmt"><p>A new stream that re-fires events from this stream until the filter
+predicate fails for an event.
+</p></dd></dl></div>
+    </li><li name="scala.frp.EventStream#until" visbl="pub" data-isabs="true" fullComment="yes" group="Ungrouped">
       <a id="until(end:scala.frp.EventStream[_]):scala.frp.EventStream[A]"></a>
       <a id="until(EventStream[_]):EventStream[A]"></a>
       <h4 class="signature">
@@ -287,7 +379,13 @@ produce any more events.</p></div><dl class="paramcmts block"><dt>returns</dt><d
         <span class="name">until</span><span class="params">(<span name="end">end: <a href="" class="extype" name="scala.frp.EventStream">EventStream</a>[_]</span>)</span><span class="result">: <a href="" class="extype" name="scala.frp.EventStream">EventStream</a>[<span class="extype" name="scala.frp.EventStream.A">A</span>]</span>
       </span>
       </h4>
-      
+      <p class="shortcomment cmt">Creates a new EventStream that will re-fire all events from this stream until the <code>end</code>
+stream fires an event.</p><div class="fullcomment"><div class="comment cmt"><p>Creates a new EventStream that will re-fire all events from this stream until the <code>end</code>
+stream fires an event. The <code>end</code> stream stopping does not count as a fired event in this case.
+The resulting stream will also stop when and if this stream stops.
+</p></div><dl class="paramcmts block"><dt class="param">end</dt><dd class="cmt"><p>An EventStream whose first event marks the end of the resulting stream</p></dd><dt>returns</dt><dd class="cmt"><p>A new stream that re-fires events from this stream until the first event
+from the <code>end</code> stream.
+</p></dd></dl></div>
     </li><li name="scala.frp.EventStream#withFilter" visbl="pub" data-isabs="true" fullComment="yes" group="Ungrouped">
       <a id="withFilter(p:A=&gt;Boolean):scala.frp.EventStream[A]"></a>
       <a id="withFilter((A)⇒Boolean):EventStream[A]"></a>
@@ -306,7 +404,7 @@ the filter predicate. The resulting stream will stop when this stream stops.
 </p></div><dl class="paramcmts block"><dt class="param">p</dt><dd class="cmt"><p>The filter predicate. For each event <code>e</code>, fired by this stream, the
 filtered stream will fire <code>e</code> as long as <code>p(e)</code> returns <code>true</code>.</p></dd><dt>returns</dt><dd class="cmt"><p>A filtered version of this stream.
 </p></dd></dl></div>
-    </li><li name="scala.frp.EventStream#within" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
+    </li><li name="scala.frp.EventStream#within" visbl="pub" data-isabs="true" fullComment="yes" group="Ungrouped">
       <a id="within(duration:scala.concurrent.duration.Duration):scala.frp.EventStream[A]"></a>
       <a id="within(Duration):EventStream[A]"></a>
       <h4 class="signature">
@@ -318,8 +416,15 @@ filtered stream will fire <code>e</code> as long as <code>p(e)</code> returns <c
         <span class="name">within</span><span class="params">(<span name="duration">duration: <span class="extype" name="scala.concurrent.duration.Duration">Duration</span></span>)</span><span class="result">: <a href="" class="extype" name="scala.frp.EventStream">EventStream</a>[<span class="extype" name="scala.frp.EventStream.A">A</span>]</span>
       </span>
       </h4>
-      
-    </li><li name="scala.frp.EventStream#||" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
+      <p class="shortcomment cmt">Creates a new EventStream that re-fires events from this stream that happen within
+the given <code>duration</code> from the time of creation.</p><div class="fullcomment"><div class="comment cmt"><p>Creates a new EventStream that re-fires events from this stream that happen within
+the given <code>duration</code> from the time of creation. The resulting stream will stop
+when this stream stops, or when the <code>duration</code> runs out. Time-based expiration will
+generally happen on another thread, as it is handled by a <code>ScheduledExecutorService</code>.
+</p></div><dl class="paramcmts block"><dt class="param">duration</dt><dd class="cmt"><p>The amount of time before the resulting stream stops automatically.</p></dd><dt>returns</dt><dd class="cmt"><p>A new stream that represents all events fired by this stream, within the
+given <code>duration</code> from the time of creation.
+</p></dd></dl></div>
+    </li><li name="scala.frp.EventStream#||" visbl="pub" data-isabs="true" fullComment="yes" group="Ungrouped">
       <a id="||[A1&gt;:A](that:scala.frp.EventStream[A1]):scala.frp.EventStream[A1]"></a>
       <a id="||[A1&gt;:A](EventStream[A1]):EventStream[A1]"></a>
       <h4 class="signature">
@@ -331,7 +436,11 @@ filtered stream will fire <code>e</code> as long as <code>p(e)</code> returns <c
         <span title="gt4s: $bar$bar" class="name">||</span><span class="tparams">[<span name="A1">A1 &gt;: <span class="extype" name="scala.frp.EventStream.A">A</span></span>]</span><span class="params">(<span name="that">that: <a href="" class="extype" name="scala.frp.EventStream">EventStream</a>[<span class="extype" name="scala.frp.EventStream.||.A1">A1</span>]</span>)</span><span class="result">: <a href="" class="extype" name="scala.frp.EventStream">EventStream</a>[<span class="extype" name="scala.frp.EventStream.||.A1">A1</span>]</span>
       </span>
       </h4>
-      
+      <p class="shortcomment cmt">Creates a new EventStream that represents the union of <code>this</code> and <code>that</code> stream.</p><div class="fullcomment"><div class="comment cmt"><p>Creates a new EventStream that represents the union of <code>this</code> and <code>that</code> stream.
+All events from both streams will be re-fired in the order that they are encountered.
+The resulting stream will stop once both parent streams are stopped.
+</p></div><dl class="paramcmts block"><dt class="param">that</dt><dd class="cmt"><p>Any EventStream, to be joined with this stream in a Union.</p></dd><dt>returns</dt><dd class="cmt"><p>The Union of this stream and <code>that</code> stream.
+</p></dd></dl></div>
     </li></ol>
             </div>
 
@@ -577,7 +686,8 @@ filtered stream will fire <code>e</code> as long as <code>p(e)</code> returns <c
         <span class="name">onEnd</span><span class="params">(<span name="f">f: ⇒ <span class="extype" name="scala.Unit">Unit</span></span>)</span><span class="params">(<span class="implicit">implicit </span><span name="obs">obs: <a href="Observer.html" class="extype" name="scala.frp.Observer">Observer</a></span>)</span><span class="result">: <span class="extype" name="scala.Unit">Unit</span></span>
       </span>
       </h4>
-      <p class="shortcomment cmt">Assign a block of code that will run when this stream <code>stop</code>s.</p><div class="fullcomment"><div class="comment cmt"><p>Assign a block of code that will run when this stream <code>stop</code>s.</p></div><dl class="paramcmts block"><dt class="param">f</dt><dd class="cmt"><p>A block of code that will run when this stream sends a <code>Stop</code> event.
+      <p class="shortcomment cmt">Assign a block of code that will run when this stream <code>stop</code>s.</p><div class="fullcomment"><div class="comment cmt"><p>Assign a block of code that will run when this stream <code>stop</code>s. If this stream
+is already stopped, the block of code will run immediately.</p></div><dl class="paramcmts block"><dt class="param">f</dt><dd class="cmt"><p>A block of code that will run when this stream sends a <code>Stop</code> event.
 </p></dd></dl></div>
     </li><li name="scala.frp.EventStream#onNext" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="onNext(f:A=&gt;Unit)(implicitobs:scala.frp.Observer):Unit"></a>

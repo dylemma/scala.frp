@@ -257,6 +257,19 @@ automatically be stopped.
                 <span class="name">@throws</span><span class="args">()</span>
               
         </dd></dl></div>
+    </li><li name="scala.frp.impl.EventSourceImpl#collect" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="collect[B](pf:PartialFunction[A,B]):scala.frp.EventStream[B]"></a>
+      <a id="collect[B](PartialFunction[B,B]):EventStream[B]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">collect</span><span class="tparams">[<span name="B">B</span>]</span><span class="params">(<span name="pf">pf: <span class="extype" name="scala.PartialFunction">PartialFunction</span>[<span class="extype" name="scala.frp.EventPipe.B">B</span>, <span class="extype" name="scala.frp.impl.EventSourceImpl.collect.B">B</span>]</span>)</span><span class="result">: <a href="EventStream.html" class="extype" name="scala.frp.EventStream">EventStream</a>[<span class="extype" name="scala.frp.impl.EventSourceImpl.collect.B">B</span>]</span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>EventSourceImpl</dd></dl></div>
     </li><li name="scala.frp.impl.EventSourceImpl#drop" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="drop(count:Int):scala.frp.EventStream[A]"></a>
       <a id="drop(Int):EventStream[B]"></a>
@@ -280,6 +293,19 @@ automatically be stopped.
       </span>
       <span class="symbol">
         <span class="name">dropWhile</span><span class="params">(<span name="p">p: (<span class="extype" name="scala.frp.EventPipe.B">B</span>) ⇒ <span class="extype" name="scala.Boolean">Boolean</span></span>)</span><span class="result">: <a href="EventStream.html" class="extype" name="scala.frp.EventStream">EventStream</a>[<span class="extype" name="scala.frp.EventPipe.B">B</span>]</span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>EventSourceImpl</dd></dl></div>
+    </li><li name="scala.frp.impl.EventSourceImpl#either" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="either[B](that:scala.frp.EventStream[B]):scala.frp.EventStream[Either[A,B]]"></a>
+      <a id="either[B](EventStream[B]):EventStream[Either[B,B]]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">either</span><span class="tparams">[<span name="B">B</span>]</span><span class="params">(<span name="that">that: <a href="EventStream.html" class="extype" name="scala.frp.EventStream">EventStream</a>[<span class="extype" name="scala.frp.impl.EventSourceImpl.either.B">B</span>]</span>)</span><span class="result">: <a href="EventStream.html" class="extype" name="scala.frp.EventStream">EventStream</a>[<a href="../package.html#Either[+A,+B]=scala.util.Either[A,B]" class="extmbr" name="scala.Either">Either</a>[<span class="extype" name="scala.frp.EventPipe.B">B</span>, <span class="extype" name="scala.frp.impl.EventSourceImpl.either.B">B</span>]]</span>
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>EventSourceImpl</dd></dl></div>
@@ -361,6 +387,19 @@ automatically be stopped.
       </span>
       <span class="symbol">
         <span class="name">flatMap</span><span class="tparams">[<span name="B">B</span>]</span><span class="params">(<span name="f">f: (<span class="extype" name="scala.frp.EventPipe.B">B</span>) ⇒ <a href="EventStream.html" class="extype" name="scala.frp.EventStream">EventStream</a>[<span class="extype" name="scala.frp.impl.EventSourceImpl.flatMap.B">B</span>]</span>)</span><span class="result">: <a href="EventStream.html" class="extype" name="scala.frp.EventStream">EventStream</a>[<span class="extype" name="scala.frp.impl.EventSourceImpl.flatMap.B">B</span>]</span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>EventSourceImpl</dd></dl></div>
+    </li><li name="scala.frp.impl.EventSourceImpl#foldLeft" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="foldLeft[B](z:B)(op:(B,A)=&gt;B):scala.frp.EventStream[B]"></a>
+      <a id="foldLeft[B](B)((B,B)⇒B):EventStream[B]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">foldLeft</span><span class="tparams">[<span name="B">B</span>]</span><span class="params">(<span name="z">z: <span class="extype" name="scala.frp.impl.EventSourceImpl.foldLeft.B">B</span></span>)</span><span class="params">(<span name="op">op: (<span class="extype" name="scala.frp.impl.EventSourceImpl.foldLeft.B">B</span>, <span class="extype" name="scala.frp.EventPipe.B">B</span>) ⇒ <span class="extype" name="scala.frp.impl.EventSourceImpl.foldLeft.B">B</span></span>)</span><span class="result">: <a href="EventStream.html" class="extype" name="scala.frp.EventStream">EventStream</a>[<span class="extype" name="scala.frp.impl.EventSourceImpl.foldLeft.B">B</span>]</span>
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>EventSourceImpl</dd></dl></div>
@@ -481,7 +520,8 @@ automatically be stopped.
         <span class="name">onEnd</span><span class="params">(<span name="f">f: ⇒ <span class="extype" name="scala.Unit">Unit</span></span>)</span><span class="params">(<span class="implicit">implicit </span><span name="obs">obs: <a href="Observer.html" class="extype" name="scala.frp.Observer">Observer</a></span>)</span><span class="result">: <span class="extype" name="scala.Unit">Unit</span></span>
       </span>
       </h4>
-      <p class="shortcomment cmt">Assign a block of code that will run when this stream <code>stop</code>s.</p><div class="fullcomment"><div class="comment cmt"><p>Assign a block of code that will run when this stream <code>stop</code>s.</p></div><dl class="paramcmts block"><dt class="param">f</dt><dd class="cmt"><p>A block of code that will run when this stream sends a <code>Stop</code> event.
+      <p class="shortcomment cmt">Assign a block of code that will run when this stream <code>stop</code>s.</p><div class="fullcomment"><div class="comment cmt"><p>Assign a block of code that will run when this stream <code>stop</code>s. If this stream
+is already stopped, the block of code will run immediately.</p></div><dl class="paramcmts block"><dt class="param">f</dt><dd class="cmt"><p>A block of code that will run when this stream sends a <code>Stop</code> event.
 </p></dd></dl><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="EventStream.html" class="extype" name="scala.frp.EventStream">EventStream</a></dd></dl></div>
     </li><li name="scala.frp.EventStream#onNext" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="onNext(f:A=&gt;Unit)(implicitobs:scala.frp.Observer):Unit"></a>
