@@ -23,7 +23,6 @@ class EventStream_flatMap extends FunSuite with TestHelpers with Observer {
 		s fire 3
 		t fire 4 //yield 3->4
 
-		println("test1 results: " + results.toList)
 		assert(results.toList == List(2 -> 1, 2 -> 2, 3 -> 4))
 	}
 
