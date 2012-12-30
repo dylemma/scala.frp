@@ -44,9 +44,16 @@
       </span>
       </h4>
       
-          <div id="comment" class="fullcommenttop"><div class="toggleContainer block">
+          <div id="comment" class="fullcommenttop"><div class="comment cmt"><p>An EventJoin is a transformer that takes in events of type <code>A</code>
+and <code>B</code> from two parent <a href="EventStream.html" class="extype" name="scala.frp.EventStream">EventStream</a>s and produces any number
+of new events of type <code>C</code> in response.</p><p>To create an EventJoin, implement the three required methods:</p><pre><span class="kw">protected</span> <span class="kw">def</span> leftPparent: EventStream[A]
+<span class="kw">protected</span> <span class="kw">def</span> rightParent: EventStream[B]
+<span class="kw">protected</span> <span class="kw">def</span> handle(event: Either[Event[A], Event[B]]): <span class="std">Boolean</span></pre><p>Generally, <code>handle</code> will call <code>fire</code> and/or <code>stop</code>.
+**Note:** to see the method signatures in this documentation, make
+sure to select &quot;Visibility: All&quot;.
+</p></div><div class="toggleContainer block">
           <span class="toggle">Linear Supertypes</span>
-          <div class="superTypes hiddenContent"><a href="EventSource.html" class="extype" name="scala.frp.EventSource">EventSource</a>[<span class="extype" name="scala.frp.EventJoin.C">C</span>], <span class="extype" name="scala.frp.impl.EventSourceImplMixin">EventSourceImplMixin</span>[<span class="extype" name="scala.frp.EventJoin.C">C</span>], <a href="EventStream.html" class="extype" name="scala.frp.EventStream">EventStream</a>[<span class="extype" name="scala.frp.EventJoin.C">C</span>], <a href="../package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a>, <span class="extype" name="scala.Any">Any</span></div>
+          <div class="superTypes hiddenContent"><a href="EventSource.html" class="extype" name="scala.frp.EventSource">EventSource</a>[<span class="extype" name="scala.frp.EventJoin.C">C</span>], <span class="extype" name="scala.frp.impl.EventSourceImpl">EventSourceImpl</span>[<span class="extype" name="scala.frp.EventJoin.C">C</span>], <a href="EventStream.html" class="extype" name="scala.frp.EventStream">EventStream</a>[<span class="extype" name="scala.frp.EventJoin.C">C</span>], <a href="../package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a>, <span class="extype" name="scala.Any">Any</span></div>
         </div></div>
         
 
@@ -64,7 +71,7 @@
                 <span class="filtertype">Inherited<br />
                 </span>
                 <ol id="linearization">
-                  <li class="in" name="scala.frp.EventJoin"><span>EventJoin</span></li><li class="in" name="scala.frp.EventSource"><span>EventSource</span></li><li class="in" name="scala.frp.impl.EventSourceImplMixin"><span>EventSourceImplMixin</span></li><li class="in" name="scala.frp.EventStream"><span>EventStream</span></li><li class="in" name="scala.AnyRef"><span>AnyRef</span></li><li class="in" name="scala.Any"><span>Any</span></li>
+                  <li class="in" name="scala.frp.EventJoin"><span>EventJoin</span></li><li class="in" name="scala.frp.EventSource"><span>EventSource</span></li><li class="in" name="scala.frp.impl.EventSourceImpl"><span>EventSourceImpl</span></li><li class="in" name="scala.frp.EventStream"><span>EventStream</span></li><li class="in" name="scala.AnyRef"><span>AnyRef</span></li><li class="in" name="scala.Any"><span>Any</span></li>
                 </ol>
               </div><div id="ancestors">
             <span class="filtertype"></span>
@@ -100,7 +107,19 @@
         <span class="name">handle</span><span class="params">(<span name="event">event: <a href="../package.html#Either[+A,+B]=scala.util.Either[A,B]" class="extmbr" name="scala.Either">Either</a>[<a href="Event.html" class="extype" name="scala.frp.Event">Event</a>[<span class="extype" name="scala.frp.EventJoin.A">A</span>], <a href="Event.html" class="extype" name="scala.frp.Event">Event</a>[<span class="extype" name="scala.frp.EventJoin.B">B</span>]]</span>)</span><span class="result">: <span class="extype" name="scala.Boolean">Boolean</span></span>
       </span>
       </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>protected </dd></dl></div>
+      <p class="shortcomment cmt">The method that reacts to events from the two parent streams.</p><div class="fullcomment"><div class="comment cmt"><p>The method that reacts to events from the two parent streams.
+Generally, the body of this method will include calls to <code>fire</code>
+or <code>stop</code>, depending on the received <code>event</code>.</p><p>**Note:** if both parents are <code>stopped</code>, this method will be
+ignored, and this EventJoin will automatically become stopped
+as well.
+</p></div><dl class="paramcmts block"><dt class="param">event</dt><dd class="cmt"><p>An event sent from one of the two parent streams.
+Events from the <code>leftParent</code> will be wrapped in a <code>Left</code>, while
+events from the <code>rightParent</code> will be wrapped in a <code>Right</code>.
+</p></dd><dt>returns</dt><dd class="cmt"><p>Whether or not to keep the <code>handle</code> method attached to
+the parent stream that sent the <code>event</code>. Returning <code>true</code> will
+maintain the attachment. Returning <code>false</code> will cause the
+corresponding parent to detach the <code>handle</code>.
+</p></dd></dl><dl class="attributes block"> <dt>Attributes</dt><dd>protected </dd></dl></div>
     </li><li name="scala.frp.EventJoin#leftParent" visbl="prt" data-isabs="true" fullComment="yes" group="Ungrouped">
       <a id="leftParent:scala.frp.EventStream[A]"></a>
       <a id="leftParent:EventStream[A]"></a>
@@ -113,7 +132,10 @@
         <span class="name">leftParent</span><span class="result">: <a href="EventStream.html" class="extype" name="scala.frp.EventStream">EventStream</a>[<span class="extype" name="scala.frp.EventJoin.A">A</span>]</span>
       </span>
       </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>protected </dd></dl></div>
+      <p class="shortcomment cmt">The &quot;left&quot; parent EventStream.</p><div class="fullcomment"><div class="comment cmt"><p>The &quot;left&quot; parent EventStream. Events from this stream
+will be passed into the <code>handle</code> method, wrapped in a
+<code>scala.util.Left</code>.
+</p></div><dl class="attributes block"> <dt>Attributes</dt><dd>protected </dd></dl></div>
     </li><li name="scala.frp.EventJoin#rightParent" visbl="prt" data-isabs="true" fullComment="yes" group="Ungrouped">
       <a id="rightParent:scala.frp.EventStream[B]"></a>
       <a id="rightParent:EventStream[B]"></a>
@@ -126,7 +148,10 @@
         <span class="name">rightParent</span><span class="result">: <a href="EventStream.html" class="extype" name="scala.frp.EventStream">EventStream</a>[<span class="extype" name="scala.frp.EventJoin.B">B</span>]</span>
       </span>
       </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>protected </dd></dl></div>
+      <p class="shortcomment cmt">The &quot;right&quot; parent EventStream.</p><div class="fullcomment"><div class="comment cmt"><p>The &quot;right&quot; parent EventStream. Events from this stream
+will be passed into the <code>handle</code> method, wrapped in a
+<code>scala.util.Right</code>.
+</p></div><dl class="attributes block"> <dt>Attributes</dt><dd>protected </dd></dl></div>
     </li></ol>
             </div>
 
@@ -171,7 +196,7 @@
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
-    </li><li name="scala.frp.impl.EventSourceImplMixin#++" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+    </li><li name="scala.frp.impl.EventSourceImpl#++" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="++[A1&gt;:A](that:scala.frp.EventStream[A1]):scala.frp.EventStream[A1]"></a>
       <a id="++[A1&gt;:C](EventStream[A1]):EventStream[A1]"></a>
       <h4 class="signature">
@@ -180,10 +205,10 @@
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span title="gt4s: $plus$plus" class="name">++</span><span class="tparams">[<span name="A1">A1 &gt;: <span class="extype" name="scala.frp.EventJoin.C">C</span></span>]</span><span class="params">(<span name="that">that: <a href="EventStream.html" class="extype" name="scala.frp.EventStream">EventStream</a>[<span class="extype" name="scala.frp.impl.EventSourceImplMixin.++.A1">A1</span>]</span>)</span><span class="result">: <a href="EventStream.html" class="extype" name="scala.frp.EventStream">EventStream</a>[<span class="extype" name="scala.frp.impl.EventSourceImplMixin.++.A1">A1</span>]</span>
+        <span title="gt4s: $plus$plus" class="name">++</span><span class="tparams">[<span name="A1">A1 &gt;: <span class="extype" name="scala.frp.EventJoin.C">C</span></span>]</span><span class="params">(<span name="that">that: <a href="EventStream.html" class="extype" name="scala.frp.EventStream">EventStream</a>[<span class="extype" name="scala.frp.impl.EventSourceImpl.++.A1">A1</span>]</span>)</span><span class="result">: <a href="EventStream.html" class="extype" name="scala.frp.EventStream">EventStream</a>[<span class="extype" name="scala.frp.impl.EventSourceImpl.++.A1">A1</span>]</span>
       </span>
       </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>EventSourceImplMixin</dd></dl></div>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>EventSourceImpl</dd></dl></div>
     </li><li name="scala.AnyRef#==" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="==(x$1:AnyRef):Boolean"></a>
       <a id="==(AnyRef):Boolean"></a>
@@ -223,7 +248,7 @@
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Any</dd></dl></div>
-    </li><li name="scala.frp.impl.EventSourceImplMixin#before" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+    </li><li name="scala.frp.impl.EventSourceImpl#before" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="before(deadline:scala.concurrent.duration.Deadline):scala.frp.EventStream[A]"></a>
       <a id="before(Deadline):EventStream[C]"></a>
       <h4 class="signature">
@@ -235,7 +260,7 @@
         <span class="name">before</span><span class="params">(<span name="deadline">deadline: <span class="extype" name="scala.concurrent.duration.Deadline">Deadline</span></span>)</span><span class="result">: <a href="EventStream.html" class="extype" name="scala.frp.EventStream">EventStream</a>[<span class="extype" name="scala.frp.EventJoin.C">C</span>]</span>
       </span>
       </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>EventSourceImplMixin</dd></dl></div>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>EventSourceImpl</dd></dl></div>
     </li><li name="scala.AnyRef#clone" visbl="prt" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="clone():Object"></a>
       <a id="clone():AnyRef"></a>
@@ -252,7 +277,7 @@
                 <span class="name">@throws</span><span class="args">()</span>
               
         </dd></dl></div>
-    </li><li name="scala.frp.impl.EventSourceImplMixin#drop" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+    </li><li name="scala.frp.impl.EventSourceImpl#drop" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="drop(count:Int):scala.frp.EventStream[A]"></a>
       <a id="drop(Int):EventStream[C]"></a>
       <h4 class="signature">
@@ -264,8 +289,8 @@
         <span class="name">drop</span><span class="params">(<span name="count">count: <span class="extype" name="scala.Int">Int</span></span>)</span><span class="result">: <a href="EventStream.html" class="extype" name="scala.frp.EventStream">EventStream</a>[<span class="extype" name="scala.frp.EventJoin.C">C</span>]</span>
       </span>
       </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>EventSourceImplMixin</dd></dl></div>
-    </li><li name="scala.frp.impl.EventSourceImplMixin#dropWhile" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>EventSourceImpl</dd></dl></div>
+    </li><li name="scala.frp.impl.EventSourceImpl#dropWhile" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="dropWhile(p:A=&gt;Boolean):scala.frp.EventStream[A]"></a>
       <a id="dropWhile((C)⇒Boolean):EventStream[C]"></a>
       <h4 class="signature">
@@ -277,7 +302,7 @@
         <span class="name">dropWhile</span><span class="params">(<span name="p">p: (<span class="extype" name="scala.frp.EventJoin.C">C</span>) ⇒ <span class="extype" name="scala.Boolean">Boolean</span></span>)</span><span class="result">: <a href="EventStream.html" class="extype" name="scala.frp.EventStream">EventStream</a>[<span class="extype" name="scala.frp.EventJoin.C">C</span>]</span>
       </span>
       </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>EventSourceImplMixin</dd></dl></div>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>EventSourceImpl</dd></dl></div>
     </li><li name="scala.AnyRef#eq" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="eq(x$1:AnyRef):Boolean"></a>
       <a id="eq(AnyRef):Boolean"></a>
@@ -304,7 +329,7 @@
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
-    </li><li name="scala.frp.impl.EventSourceImplMixin#filter" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+    </li><li name="scala.frp.impl.EventSourceImpl#filter" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="filter(p:A=&gt;Boolean):scala.frp.EventStream[A]"></a>
       <a id="filter((C)⇒Boolean):EventStream[C]"></a>
       <h4 class="signature">
@@ -316,7 +341,7 @@
         <span class="name">filter</span><span class="params">(<span name="p">p: (<span class="extype" name="scala.frp.EventJoin.C">C</span>) ⇒ <span class="extype" name="scala.Boolean">Boolean</span></span>)</span><span class="result">: <a href="EventStream.html" class="extype" name="scala.frp.EventStream">EventStream</a>[<span class="extype" name="scala.frp.EventJoin.C">C</span>]</span>
       </span>
       </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>EventSourceImplMixin</dd></dl></div>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>EventSourceImpl</dd></dl></div>
     </li><li name="scala.AnyRef#finalize" visbl="prt" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="finalize():Unit"></a>
       <a id="finalize():Unit"></a>
@@ -346,7 +371,7 @@
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="EventSource.html" class="extype" name="scala.frp.EventSource">EventSource</a></dd></dl></div>
-    </li><li name="scala.frp.impl.EventSourceImplMixin#flatMap" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+    </li><li name="scala.frp.impl.EventSourceImpl#flatMap" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="flatMap[B](f:A=&gt;scala.frp.EventStream[B]):scala.frp.EventStream[B]"></a>
       <a id="flatMap[B]((C)⇒EventStream[B]):EventStream[B]"></a>
       <h4 class="signature">
@@ -355,10 +380,10 @@
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">flatMap</span><span class="tparams">[<span name="B">B</span>]</span><span class="params">(<span name="f">f: (<span class="extype" name="scala.frp.EventJoin.C">C</span>) ⇒ <a href="EventStream.html" class="extype" name="scala.frp.EventStream">EventStream</a>[<span class="extype" name="scala.frp.impl.EventSourceImplMixin.flatMap.B">B</span>]</span>)</span><span class="result">: <a href="EventStream.html" class="extype" name="scala.frp.EventStream">EventStream</a>[<span class="extype" name="scala.frp.impl.EventSourceImplMixin.flatMap.B">B</span>]</span>
+        <span class="name">flatMap</span><span class="tparams">[<span name="B">B</span>]</span><span class="params">(<span name="f">f: (<span class="extype" name="scala.frp.EventJoin.C">C</span>) ⇒ <a href="EventStream.html" class="extype" name="scala.frp.EventStream">EventStream</a>[<span class="extype" name="scala.frp.impl.EventSourceImpl.flatMap.B">B</span>]</span>)</span><span class="result">: <a href="EventStream.html" class="extype" name="scala.frp.EventStream">EventStream</a>[<span class="extype" name="scala.frp.impl.EventSourceImpl.flatMap.B">B</span>]</span>
       </span>
       </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>EventSourceImplMixin</dd></dl></div>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>EventSourceImpl</dd></dl></div>
     </li><li name="scala.frp.EventStream#foreach" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="foreach[U](f:A=&gt;U)(implicitobs:scala.frp.Observer):Unit"></a>
       <a id="foreach[U]((C)⇒U)(Observer):Unit"></a>
@@ -371,7 +396,8 @@
         <span class="name">foreach</span><span class="tparams">[<span name="U">U</span>]</span><span class="params">(<span name="f">f: (<span class="extype" name="scala.frp.EventJoin.C">C</span>) ⇒ <span class="extype" name="scala.frp.EventStream.foreach.U">U</span></span>)</span><span class="params">(<span class="implicit">implicit </span><span name="obs">obs: <a href="Observer.html" class="extype" name="scala.frp.Observer">Observer</a></span>)</span><span class="result">: <span class="extype" name="scala.Unit">Unit</span></span>
       </span>
       </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="EventStream.html" class="extype" name="scala.frp.EventStream">EventStream</a></dd></dl></div>
+      <p class="shortcomment cmt">Attach an event handler for data fired by this stream.</p><div class="fullcomment"><div class="comment cmt"><p>Attach an event handler for data fired by this stream.</p></div><dl class="paramcmts block"><dt class="param">f</dt><dd class="cmt"><p>A function that takes in an event data and performs side effects.
+</p></dd></dl><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="EventStream.html" class="extype" name="scala.frp.EventStream">EventStream</a></dd></dl></div>
     </li><li name="scala.AnyRef#getClass" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="getClass():Class[_]"></a>
       <a id="getClass():Class[_]"></a>
@@ -411,7 +437,7 @@
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Any</dd></dl></div>
-    </li><li name="scala.frp.impl.EventSourceImplMixin#map" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+    </li><li name="scala.frp.impl.EventSourceImpl#map" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="map[B](f:A=&gt;B):scala.frp.EventStream[B]"></a>
       <a id="map[B]((C)⇒B):EventStream[B]"></a>
       <h4 class="signature">
@@ -420,10 +446,10 @@
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">map</span><span class="tparams">[<span name="B">B</span>]</span><span class="params">(<span name="f">f: (<span class="extype" name="scala.frp.EventJoin.C">C</span>) ⇒ <span class="extype" name="scala.frp.impl.EventSourceImplMixin.map.B">B</span></span>)</span><span class="result">: <a href="EventStream.html" class="extype" name="scala.frp.EventStream">EventStream</a>[<span class="extype" name="scala.frp.impl.EventSourceImplMixin.map.B">B</span>]</span>
+        <span class="name">map</span><span class="tparams">[<span name="B">B</span>]</span><span class="params">(<span name="f">f: (<span class="extype" name="scala.frp.EventJoin.C">C</span>) ⇒ <span class="extype" name="scala.frp.impl.EventSourceImpl.map.B">B</span></span>)</span><span class="result">: <a href="EventStream.html" class="extype" name="scala.frp.EventStream">EventStream</a>[<span class="extype" name="scala.frp.impl.EventSourceImpl.map.B">B</span>]</span>
       </span>
       </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>EventSourceImplMixin</dd></dl></div>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>EventSourceImpl</dd></dl></div>
     </li><li name="scala.AnyRef#ne" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="ne(x$1:AnyRef):Boolean"></a>
       <a id="ne(AnyRef):Boolean"></a>
@@ -475,7 +501,8 @@
         <span class="name">onEnd</span><span class="params">(<span name="f">f: ⇒ <span class="extype" name="scala.Unit">Unit</span></span>)</span><span class="params">(<span class="implicit">implicit </span><span name="obs">obs: <a href="Observer.html" class="extype" name="scala.frp.Observer">Observer</a></span>)</span><span class="result">: <span class="extype" name="scala.Unit">Unit</span></span>
       </span>
       </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="EventStream.html" class="extype" name="scala.frp.EventStream">EventStream</a></dd></dl></div>
+      <p class="shortcomment cmt">Assign a block of code that will run when this stream <code>stop</code>s.</p><div class="fullcomment"><div class="comment cmt"><p>Assign a block of code that will run when this stream <code>stop</code>s.</p></div><dl class="paramcmts block"><dt class="param">f</dt><dd class="cmt"><p>A block of code that will run when this stream sends a <code>Stop</code> event.
+</p></dd></dl><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="EventStream.html" class="extype" name="scala.frp.EventStream">EventStream</a></dd></dl></div>
     </li><li name="scala.frp.EventStream#onNext" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="onNext(f:A=&gt;Unit)(implicitobs:scala.frp.Observer):Unit"></a>
       <a id="onNext((C)⇒Unit)(Observer):Unit"></a>
@@ -488,8 +515,10 @@
         <span class="name">onNext</span><span class="params">(<span name="f">f: (<span class="extype" name="scala.frp.EventJoin.C">C</span>) ⇒ <span class="extype" name="scala.Unit">Unit</span></span>)</span><span class="params">(<span class="implicit">implicit </span><span name="obs">obs: <a href="Observer.html" class="extype" name="scala.frp.Observer">Observer</a></span>)</span><span class="result">: <span class="extype" name="scala.Unit">Unit</span></span>
       </span>
       </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="EventStream.html" class="extype" name="scala.frp.EventStream">EventStream</a></dd></dl></div>
-    </li><li name="scala.frp.EventJoin#parentsStopped" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <p class="shortcomment cmt">Assign a handler for the next event fired by this stream.</p><div class="fullcomment"><div class="comment cmt"><p>Assign a handler for the next event fired by this stream.</p></div><dl class="paramcmts block"><dt class="param">f</dt><dd class="cmt"><p>A function that takes in an event data and performs side effects.
+It can be assumed that <code>f</code> will be run at most once.
+</p></dd></dl><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="EventStream.html" class="extype" name="scala.frp.EventStream">EventStream</a></dd></dl></div>
+    </li><li name="scala.frp.EventJoin#parentsStopped" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="parentsStopped:Boolean"></a>
       <a id="parentsStopped:Boolean"></a>
       <h4 class="signature">
@@ -501,7 +530,9 @@
         <span class="name">parentsStopped</span><span class="result">: <span class="extype" name="scala.Boolean">Boolean</span></span>
       </span>
       </h4>
-      
+      <p class="shortcomment cmt">Checks whether both parent streams are stopped.</p><div class="fullcomment"><div class="comment cmt"><p>Checks whether both parent streams are stopped.</p></div><dl class="paramcmts block"><dt>returns</dt><dd class="cmt"><p><code>true</code> if and only if both the <code>leftParent</code> and
+<code>rightParent</code> streams are <code>stopped</code>.
+</p></dd></dl></div>
     </li><li name="scala.frp.EventSource#produce" visbl="prt" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="produce(item:scala.frp.Event[A]):Unit"></a>
       <a id="produce(Event[C]):Unit"></a>
@@ -586,7 +617,9 @@ reference loops.
         <span class="name">stopped</span><span class="result">: <span class="extype" name="scala.Boolean">Boolean</span></span>
       </span>
       </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="EventSource.html" class="extype" name="scala.frp.EventSource">EventSource</a> → <a href="EventStream.html" class="extype" name="scala.frp.EventStream">EventStream</a></dd></dl></div>
+      <p class="shortcomment cmt">Marks whether or not this stream is stopped.</p><div class="fullcomment"><div class="comment cmt"><p>Marks whether or not this stream is stopped. A stopped stream will not
+produce any more events.</p></div><dl class="paramcmts block"><dt>returns</dt><dd class="cmt"><p><code>true</code> if this stream is stopped, <code>false</code> otherwise.
+</p></dd></dl><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="EventSource.html" class="extype" name="scala.frp.EventSource">EventSource</a> → <a href="EventStream.html" class="extype" name="scala.frp.EventStream">EventStream</a></dd></dl></div>
     </li><li name="scala.AnyRef#synchronized" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="synchronized[T0](x$1:=&gt;T0):T0"></a>
       <a id="synchronized[T0](⇒T0):T0"></a>
@@ -600,7 +633,7 @@ reference loops.
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
-    </li><li name="scala.frp.impl.EventSourceImplMixin#take" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+    </li><li name="scala.frp.impl.EventSourceImpl#take" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="take(count:Int):scala.frp.EventStream[A]"></a>
       <a id="take(Int):EventStream[C]"></a>
       <h4 class="signature">
@@ -612,8 +645,8 @@ reference loops.
         <span class="name">take</span><span class="params">(<span name="count">count: <span class="extype" name="scala.Int">Int</span></span>)</span><span class="result">: <a href="EventStream.html" class="extype" name="scala.frp.EventStream">EventStream</a>[<span class="extype" name="scala.frp.EventJoin.C">C</span>]</span>
       </span>
       </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>EventSourceImplMixin</dd></dl></div>
-    </li><li name="scala.frp.impl.EventSourceImplMixin#takeWhile" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>EventSourceImpl</dd></dl></div>
+    </li><li name="scala.frp.impl.EventSourceImpl#takeWhile" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="takeWhile(p:A=&gt;Boolean):scala.frp.EventStream[A]"></a>
       <a id="takeWhile((C)⇒Boolean):EventStream[C]"></a>
       <h4 class="signature">
@@ -625,7 +658,7 @@ reference loops.
         <span class="name">takeWhile</span><span class="params">(<span name="p">p: (<span class="extype" name="scala.frp.EventJoin.C">C</span>) ⇒ <span class="extype" name="scala.Boolean">Boolean</span></span>)</span><span class="result">: <a href="EventStream.html" class="extype" name="scala.frp.EventStream">EventStream</a>[<span class="extype" name="scala.frp.EventJoin.C">C</span>]</span>
       </span>
       </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>EventSourceImplMixin</dd></dl></div>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>EventSourceImpl</dd></dl></div>
     </li><li name="scala.AnyRef#toString" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="toString():String"></a>
       <a id="toString():String"></a>
@@ -639,7 +672,7 @@ reference loops.
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
-    </li><li name="scala.frp.impl.EventSourceImplMixin#until" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+    </li><li name="scala.frp.impl.EventSourceImpl#until" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="until(end:scala.frp.EventStream[_]):scala.frp.EventStream[A]"></a>
       <a id="until(EventStream[_]):EventStream[C]"></a>
       <h4 class="signature">
@@ -651,7 +684,7 @@ reference loops.
         <span class="name">until</span><span class="params">(<span name="end">end: <a href="EventStream.html" class="extype" name="scala.frp.EventStream">EventStream</a>[_]</span>)</span><span class="result">: <a href="EventStream.html" class="extype" name="scala.frp.EventStream">EventStream</a>[<span class="extype" name="scala.frp.EventJoin.C">C</span>]</span>
       </span>
       </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>EventSourceImplMixin</dd></dl></div>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>EventSourceImpl</dd></dl></div>
     </li><li name="scala.AnyRef#wait" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="wait():Unit"></a>
       <a id="wait():Unit"></a>
@@ -700,7 +733,7 @@ reference loops.
                 <span class="name">@throws</span><span class="args">()</span>
               
         </dd></dl></div>
-    </li><li name="scala.frp.impl.EventSourceImplMixin#withFilter" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+    </li><li name="scala.frp.impl.EventSourceImpl#withFilter" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="withFilter(p:A=&gt;Boolean):scala.frp.EventStream[A]"></a>
       <a id="withFilter((C)⇒Boolean):EventStream[C]"></a>
       <h4 class="signature">
@@ -712,8 +745,8 @@ reference loops.
         <span class="name">withFilter</span><span class="params">(<span name="p">p: (<span class="extype" name="scala.frp.EventJoin.C">C</span>) ⇒ <span class="extype" name="scala.Boolean">Boolean</span></span>)</span><span class="result">: <a href="EventStream.html" class="extype" name="scala.frp.EventStream">EventStream</a>[<span class="extype" name="scala.frp.EventJoin.C">C</span>]</span>
       </span>
       </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>EventSourceImplMixin</dd></dl></div>
-    </li><li name="scala.frp.impl.EventSourceImplMixin#within" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>EventSourceImpl</dd></dl></div>
+    </li><li name="scala.frp.impl.EventSourceImpl#within" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="within(duration:scala.concurrent.duration.Duration):scala.frp.EventStream[A]"></a>
       <a id="within(Duration):EventStream[C]"></a>
       <h4 class="signature">
@@ -725,8 +758,8 @@ reference loops.
         <span class="name">within</span><span class="params">(<span name="duration">duration: <span class="extype" name="scala.concurrent.duration.Duration">Duration</span></span>)</span><span class="result">: <a href="EventStream.html" class="extype" name="scala.frp.EventStream">EventStream</a>[<span class="extype" name="scala.frp.EventJoin.C">C</span>]</span>
       </span>
       </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>EventSourceImplMixin</dd></dl></div>
-    </li><li name="scala.frp.impl.EventSourceImplMixin#||" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>EventSourceImpl</dd></dl></div>
+    </li><li name="scala.frp.impl.EventSourceImpl#||" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="||[A1&gt;:A](that:scala.frp.EventStream[A1]):scala.frp.EventStream[A1]"></a>
       <a id="||[A1&gt;:C](EventStream[A1]):EventStream[A1]"></a>
       <h4 class="signature">
@@ -735,10 +768,10 @@ reference loops.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span title="gt4s: $bar$bar" class="name">||</span><span class="tparams">[<span name="A1">A1 &gt;: <span class="extype" name="scala.frp.EventJoin.C">C</span></span>]</span><span class="params">(<span name="that">that: <a href="EventStream.html" class="extype" name="scala.frp.EventStream">EventStream</a>[<span class="extype" name="scala.frp.impl.EventSourceImplMixin.||.A1">A1</span>]</span>)</span><span class="result">: <a href="EventStream.html" class="extype" name="scala.frp.EventStream">EventStream</a>[<span class="extype" name="scala.frp.impl.EventSourceImplMixin.||.A1">A1</span>]</span>
+        <span title="gt4s: $bar$bar" class="name">||</span><span class="tparams">[<span name="A1">A1 &gt;: <span class="extype" name="scala.frp.EventJoin.C">C</span></span>]</span><span class="params">(<span name="that">that: <a href="EventStream.html" class="extype" name="scala.frp.EventStream">EventStream</a>[<span class="extype" name="scala.frp.impl.EventSourceImpl.||.A1">A1</span>]</span>)</span><span class="result">: <a href="EventStream.html" class="extype" name="scala.frp.EventStream">EventStream</a>[<span class="extype" name="scala.frp.impl.EventSourceImpl.||.A1">A1</span>]</span>
       </span>
       </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>EventSourceImplMixin</dd></dl></div>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>EventSourceImpl</dd></dl></div>
     </li></ol>
             </div>
 
@@ -750,8 +783,8 @@ reference loops.
         <div id="inheritedMembers">
         <div class="parent" name="scala.frp.EventSource">
               <h3>Inherited from <a href="EventSource.html" class="extype" name="scala.frp.EventSource">EventSource</a>[<span class="extype" name="scala.frp.EventJoin.C">C</span>]</h3>
-            </div><div class="parent" name="scala.frp.impl.EventSourceImplMixin">
-              <h3>Inherited from <span class="extype" name="scala.frp.impl.EventSourceImplMixin">EventSourceImplMixin</span>[<span class="extype" name="scala.frp.EventJoin.C">C</span>]</h3>
+            </div><div class="parent" name="scala.frp.impl.EventSourceImpl">
+              <h3>Inherited from <span class="extype" name="scala.frp.impl.EventSourceImpl">EventSourceImpl</span>[<span class="extype" name="scala.frp.EventJoin.C">C</span>]</h3>
             </div><div class="parent" name="scala.frp.EventStream">
               <h3>Inherited from <a href="EventStream.html" class="extype" name="scala.frp.EventStream">EventStream</a>[<span class="extype" name="scala.frp.EventJoin.C">C</span>]</h3>
             </div><div class="parent" name="scala.AnyRef">

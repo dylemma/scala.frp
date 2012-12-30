@@ -88,7 +88,9 @@
         <a href="EventJoin.html"><span class="name">EventJoin</span></a><span class="tparams">[<span name="A">A</span>, <span name="B">B</span>, <span name="C">C</span>]</span><span class="result"> extends <a href="EventSource.html" class="extype" name="scala.frp.EventSource">EventSource</a>[<span class="extype" name="scala.frp.EventJoin.C">C</span>]</span>
       </span>
       </h4>
-      
+      <p class="comment cmt">An EventJoin is a transformer that takes in events of type <code>A</code>
+and <code>B</code> from two parent <a href="EventStream.html" class="extype" name="scala.frp.EventStream">EventStream</a>s and produces any number
+of new events of type <code>C</code> in response.</p>
     </li><li name="scala.frp.EventPipe" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
       <a id="EventPipe[A,B]extendsEventSource[B]"></a>
       <a id="EventPipe[A,B]:EventPipe[A,B]"></a>
@@ -101,9 +103,11 @@
         <a href="EventPipe.html"><span class="name">EventPipe</span></a><span class="tparams">[<span name="A">A</span>, <span name="B">B</span>]</span><span class="result"> extends <a href="EventSource.html" class="extype" name="scala.frp.EventSource">EventSource</a>[<span class="extype" name="scala.frp.EventPipe.B">B</span>]</span>
       </span>
       </h4>
-      
+      <p class="comment cmt">An EventPipe is a transformer that takes in events of type <code>A</code>
+from a single parent <a href="EventStream.html" class="extype" name="scala.frp.EventStream">EventStream</a> and produces any number of
+new events of type <code>B</code> in response.</p>
     </li><li name="scala.frp.EventSource" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
-      <a id="EventSource[A]extendsEventStream[A]withEventSourceImplMixin[A]"></a>
+      <a id="EventSource[A]extendsEventStream[A]withEventSourceImpl[A]"></a>
       <a id="EventSource[A]:EventSource[A]"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -111,10 +115,10 @@
         <span class="kind">trait</span>
       </span>
       <span class="symbol">
-        <a href="EventSource.html"><span class="name">EventSource</span></a><span class="tparams">[<span name="A">A</span>]</span><span class="result"> extends <a href="EventStream.html" class="extype" name="scala.frp.EventStream">EventStream</a>[<span class="extype" name="scala.frp.EventSource.A">A</span>] with <span class="extype" name="scala.frp.impl.EventSourceImplMixin">EventSourceImplMixin</span>[<span class="extype" name="scala.frp.EventSource.A">A</span>]</span>
+        <a href="EventSource.html"><span class="name">EventSource</span></a><span class="tparams">[<span name="A">A</span>]</span><span class="result"> extends <a href="EventStream.html" class="extype" name="scala.frp.EventStream">EventStream</a>[<span class="extype" name="scala.frp.EventSource.A">A</span>] with <span class="extype" name="scala.frp.impl.EventSourceImpl">EventSourceImpl</span>[<span class="extype" name="scala.frp.EventSource.A">A</span>]</span>
       </span>
       </h4>
-      
+      <p class="comment cmt">EventSource is an implementation of <a href="EventStream.html" class="extype" name="scala.frp.EventStream">EventStream</a> that adds <code>fire</code> and <code>stop</code> methods.</p>
     </li><li name="scala.frp.EventStream" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
       <a id="EventStream[+A]extendsObject"></a>
       <a id="EventStream[+A]:EventStream[A]"></a>
@@ -127,7 +131,8 @@
         <a href="EventStream.html"><span class="name">EventStream</span></a><span class="tparams">[<span name="A">+A</span>]</span><span class="result"> extends <a href="../package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></span>
       </span>
       </h4>
-      
+      <p class="comment cmt">An EventStream represents a (potentially finite) series of events that may occur at
+any time in the future.</p>
     </li><li name="scala.frp.Fire" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="Fire[A]extendsEvent[A]withProductwithSerializable"></a>
       <a id="Fire[A]:Fire[A]"></a>
