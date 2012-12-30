@@ -37,33 +37,6 @@ private[frp] class FlatMappedEventStream[A, B](val parent: EventStream[A], f: A 
 	}
 }
 
-private[frp] class CancellableEventStream[A](base: EventStream[A])(implicit obs: Observer)
-	extends EventSource[A] {
-
-	private val canceledAtomic = new AtomicBoolean(false)
-	private val stoppedAtomic = new AtomicBoolean(false)
-
-	def isCancelled: Boolean = canceledAtomic.get
-
-	def cancel: Unit = canceledAtomic.set(true)
-
-	private def tryStop = if (stoppedAtomic.compareAndSet(false, true)) stop
-
-	base sink {
-		case Stop =>
-			tryStop
-			false
-		case Fire(e) =>
-			if (isCancelled) {
-				tryStop
-				false
-			} else {
-				fire(e)
-				true
-			}
-	}
-}
-
 private[frp] class WithFilterEventStream[A](protected val parent: EventStream[A], f: A => Boolean)
 	extends EventPipe[A, A] {
 	protected def handle(item: Event[A]) = item match {
