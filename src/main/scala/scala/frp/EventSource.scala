@@ -6,10 +6,24 @@ import collection.parallel.mutable.ParHashSet
 import java.lang.ref.WeakReference
 
 object EventSource {
+	/** Convenience method for creating an `EventSource` instance, given some type, `A`. */
 	def apply[A](): EventSource[A] = new EventSource[A] {}
 }
 
-trait EventSource[A] extends EventStream[A] with EventSourceImplMixin[A] {
+/** EventSource is an implementation of [[EventStream]] that adds `fire` and `stop` methods.
+  * Usage in client code will generally look something like
+  * {{{
+  * class CoolThings {
+  * 	private val _events = EventSource[Thing]
+  *
+  * 	// don't expose `fire` and `stop` publicly: EventStream is read-only
+  * 	def events: EventStream[Thing] = _events
+  *
+  * 	def doThings = { events fire new Thing(...) }
+  * }
+  * }}}
+  */
+trait EventSource[A] extends EventStream[A] with EventSourceImpl[A] {
 	private val _stopped = new AtomicBoolean(false)
 
 	def stopped: Boolean = _stopped.get
@@ -19,11 +33,10 @@ trait EventSource[A] extends EventStream[A] with EventSourceImplMixin[A] {
 		else produce(Fire(event))
 	}
 
-	/**
-	 * A number indicating the minimum number of cleared references
-	 * that must be encountered before purging all cleared references from the list.
-	 * This method may be overridden - the default value is 5.
-	 */
+	/** A number indicating the minimum number of cleared references
+	  * that must be encountered before purging all cleared references from the list.
+	  * This method may be overridden - the default value is 5.
+	  */
 	protected def purgeThreshold: Int = 5
 
 	private var refs = new ParHashSet[WeakReference[Event[A] => Boolean]]
@@ -35,13 +48,12 @@ trait EventSource[A] extends EventStream[A] with EventSourceImplMixin[A] {
 		for (ref <- refs.find(_.get == handler)) refs -= ref
 	}
 
-	/**
-	 * Produce a new item. All `handler` functions will be called with `item` as
-	 * the argument. There is no guarantee of the order in which the `handler`
-	 * functions will be called.
-	 *
-	 * @param item The item to be sent to all `handler`s (sinks).
-	 */
+	/** Produce a new item. All `handler` functions will be called with `item` as
+	  * the argument. There is no guarantee of the order in which the `handler`
+	  * functions will be called.
+	  *
+	  * @param item The item to be sent to all `handler`s (sinks).
+	  */
 	protected def produce(item: Event[A]): Unit = {
 		var deadCount = 0
 		try {
