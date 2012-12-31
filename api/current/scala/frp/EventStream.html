@@ -429,6 +429,87 @@ generally happen on another thread, as it is handled by a <code>ScheduledExecuto
 </p></div><dl class="paramcmts block"><dt class="param">duration</dt><dd class="cmt"><p>The amount of time before the resulting stream stops automatically.</p></dd><dt>returns</dt><dd class="cmt"><p>A new stream that represents all events fired by this stream, within the
 given <code>duration</code> from the time of creation.
 </p></dd></dl></div>
+    </li><li name="scala.frp.EventStream#zip" visbl="pub" data-isabs="true" fullComment="yes" group="Ungrouped">
+      <a id="zip[B](that:scala.frp.EventStream[B]):scala.frp.EventStream[(A,B)]"></a>
+      <a id="zip[B](EventStream[B]):EventStream[(A,B)]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">abstract </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">zip</span><span class="tparams">[<span name="B">B</span>]</span><span class="params">(<span name="that">that: <a href="" class="extype" name="scala.frp.EventStream">EventStream</a>[<span class="extype" name="scala.frp.EventStream.zip.B">B</span>]</span>)</span><span class="result">: <a href="" class="extype" name="scala.frp.EventStream">EventStream</a>[(<span class="extype" name="scala.frp.EventStream.A">A</span>, <span class="extype" name="scala.frp.EventStream.zip.B">B</span>)]</span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">Creates a new EventStream that joins this stream with <code>that</code> stream, firing events
+as pairs as soon as an event is available from both streams.</p><div class="fullcomment"><div class="comment cmt"><p>Creates a new EventStream that joins this stream with <code>that</code> stream, firing events
+as pairs as soon as an event is available from both streams. The new stream will
+buffer events from both parent streams, so take care to avoid creating a zipped stream
+if one stream is expected to fire significantly more events than the other; the
+buffer for the larger stream will continue to accumulate without being emptied.</p><p>Example usage:</p><pre><span class="kw">val</span> a = EventSource[<span class="std">Int</span>]
+<span class="kw">val</span> b = EventSource[<span class="std">String</span>]
+<span class="kw">val</span> c: EventStream[(<span class="std">Int</span>, <span class="std">String</span>)] = a zip b
+
+c foreach println _
+
+a fire <span class="num">5</span>
+a fire <span class="num">2</span>
+a fire <span class="num">4</span>
+b fire <span class="lit">"A"</span> <span class="cmt">// prints "(5, A)"</span>
+b fire <span class="lit">"B"</span> <span class="cmt">// prints "(2, B)"</span>
+b fire <span class="lit">"C"</span> <span class="cmt">// prints "(4, C)"</span></pre></div><dl class="paramcmts block"><dt class="param">that</dt><dd class="cmt"><p>The event stream to be zipped with this stream.</p></dd><dt>returns</dt><dd class="cmt"><p>A new stream that fires a pair for each corresponding pair of events from
+<code>this</code> stream and <code>that</code> stream.
+</p></dd></dl></div>
+    </li><li name="scala.frp.EventStream#zipWithIndex" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
+      <a id="zipWithIndex:scala.frp.EventStream[(A,Int)]"></a>
+      <a id="zipWithIndex:EventStream[(A,Int)]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">abstract </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">zipWithIndex</span><span class="result">: <a href="" class="extype" name="scala.frp.EventStream">EventStream</a>[(<span class="extype" name="scala.frp.EventStream.A">A</span>, <span class="extype" name="scala.Int">Int</span>)]</span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">Creates a new EventStream that re-fires events from this stream, paired with the
+zero-based index of the event.</p>
+    </li><li name="scala.frp.EventStream#zipWithStaleness" visbl="pub" data-isabs="true" fullComment="yes" group="Ungrouped">
+      <a id="zipWithStaleness:scala.frp.EventStream[(A,()=&gt;Boolean)]"></a>
+      <a id="zipWithStaleness:EventStream[(A,()⇒Boolean)]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">abstract </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">zipWithStaleness</span><span class="result">: <a href="" class="extype" name="scala.frp.EventStream">EventStream</a>[(<span class="extype" name="scala.frp.EventStream.A">A</span>, () ⇒ <span class="extype" name="scala.Boolean">Boolean</span>)]</span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">Creates a new EventStream that re-fires events from this stream, paired with a
+function that checks if that event is currently &quot;stale&quot;.</p><div class="fullcomment"><div class="comment cmt"><p>Creates a new EventStream that re-fires events from this stream, paired with a
+function that checks if that event is currently &quot;stale&quot;. A stale event is one that
+is not currently the most recent event fired by the stream.
+</p></div></div>
+    </li><li name="scala.frp.EventStream#zipWithTime" visbl="pub" data-isabs="true" fullComment="yes" group="Ungrouped">
+      <a id="zipWithTime[T](implicitevidence$1:scala.frp.Time[T]):scala.frp.EventStream[(A,T)]"></a>
+      <a id="zipWithTime[T](Time[T]):EventStream[(A,T)]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">abstract </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">zipWithTime</span><span class="tparams">[<span name="T">T</span>]</span><span class="params">(<span class="implicit">implicit </span><span name="arg0">arg0: <a href="Time.html" class="extype" name="scala.frp.Time">Time</a>[<span class="extype" name="scala.frp.EventStream.zipWithTime.T">T</span>]</span>)</span><span class="result">: <a href="" class="extype" name="scala.frp.EventStream">EventStream</a>[(<span class="extype" name="scala.frp.EventStream.A">A</span>, <span class="extype" name="scala.frp.EventStream.zipWithTime.T">T</span>)]</span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">Creates a new EventStream that re-fires events from this stream, paired with
+a time stamp representing when the event was fired.</p><div class="fullcomment"><div class="comment cmt"><p>Creates a new EventStream that re-fires events from this stream, paired with
+a time stamp representing when the event was fired.
+</p></div><dl class="paramcmts block"><dt class="tparam">T</dt><dd class="cmt"><p>The type of Time</p></dd><dt class="param">arg0</dt><dd class="cmt"><p>An instance of <code>Time[T]</code> that can generate time stamps. The default
+implementation is <a href="package$$SystemTime$.html" class="extype" name="scala.frp.SystemTime">SystemTime</a> which generates <code>Long</code> time stamps by calling
+<code>System.currentTimeMillis</code>.
+</p></dd></dl></div>
     </li><li name="scala.frp.EventStream#||" visbl="pub" data-isabs="true" fullComment="yes" group="Ungrouped">
       <a id="||[A1&gt;:A](that:scala.frp.EventStream[A1]):scala.frp.EventStream[A1]"></a>
       <a id="||[A1&gt;:A](EventStream[A1]):EventStream[A1]"></a>
