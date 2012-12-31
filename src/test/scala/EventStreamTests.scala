@@ -193,4 +193,77 @@ class EventStreamTests extends FunSuite with TestHelpers {
 
 		assert(results.toList == List(Left(1), Right("a"), Right("b"), Left(2)))
 	}
+
+	test("EventStream.zipWithIndex basic functionality") {
+		val s = EventSource[Char]
+		val results = accumulateEvents(s.zipWithIndex)
+
+		s fire 'a'
+		s fire 'b'
+		s fire 'c'
+
+		assert(results.toList == List('a' -> 0, 'b' -> 1, 'c' -> 2))
+	}
+
+	test("EventStream.zipWithStaleness basic functionality") {
+		val s = EventSource[Int]
+		val x = s.zipWithStaleness
+
+		var a: (Int, () => Boolean) = null
+		x onNext { a = _ }
+		s fire 1
+
+		assert(!a._2(), "The first event should not be stale yet") // event 'a' isn't stale yet
+
+		var b: (Int, () => Boolean) = null
+		x onNext { b = _ }
+		s fire 2
+
+		assert(a._2(), "The first event should now be stale")
+		assert(!b._2(), "The second event should be fresh")
+
+		var c: (Int, () => Boolean) = null
+		x onNext { c = _ }
+		s fire 3
+
+		assert(a._2(), "The first event should be stale")
+		assert(b._2(), "The second event should be stale")
+		assert(!c._2(), "The thrid event should be fresh")
+	}
+
+	test("EventStream.zipWithTime basic functionality") {
+		val s = EventSource[Int]
+		val fakeTime = new FakeTime
+
+		//use fakeTime instead of SystemTime, so we can guarantee the values
+		val x = s.zipWithTime(fakeTime)
+		val results = accumulateEvents(x)
+
+		fakeTime setTime 123L
+		s fire 1
+
+		fakeTime setTime 456L
+		s fire 2
+
+		fakeTime setTime 789L
+		s fire 3
+
+		assert(results.toList == List(1 -> 123L, 2 -> 456L, 3 -> 789L))
+
+	}
+
+	test("EventStream.zip basic functionality") {
+		val s = EventSource[Int]
+		val t = EventSource[String]
+		val results = accumulateEvents(s zip t)
+
+		s fire 1
+		s fire 5
+		t fire "A"
+		s fire 10
+		t fire "B"
+		t fire "C"
+
+		assert(results.toList == List(1 -> "A", 5 -> "B", 10 -> "C"))
+	}
 }

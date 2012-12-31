@@ -5,6 +5,14 @@ import scala.util._
 
 package object frp {
 
+	/** An instance of the `Time` typeclass, for `Long` times.
+	  * The `currentTime` will always return the result of
+	  * `System.currentTimeMillis`.
+	  */
+	implicit object SystemTime extends Time[Long] {
+		def currentTime = System.currentTimeMillis
+	}
+
 	implicit class EventStreamFutures[A](stream: EventStream[A]) {
 
 		/** Returns a `Future` that will complete with the value of the next

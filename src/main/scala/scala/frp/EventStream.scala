@@ -284,7 +284,55 @@ trait EventStream[+A] {
 	  */
 	def before(deadline: Deadline): EventStream[A]
 
-	//TODO: def next: Future[A]
+	/** Creates a new EventStream that re-fires events from this stream, paired with the
+	  * zero-based index of the event.
+	  */
+	def zipWithIndex: EventStream[(A, Int)]
+
+	/** Creates a new EventStream that re-fires events from this stream, paired with a
+	  * function that checks if that event is currently "stale". A stale event is one that
+	  * is not currently the most recent event fired by the stream.
+	  */
+	def zipWithStaleness: EventStream[(A, () => Boolean)]
+
+	/** Creates a new EventStream that re-fires events from this stream, paired with
+	  * a time stamp representing when the event was fired.
+	  *
+	  * @tparam T The type of Time
+	  * @param arg0 An instance of `Time[T]` that can generate time stamps. The default
+	  * implementation is [[SystemTime]] which generates `Long` time stamps by calling
+	  * `System.currentTimeMillis`.
+	  */
+	def zipWithTime[T: Time]: EventStream[(A, T)]
+
+	/** Creates a new EventStream that joins this stream with `that` stream, firing events
+	  * as pairs as soon as an event is available from both streams. The new stream will
+	  * buffer events from both parent streams, so take care to avoid creating a zipped stream
+	  * if one stream is expected to fire significantly more events than the other; the
+	  * buffer for the larger stream will continue to accumulate without being emptied.
+	  *
+	  * Example usage:
+	  * {{{
+	  * val a = EventSource[Int]
+	  * val b = EventSource[String]
+	  * val c: EventStream[(Int, String)] = a zip b
+	  *
+	  * c foreach println _
+	  *
+	  * a fire 5
+	  * a fire 2
+	  * a fire 4
+	  * b fire "A" // prints "(5, A)"
+	  * b fire "B" // prints "(2, B)"
+	  * b fire "C" // prints "(4, C)"
+	  * }}}
+	  *
+	  * @param that The event stream to be zipped with this stream.
+	  * @return A new stream that fires a pair for each corresponding pair of events from
+	  * `this` stream and `that` stream.
+	  */
+	def zip[B](that: EventStream[B]): EventStream[(A, B)]
+
 	//TODO: def grouped(size: Int): EventStream[List[A]]
 }
 

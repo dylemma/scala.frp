@@ -271,3 +271,62 @@ private[frp] class DeadlinedEventStream[A](val parent: EventStream[A], deadline:
 	}
 
 }
+
+private[frp] class ZipWithIndexEventStream[A](val parent: EventStream[A]) extends EventPipe[A, (A, Int)] {
+	val _index = new AtomicInteger(0)
+
+	def handle(event: Event[A]) = event match {
+		case Stop =>
+			stop
+			false
+		case Fire(e) =>
+			val index = _index.getAndIncrement
+			fire(e -> index)
+			true
+	}
+}
+
+private[frp] class ZipWithStalenessEventStream[A](val parent: EventStream[A]) extends EventPipe[A, (A, () => Boolean)] {
+	val _index = new AtomicInteger(0)
+
+	def handle(event: Event[A]) = event match {
+		case Stop =>
+			stop
+			false
+		case Fire(e) =>
+			val index = _index.incrementAndGet
+			val staleTest = () => index < _index.get
+			fire(e -> staleTest)
+			true
+	}
+}
+
+private[frp] class ZippedEventStream[A, B](val leftParent: EventStream[A], val rightParent: EventStream[B])
+	extends EventJoin[A, B, (A, B)] {
+
+	private val leftQueue = new collection.mutable.SynchronizedQueue[A]
+	private val rightQueue = new collection.mutable.SynchronizedQueue[B]
+
+	//if there are elements available from both queues, dequeue them and fire the pair
+	private def tryDequeue = {
+		if (!leftQueue.isEmpty && !rightQueue.isEmpty) {
+			val l = leftQueue.dequeue
+			val r = rightQueue.dequeue
+			fire(l -> r)
+		}
+	}
+
+	def handle(event: Either[Event[A], Event[B]]) = event match {
+		case Left(Stop) | Right(Stop) =>
+			if (parentsStopped) stop
+			false
+		case Left(Fire(e)) =>
+			leftQueue += e
+			tryDequeue
+			true
+		case Right(Fire(e)) =>
+			rightQueue += e
+			tryDequeue
+			true
+	}
+}

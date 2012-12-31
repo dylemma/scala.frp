@@ -6,4 +6,4 @@ scalaVersion := "2.10.0-RC5"
 
 libraryDependencies += "org.scalatest" % "scalatest_2.10.0-RC5" % "1.8-B1" % "test"
 
-scalacOptions in (Compile, doc) ++= Seq( "-implicits")
+scalacOptions in (Compile, doc) ++= Seq("-implicits")

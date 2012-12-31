@@ -74,4 +74,19 @@ private[frp] trait EventSourceImpl[A] { self: EventSource[A] =>
 		new DeadlinedEventStream(this, deadline)
 	}
 
+	def zipWithIndex: EventStream[(A, Int)] = {
+		new ZipWithIndexEventStream(this)
+	}
+
+	def zipWithStaleness: EventStream[(A, () => Boolean)] = {
+		new ZipWithStalenessEventStream(this)
+	}
+
+	def zipWithTime[T: Time]: EventStream[(A, T)] = {
+		map { _ -> implicitly[Time[T]].currentTime }
+	}
+
+	def zip[B](that: EventStream[B]): EventStream[(A, B)] = {
+		new ZippedEventStream(this, that)
+	}
 }
