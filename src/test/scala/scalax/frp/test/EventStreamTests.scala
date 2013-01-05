@@ -268,4 +268,17 @@ class EventStreamTests extends FunSuite with TestHelpers {
 
 		assert(results.toList == List(1 -> "A", 5 -> "B", 10 -> "C"))
 	}
+
+	test("EventStream.unzip basic functionality") {
+		val x = EventSource[(Int, String)]
+		val (a, b) = x.unzip
+
+		val aResults = accumulateEvents(a)
+		val bResults = accumulateEvents(b)
+
+		x fire 1 -> "a"
+		x fire 2 -> "b"
+
+		assert(aResults.toList == List(1, 2) && bResults.toList == List("a", "b"))
+	}
 }

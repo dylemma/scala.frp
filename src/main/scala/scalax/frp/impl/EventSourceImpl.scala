@@ -89,4 +89,10 @@ private[frp] trait EventSourceImpl[A] { self: EventSource[A] =>
 	def zip[B](that: EventStream[B]): EventStream[(A, B)] = {
 		new ZippedEventStream(this, that)
 	}
+
+	def unzip[A1, A2](implicit asPair: A => (A1, A2)): (EventStream[A1], EventStream[A2]) = {
+		val left = this.map { p => asPair(p)._1 }
+		val right = this.map { p => asPair(p)._2 }
+		left -> right
+	}
 }

@@ -333,7 +333,32 @@ trait EventStream[+A] {
 	  */
 	def zip[B](that: EventStream[B]): EventStream[(A, B)]
 
-	//TODO: def unzip[A1, A2](implicit asPair: A => (A1, A2)): (EventStream[A1], EventStream[A2])
+	/** Where this EventStream's data can be represented as a `Tuple2[A1, A2]`, this
+	  * method creates two separate EventStreams that each represent a half of that pair,
+	  * respectively.
+	  *
+	  * Example usage:
+	  * {{{
+	  * val x = EventSource[(Int, String)]
+	  * val (a,b) = x.unzip
+	  *
+	  * for(i <- a) println("left: " + i)
+	  * for(s <- b) println("right: + s)
+	  *
+	  * x fire 1 -> "hi"
+	  * //prints "left: 1"
+	  * //prints "right: hi"
+	  *
+	  * x fire 5 -> "earth"
+	  * //prints "left: 5"
+	  * //prints "right: earth"
+	  * }}}
+	  *
+	  * @return Two new streams that represent the left and right halves of this stream's
+	  * events, respectively.
+	  */
+	def unzip[A1, A2](implicit asPair: A => (A1, A2)): (EventStream[A1], EventStream[A2])
+
 	//TODO: def grouped(size: Int): EventStream[List[A]]
 	//TODO: def grouped(duration: Duration): EventStream[List[A]]
 	//TODO: consider where using Typeclasses would be appropriate
