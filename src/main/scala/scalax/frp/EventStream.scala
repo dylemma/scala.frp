@@ -359,7 +359,17 @@ trait EventStream[+A] {
 	  */
 	def unzip[A1, A2](implicit asPair: A => (A1, A2)): (EventStream[A1], EventStream[A2])
 
-	//TODO: def grouped(size: Int): EventStream[List[A]]
+	/** Creates a new EventStream that accumulates events from this stream in a List,
+	  * re-firing the list once it reaches the specified `size` (or once this stream stops).
+	  * The behavior of the resulting stream is supposed to parallel the behavior of a
+	  * scala standard library collection's `grouped` method.
+	  *
+	  * @param size The group size
+	  * @return A new stream that buffers events into a list, firing them when the list
+	  * reaches the given `size` or when this stream stops.
+	  */
+	def grouped(size: Int): EventStream[List[A]]
+
 	//TODO: def grouped(duration: Duration): EventStream[List[A]]
 	//TODO: consider where using Typeclasses would be appropriate
 }

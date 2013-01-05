@@ -281,4 +281,25 @@ class EventStreamTests extends FunSuite with TestHelpers {
 
 		assert(aResults.toList == List(1, 2) && bResults.toList == List("a", "b"))
 	}
+
+	test("EventStream.grouped basic functionality") {
+		val x = EventSource[Int]
+		val results = accumulateEvents(x grouped 3)
+
+		//group 1: (1,2,3)
+		x fire 1
+		x fire 2
+		x fire 3
+
+		//group 2: (4,5,6)
+		x fire 4
+		x fire 5
+		x fire 6
+
+		//group 3: (7, <end>)
+		x fire 7
+		x.stop
+
+		assert(results.toList == List(1, 2, 3) :: List(4, 5, 6) :: List(7) :: Nil)
+	}
 }

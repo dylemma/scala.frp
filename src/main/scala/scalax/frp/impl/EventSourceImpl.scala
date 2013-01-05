@@ -95,4 +95,8 @@ private[frp] trait EventSourceImpl[A] { self: EventSource[A] =>
 		val right = this.map { p => asPair(p)._2 }
 		left -> right
 	}
+
+	def grouped(size: Int): EventStream[List[A]] = {
+		new GroupedEventStream(this, size)
+	}
 }

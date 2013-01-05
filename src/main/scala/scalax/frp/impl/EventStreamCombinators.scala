@@ -330,3 +330,34 @@ private[frp] class ZippedEventStream[A, B](val leftParent: EventStream[A], val r
 			true
 	}
 }
+
+private[frp] class GroupedEventStream[A](val parent: EventStream[A], val groupSize: Int)
+	extends EventPipe[A, List[A]] {
+
+	private val buf = new collection.mutable.ListBuffer[A]
+
+	//put `event` in the buffer, then fire the buffer if needed
+	private def add(event: A) = {
+		buf += event
+		if (buf.size >= groupSize) fireBuffer
+	}
+
+	//how to fire the buffer (and clear it too)
+	private def fireBuffer = {
+		if (!buf.isEmpty) {
+			val list = buf.result
+			buf.clear
+			fire(list)
+		}
+	}
+
+	def handle(event: Event[A]) = event match {
+		case Stop =>
+			fireBuffer
+			stop
+			false
+		case Fire(e) =>
+			add(e)
+			true
+	}
+}
