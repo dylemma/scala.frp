@@ -333,7 +333,10 @@ trait EventStream[+A] {
 	  */
 	def zip[B](that: EventStream[B]): EventStream[(A, B)]
 
+	//TODO: def unzip[A1, A2](implicit asPair: A => (A1, A2)): (EventStream[A1], EventStream[A2])
 	//TODO: def grouped(size: Int): EventStream[List[A]]
+	//TODO: def grouped(duration: Duration): EventStream[List[A]]
+	//TODO: consider where using Typeclasses would be appropriate
 }
 
 object EventStream {
@@ -343,4 +346,6 @@ object EventStream {
 		s.stop
 		s
 	}
+
+	//TODO: def interval[A](span: Duration, f: () => A)): EventStream[A] /*fire a new f() every span*/
 }
