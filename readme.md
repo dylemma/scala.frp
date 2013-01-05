@@ -67,4 +67,4 @@ There are a bunch of combinators that you can use with `EventStream`s.
 	val intsOnTime = ints.before(2 seconds fromNow)
 	val intsInTime = ints.within(2.seconds)
 
-There are even more, so check them out in the [docs](http://dylemma.github.com/scala.frp/api/current/index.html#scala.frp.EventStream)
+There are even more, so check them out in the [docs](http://dylemma.github.com/scala.frp/api/current/index.html#scalax.frp.EventStream)
