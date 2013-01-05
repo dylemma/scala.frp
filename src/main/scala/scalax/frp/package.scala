@@ -68,11 +68,11 @@ package object frp {
 		  *
 		  * @return A `Future` containing a time stamp describing when this stream stopped.
 		  */
-		def end(implicit obs: Observer): Future[Long] = {
-			if (stream.stopped) Future successful System.currentTimeMillis
+		def end[T](implicit obs: Observer, time: Time[T]): Future[T] = {
+			if (stream.stopped) Future successful time.currentTime
 			else {
-				val p = Promise[Long]
-				stream onEnd { p success System.currentTimeMillis }
+				val p = Promise[T]
+				stream onEnd { p success time.currentTime }
 				p.future
 			}
 		}
