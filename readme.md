@@ -15,7 +15,7 @@ Currently the only way for you to use this library is to build it from source. I
 
 Once you've got some binary version of Scala FRP, the bare minimum you should do is
 
-	import scala.frp._
+	import scalax.frp._
 	implicit object observer extends Observer
 
 There are two main classes that you will want to interact with. `EventStream` is a read-only class that you can attach event handlers to, and create mappings and combinations with. `EventSource` is a subclass of `EventStream` that also exposes `fire` and `stop` methods.

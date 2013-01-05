@@ -1,4 +1,4 @@
-package scala.frp
+package scalax.frp
 
 import impl._
 import java.util.concurrent.atomic.AtomicBoolean

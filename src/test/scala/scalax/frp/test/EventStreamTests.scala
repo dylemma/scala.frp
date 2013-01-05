@@ -1,7 +1,7 @@
 package scalax.frp.test
 
 import org.scalatest._
-import scala.frp._
+import scalax.frp._
 
 class EventStreamTests extends FunSuite with TestHelpers {
 

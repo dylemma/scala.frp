@@ -1,4 +1,4 @@
-package scala.frp
+package scalax.frp
 
 /** A memory management assistant. The expected usage is that an `Observer`
   * instance will be the only thing that holds strong references to some

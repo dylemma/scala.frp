@@ -1,4 +1,4 @@
-package scala
+package scalax
 
 import scala.concurrent._
 import scala.util._

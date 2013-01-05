@@ -3,7 +3,7 @@ package scalax.frp.test
 import org.scalatest._
 import org.scalatest.concurrent.AsyncAssertions
 import org.scalatest.time.SpanSugar._
-import scala.frp._
+import scalax.frp._
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.util._
 import org.scalatest.exceptions.TestFailedException

@@ -1,4 +1,4 @@
-package scala.frp
+package scalax.frp
 
 import scala.concurrent.duration._
 

@@ -1,6 +1,6 @@
-package scala.frp.impl
+package scalax.frp.impl
 
-import scala.frp._
+import scalax.frp._
 
 import java.util.concurrent.atomic.{ AtomicBoolean, AtomicInteger, AtomicReference }
 import scala.concurrent.duration._

@@ -2,7 +2,7 @@ package scalax.frp.test
 
 import org.scalatest._
 import org.scalatest.concurrent.AsyncAssertions
-import scala.frp._
+import scalax.frp._
 import scala.concurrent.duration._
 
 class EventStreamDeadlineTests extends FunSuite with TestHelpers with AsyncAssertions with Observer {

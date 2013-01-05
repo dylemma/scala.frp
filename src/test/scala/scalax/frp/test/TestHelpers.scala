@@ -1,6 +1,6 @@
 package scalax.frp.test
 
-import scala.frp._
+import scalax.frp._
 import collection.mutable.ListBuffer
 
 trait TestHelpers {
