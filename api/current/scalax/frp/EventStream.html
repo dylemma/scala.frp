@@ -301,6 +301,26 @@ this stream. The state starts at <code>z</code> and updates along the lines of
 the state is updated, the new stream fires an event containing the state.
 </p></div><dl class="paramcmts block"><dt class="param">z</dt><dd class="cmt"><p>The initial state for the fold</p></dd><dt class="param">op</dt><dd class="cmt"><p>The update function, of the form <code>(state, next) =&gt; newState</code></p></dd><dt>returns</dt><dd class="cmt"><p>A new stream that fires events as its state updates according to <code>op</code>
 </p></dd></dl></div>
+    </li><li name="scalax.frp.EventStream#grouped" visbl="pub" data-isabs="true" fullComment="yes" group="Ungrouped">
+      <a id="grouped(size:Int):scalax.frp.EventStream[List[A]]"></a>
+      <a id="grouped(Int):EventStream[List[A]]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">abstract </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">grouped</span><span class="params">(<span name="size">size: <span class="extype" name="scala.Int">Int</span></span>)</span><span class="result">: <a href="" class="extype" name="scalax.frp.EventStream">EventStream</a>[<span class="extype" name="scala.List">List</span>[<span class="extype" name="scalax.frp.EventStream.A">A</span>]]</span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">Creates a new EventStream that accumulates events from this stream in a List,
+re-firing the list once it reaches the specified <code>size</code> (or once this stream stops).</p><div class="fullcomment"><div class="comment cmt"><p>Creates a new EventStream that accumulates events from this stream in a List,
+re-firing the list once it reaches the specified <code>size</code> (or once this stream stops).
+The behavior of the resulting stream is supposed to parallel the behavior of a
+scala standard library collection's <code>grouped</code> method.
+</p></div><dl class="paramcmts block"><dt class="param">size</dt><dd class="cmt"><p>The group size</p></dd><dt>returns</dt><dd class="cmt"><p>A new stream that buffers events into a list, firing them when the list
+reaches the given <code>size</code> or when this stream stops.
+</p></dd></dl></div>
     </li><li name="scalax.frp.EventStream#map" visbl="pub" data-isabs="true" fullComment="yes" group="Ungrouped">
       <a id="map[B](f:A=&gt;B):scalax.frp.EventStream[B]"></a>
       <a id="map[B]((A)⇒B):EventStream[B]"></a>
@@ -390,6 +410,37 @@ stream fires an event. The <code>end</code> stream stopping does not count as a 
 The resulting stream will also stop when and if this stream stops.
 </p></div><dl class="paramcmts block"><dt class="param">end</dt><dd class="cmt"><p>An EventStream whose first event marks the end of the resulting stream</p></dd><dt>returns</dt><dd class="cmt"><p>A new stream that re-fires events from this stream until the first event
 from the <code>end</code> stream.
+</p></dd></dl></div>
+    </li><li name="scalax.frp.EventStream#unzip" visbl="pub" data-isabs="true" fullComment="yes" group="Ungrouped">
+      <a id="unzip[A1,A2](implicitasPair:A=&gt;(A1,A2)):(scalax.frp.EventStream[A1],scalax.frp.EventStream[A2])"></a>
+      <a id="unzip[A1,A2]((A)⇒(A1,A2)):(EventStream[A1],EventStream[A2])"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">abstract </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">unzip</span><span class="tparams">[<span name="A1">A1</span>, <span name="A2">A2</span>]</span><span class="params">(<span class="implicit">implicit </span><span name="asPair">asPair: (<span class="extype" name="scalax.frp.EventStream.A">A</span>) ⇒ (<span class="extype" name="scalax.frp.EventStream.unzip.A1">A1</span>, <span class="extype" name="scalax.frp.EventStream.unzip.A2">A2</span>)</span>)</span><span class="result">: (<a href="" class="extype" name="scalax.frp.EventStream">EventStream</a>[<span class="extype" name="scalax.frp.EventStream.unzip.A1">A1</span>], <a href="" class="extype" name="scalax.frp.EventStream">EventStream</a>[<span class="extype" name="scalax.frp.EventStream.unzip.A2">A2</span>])</span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">Where this EventStream's data can be represented as a <code>Tuple2[A1, A2]</code>, this
+method creates two separate EventStreams that each represent a half of that pair,
+respectively.</p><div class="fullcomment"><div class="comment cmt"><p>Where this EventStream's data can be represented as a <code>Tuple2[A1, A2]</code>, this
+method creates two separate EventStreams that each represent a half of that pair,
+respectively.</p><p>Example usage:</p><pre><span class="kw">val</span> x = EventSource[(<span class="std">Int</span>, <span class="std">String</span>)]
+<span class="kw">val</span> (a,b) = x.unzip
+
+<span class="kw">for</span>(i <span class="kw">&lt;-</span> a) println(<span class="lit">"left: "</span> + i)
+<span class="kw">for</span>(s <span class="kw">&lt;-</span> b) println(<span class="lit">"right: + s)
+
+x fire 1 -> "</span>hi<span class="lit">"
+//prints "</span>left: <span class="num">1</span><span class="lit">"
+//prints "</span>right: hi<span class="lit">"
+
+x fire 5 -> "</span>earth<span class="lit">"
+//prints "</span>left: <span class="num">5</span><span class="lit">"
+//prints "</span>right: earth<span class="lit">"</span></pre></div><dl class="paramcmts block"><dt>returns</dt><dd class="cmt"><p>Two new streams that represent the left and right halves of this stream's
+events, respectively.
 </p></dd></dl></div>
     </li><li name="scalax.frp.EventStream#withFilter" visbl="pub" data-isabs="true" fullComment="yes" group="Ungrouped">
       <a id="withFilter(p:A=&gt;Boolean):scalax.frp.EventStream[A]"></a>
