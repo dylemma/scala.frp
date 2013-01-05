@@ -1,3 +1,5 @@
+package scalax.frp.test
+
 import org.scalatest._
 import org.scalatest.concurrent.AsyncAssertions
 import org.scalatest.time.SpanSugar._

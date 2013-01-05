@@ -1,3 +1,5 @@
+package scalax.frp.test
+
 import scala.frp._
 import collection.mutable.ListBuffer
 

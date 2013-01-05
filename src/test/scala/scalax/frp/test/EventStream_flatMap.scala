@@ -1,3 +1,5 @@
+package scalax.frp.test
+
 import org.scalatest._
 import scala.frp._
 
