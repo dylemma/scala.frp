@@ -1,7 +1,7 @@
-package scalax.frp.test
+package com.dylemma.frp.test
 
 import org.scalatest._
-import scalax.frp._
+import com.dylemma.frp._
 import collection.mutable.ListBuffer
 
 class EventStreamSinkTests extends FunSuite with Observer {

@@ -1,4 +1,4 @@
-package scalax.frp
+package com.dylemma.frp
 
 /** Represents an event emitted by a `Publisher` class.
   * An `Event` can be either a `Fire` or a `Stop`.

@@ -1,6 +1,6 @@
-package scalax.frp.test
+package com.dylemma.frp.test
 
-import scalax.frp._
+import com.dylemma.frp._
 import collection.mutable.ListBuffer
 
 trait TestHelpers {

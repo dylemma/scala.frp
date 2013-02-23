@@ -1,4 +1,4 @@
-package scalax.frp
+package com.dylemma.frp
 
 import scala.concurrent.duration._
 

@@ -1,4 +1,4 @@
-package scalax.frp.impl
+package com.dylemma.frp.impl
 
 import java.util.concurrent.{ThreadFactory, Executors}
 import scala.concurrent._

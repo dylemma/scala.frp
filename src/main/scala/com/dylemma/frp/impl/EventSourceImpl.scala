@@ -1,6 +1,6 @@
-package scalax.frp.impl
+package com.dylemma.frp.impl
 
-import scalax.frp._
+import com.dylemma.frp._
 import scala.concurrent.duration.{ Deadline, Duration, FiniteDuration }
 
 private[frp] trait EventSourceImpl[A] { self: EventSource[A] =>

@@ -1,6 +1,6 @@
-package scalax.frp.impl
+package com.dylemma.frp.impl
 
-import scalax.frp._
+import com.dylemma.frp._
 
 import java.util.concurrent.atomic.{ AtomicBoolean, AtomicInteger, AtomicReference }
 import scala.concurrent.duration._
