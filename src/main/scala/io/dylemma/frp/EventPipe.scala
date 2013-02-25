@@ -1,4 +1,4 @@
-package com.dylemma.frp
+package io.dylemma.frp
 
 import java.util.concurrent.atomic.AtomicBoolean
 

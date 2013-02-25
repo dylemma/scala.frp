@@ -1,4 +1,4 @@
-package com.dylemma.frp
+package io.dylemma.frp
 
 /** Typeclass for types that can get the current time. EventStream methods
   * that generate a time stamp of type `T` will require an implicitly-available

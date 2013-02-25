@@ -1,7 +1,7 @@
-package com.dylemma.frp.test
+package io.dylemma.frp.test
 
 import org.scalatest._
-import com.dylemma.frp._
+import io.dylemma.frp._
 
 class EventStream_flatMap extends FunSuite with TestHelpers with Observer {
 

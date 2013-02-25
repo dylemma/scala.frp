@@ -1,6 +1,6 @@
-package com.dylemma.frp.test
+package io.dylemma.frp.test
 
-import com.dylemma.frp._
+import io.dylemma.frp._
 import collection.mutable.ListBuffer
 
 trait TestHelpers {

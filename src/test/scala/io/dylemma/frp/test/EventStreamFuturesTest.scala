@@ -1,9 +1,9 @@
-package com.dylemma.frp.test
+package io.dylemma.frp.test
 
 import org.scalatest._
 import org.scalatest.concurrent.AsyncAssertions
 import org.scalatest.time.SpanSugar._
-import com.dylemma.frp._
+import io.dylemma.frp._
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.util._
 import org.scalatest.exceptions.TestFailedException

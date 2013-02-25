@@ -1,8 +1,8 @@
-package com.dylemma.frp.test
+package io.dylemma.frp.test
 
 import org.scalatest._
 import org.scalatest.concurrent.AsyncAssertions
-import com.dylemma.frp._
+import io.dylemma.frp._
 import scala.concurrent.duration._
 
 class EventStreamDeadlineTests extends FunSuite with TestHelpers with AsyncAssertions with Observer {

@@ -1,6 +1,4 @@
-package com.dylemma
-
-import com.dylemma.frp.Stop;
+package io.dylemma
 
 import scala.concurrent._
 import scala.util._
