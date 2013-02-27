@@ -7,9 +7,15 @@ This library replaces the idea of `Publishers` and `Subscribers` with `EventStre
 
 Scala FRP (stands for **F**unctional **R**eactive **P**rogramming) is a library inspired by [Ingo Maier's](http://lampwww.epfl.ch/~imaier/) paper, [Deprecating the Observer Pattern](http://lampwww.epfl.ch/~imaier/pub/DeprecatingObserversTR2010.pdf). Ingo Maier made an implementation of his "scala.react" framework which is available [on Github](https://github.com/ingoem/scala-react) in its original form. I also made a version of the same library that works with SBT to manage its dependencies, available [here](https://github.com/dylemma/scala.react).
 
+###Getting it
+
+Scala FRP is built for Scale 2.10.0; as long as your project is using Scala 2.10, you can simply add the following to your sbt settings:
+
+	libraryDependencies += "io.dylemma" %% "scala-frp" % "1.0"
+
 ###Example Usage
 
-	import com.dylemma.frp._
+	import io.dylemma.frp._
 
 	// Mix in `Observer` for free memory management.
 	object Example extends App with Observer {
