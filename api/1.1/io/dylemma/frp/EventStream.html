@@ -1,0 +1,1293 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html>
+        <head>
+          <title>EventStream - io.dylemma.frp.EventStream</title>
+          <meta name="description" content="EventStream - io.dylemma.frp.EventStream" />
+          <meta name="keywords" content="EventStream io.dylemma.frp.EventStream" />
+          <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+          
+      <link href="../../../lib/template.css" media="screen" type="text/css" rel="stylesheet" />
+      <link href="../../../lib/diagrams.css" media="screen" type="text/css" rel="stylesheet" id="diagrams-css" />
+      <script type="text/javascript">
+         if(top === self) {
+            var url = '../../../index.html';
+            var hash = 'io.dylemma.frp.EventStream';
+            var anchor = window.location.hash;
+            var anchor_opt = '';
+            if (anchor.length >= 1)
+              anchor_opt = '@' + anchor.substring(1);
+            window.location.href = url + '#' + hash + anchor_opt;
+         }
+   	  </script>
+    
+        </head>
+        <body class="type">
+      <div id="definition">
+        <a href="EventStream$.html" title="Go to companion"><img src="../../../lib/trait_to_object_big.png" /></a>
+        <p id="owner"><a href="../../package.html" class="extype" name="io">io</a>.<a href="../package.html" class="extype" name="io.dylemma">dylemma</a>.<a href="package.html" class="extype" name="io.dylemma.frp">frp</a></p>
+        <h1><a href="EventStream$.html" title="Go to companion">EventStream</a></h1>
+      </div>
+
+      <h4 id="signature" class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">trait</span>
+      </span>
+      <span class="symbol">
+        <span class="name">EventStream</span><span class="tparams">[<span name="A">+A</span>]</span><span class="result"> extends <span class="extype" name="scala.AnyRef">AnyRef</span></span>
+      </span>
+      </h4>
+      
+          <div id="comment" class="fullcommenttop"><div class="comment cmt"><p>An EventStream represents a (potentially finite) series of events that may occur at
+any time in the future. EventStreams are stylistic replacements for Publishers
+(from the Publisher/Subscriber, or Observer pattern). Events are produced as <a href="Event.html" class="extype" name="io.dylemma.frp.Event">Event</a>
+instances - either a <a href="Fire.html" class="extype" name="io.dylemma.frp.Fire">Fire</a> or <a href="Stop$.html" class="extype" name="io.dylemma.frp.Stop">Stop</a>. Each <code>Fire</code> event produced by an EventStream
+represents a single &quot;data&quot;. The <code>Stop</code> event represents the end of the stream.
+Once an EventStream produces a <code>Stop</code> event, it is considered finished and will produce no more events.</p><p>There are several ways to attach event handlers to an EventStream. The most low-level
+way is to use the <code>sink</code> method, which operates on <code>Event</code> instances. The <code>foreach</code>
+method is used to attach a handler that operates only on data from <code>Fire</code> events.
+<code>onNext</code> and <code>onEnd</code> attach handlers to the next <code>Fire</code> and a <code>Stop</code>, respectively.
+Attaching event handlers requires an implicit <a href="Observer.html" class="extype" name="io.dylemma.frp.Observer">Observer</a>, which is used to manage
+references between the handler and the stream.</p><p>EventStreams can be transformed and combined in a variety of ways like filtering,
+mapping, and concatenation.</p><p>Below is a working example of EventStream usage.</p><pre><span class="kw">class</span> Example <span class="kw">extends</span> <span class="std">App</span> <span class="kw">with</span> Observer {
+	<span class="cmt">// Create an EventStream instance. EventSource is a subtype of</span>
+	<span class="cmt">// EventStream, with the addition of `fire` and `stop` methods.</span>
+	<span class="kw">val</span> stream = EventSource[<span class="std">Int</span>]
+
+	<span class="cmt">// Create a mapped version of the EventStream</span>
+	<span class="kw">val</span> mappedStream = stream.map(_ * <span class="num">2</span>)
+
+	<span class="cmt">// Attach an event handler, using the `foreach` syntax</span>
+	<span class="kw">for</span>(i <span class="kw">&lt;-</span> stream) println(<span class="lit">"Int event: "</span> + i)
+	<span class="kw">for</span>(i <span class="kw">&lt;-</span> mappedStream) println(<span class="lit">"Mapped event: "</span> + i)
+
+	<span class="cmt">// Attach an "end" event handler</span>
+	stream onEnd { println(<span class="lit">"Got the end"</span>) }
+
+	<span class="cmt">// fire some events</span>
+	stream fire <span class="num">1</span>
+	<span class="cmt">// (prints "Int event: 1")</span>
+	<span class="cmt">// (prints "Mapped event: 2")</span>
+
+	stream fire <span class="num">5</span>
+	<span class="cmt">// (prints "Int event: 5")</span>
+	<span class="cmt">// (prints "Mapped event: 10")</span>
+
+	<span class="cmt">// stop the stream</span>
+	stream.stop
+	<span class="cmt">// (prints "Got the end")</span>
+}</pre></div><div class="toggleContainer block">
+          <span class="toggle">Linear Supertypes</span>
+          <div class="superTypes hiddenContent"><span class="extype" name="scala.AnyRef">AnyRef</span>, <span class="extype" name="scala.Any">Any</span></div>
+        </div><div class="toggleContainer block">
+          <span class="toggle">Known Subclasses</span>
+          <div class="subClasses hiddenContent"><a href="EventJoin.html" class="extype" name="io.dylemma.frp.EventJoin">EventJoin</a>, <a href="EventPipe.html" class="extype" name="io.dylemma.frp.EventPipe">EventPipe</a>, <a href="EventSource.html" class="extype" name="io.dylemma.frp.EventSource">EventSource</a></div>
+        </div></div>
+        
+
+      <div id="mbrsel">
+        <div id="textfilter"><span class="pre"></span><span class="input"><input id="mbrsel-input" type="text" accesskey="/" /></span><span class="post"></span></div>
+        <div id="order">
+              <span class="filtertype">Ordering</span>
+              <ol>
+                
+                <li class="alpha in"><span>Alphabetic</span></li>
+                <li class="inherit out"><span>By inheritance</span></li>
+              </ol>
+            </div>
+        <div id="ancestors">
+                <span class="filtertype">Inherited<br />
+                </span>
+                <ol id="linearization">
+                  <li class="in" name="io.dylemma.frp.EventStream"><span>EventStream</span></li><li class="in" name="scala.AnyRef"><span>AnyRef</span></li><li class="in" name="scala.Any"><span>Any</span></li>
+                </ol>
+              </div><div id="ancestors">
+                <span class="filtertype">Implicitly<br />
+                </span>
+                <ol id="implicits"> <li class="in" name="io.dylemma.frp.EventStreamFutures" data-hidden="false"><span>by EventStreamFutures</span></li><li class="in" name="scala.Predef.any2stringadd" data-hidden="true"><span>by any2stringadd</span></li><li class="in" name="scala.Predef.any2stringfmt" data-hidden="true"><span>by any2stringfmt</span></li><li class="in" name="scala.Predef.any2ArrowAssoc" data-hidden="true"><span>by any2ArrowAssoc</span></li><li class="in" name="scala.Predef.any2Ensuring" data-hidden="true"><span>by any2Ensuring</span></li>
+                </ol>
+              </div><div id="ancestors">
+            <span class="filtertype"></span>
+            <ol>
+              <li class="hideall out"><span>Hide All</span></li>
+              <li class="showall in"><span>Show all</span></li>
+            </ol>
+            <a href="http://docs.scala-lang.org/overviews/scaladoc/usage.html#members" target="_blank">Learn more about member selection</a>
+          </div>
+        <div id="visbl">
+            <span class="filtertype">Visibility</span>
+            <ol><li class="public in"><span>Public</span></li><li class="all out"><span>All</span></li></ol>
+          </div>
+      </div>
+
+      <div id="template">
+        <div id="allMembers">
+        
+
+        
+
+        <div id="values" class="values members">
+              <h3>Abstract Value Members</h3>
+              <ol><li name="io.dylemma.frp.EventStream#++" visbl="pub" data-isabs="true" fullComment="yes" group="Ungrouped">
+      <a id="++[A1&gt;:A](that:io.dylemma.frp.EventStream[A1]):io.dylemma.frp.EventStream[A1]"></a>
+      <a id="++[A1&gt;:A](EventStream[A1]):EventStream[A1]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">abstract </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span title="gt4s: $plus$plus" class="name">++</span><span class="tparams">[<span name="A1">A1 &gt;: <span class="extype" name="io.dylemma.frp.EventStream.A">A</span></span>]</span><span class="params">(<span name="that">that: <a href="" class="extype" name="io.dylemma.frp.EventStream">EventStream</a>[<span class="extype" name="io.dylemma.frp.EventStream.++.A1">A1</span>]</span>)</span><span class="result">: <a href="" class="extype" name="io.dylemma.frp.EventStream">EventStream</a>[<span class="extype" name="io.dylemma.frp.EventStream.++.A1">A1</span>]</span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">Creates a new EventStream that represents the concatenation of this stream and <code>that</code>.</p><div class="fullcomment"><div class="comment cmt"><p>Creates a new EventStream that represents the concatenation of this stream and <code>that</code>.
+The resulting stream will re-fire all events from this stream at first. Once this stream
+stops, the new stream will begin re-firing events from <code>that</code> stream, up until that one
+stops as well. If both <code>this</code> and <code>that</code> streams are stopped at the time of creation,
+the resulting stream will also be stopped.
+</p></div><dl class="paramcmts block"><dt class="param">that</dt><dd class="cmt"><p>Another EventStream whose events will be re-fired after this stream has stopped.</p></dd><dt>returns</dt><dd class="cmt"><p>The concatenation of <code>this</code> and <code>that</code> event stream.
+</p></dd></dl></div>
+    </li><li name="io.dylemma.frp.EventStream#before" visbl="pub" data-isabs="true" fullComment="yes" group="Ungrouped">
+      <a id="before(deadline:scala.concurrent.duration.Deadline):io.dylemma.frp.EventStream[A]"></a>
+      <a id="before(Deadline):EventStream[A]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">abstract </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">before</span><span class="params">(<span name="deadline">deadline: <span class="extype" name="scala.concurrent.duration.Deadline">Deadline</span></span>)</span><span class="result">: <a href="" class="extype" name="io.dylemma.frp.EventStream">EventStream</a>[<span class="extype" name="io.dylemma.frp.EventStream.A">A</span>]</span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">Creates a new EventStream that re-fires events from this stream that happen before
+the given <code>deadline</code>.</p><div class="fullcomment"><div class="comment cmt"><p>Creates a new EventStream that re-fires events from this stream that happen before
+the given <code>deadline</code>. The resulting stream will stop automatically when the deadline
+expires, or when this stream stops. Time-based expiration will generally happen on
+another thread, as it is handled by a <code>ScheduledExecutorService</code>.
+</p></div></div>
+    </li><li name="io.dylemma.frp.EventStream#collect" visbl="pub" data-isabs="true" fullComment="yes" group="Ungrouped">
+      <a id="collect[B](pf:PartialFunction[A,B]):io.dylemma.frp.EventStream[B]"></a>
+      <a id="collect[B](PartialFunction[A,B]):EventStream[B]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">abstract </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">collect</span><span class="tparams">[<span name="B">B</span>]</span><span class="params">(<span name="pf">pf: <span class="extype" name="scala.PartialFunction">PartialFunction</span>[<span class="extype" name="io.dylemma.frp.EventStream.A">A</span>, <span class="extype" name="io.dylemma.frp.EventStream.collect.B">B</span>]</span>)</span><span class="result">: <a href="" class="extype" name="io.dylemma.frp.EventStream">EventStream</a>[<span class="extype" name="io.dylemma.frp.EventStream.collect.B">B</span>]</span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">Creates a new EventStream by applying a partial function to all events fired
+by this stream on which the function is defined.</p><div class="fullcomment"><div class="comment cmt"><p>Creates a new EventStream by applying a partial function to all events fired
+by this stream on which the function is defined. The resulting stream will stop
+when this stream stops.
+</p></div><dl class="paramcmts block"><dt class="param">pf</dt><dd class="cmt"><p>The partial function to apply to events from this stream</p></dd><dt>returns</dt><dd class="cmt"><p>A new stream that fires events transformed by <code>pf</code>
+</p></dd></dl></div>
+    </li><li name="io.dylemma.frp.EventStream#drop" visbl="pub" data-isabs="true" fullComment="yes" group="Ungrouped">
+      <a id="drop(count:Int):io.dylemma.frp.EventStream[A]"></a>
+      <a id="drop(Int):EventStream[A]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">abstract </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">drop</span><span class="params">(<span name="count">count: <span class="extype" name="scala.Int">Int</span></span>)</span><span class="result">: <a href="" class="extype" name="io.dylemma.frp.EventStream">EventStream</a>[<span class="extype" name="io.dylemma.frp.EventStream.A">A</span>]</span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">Creates a new EventStream that ignores the first <code>count</code> events fired by this stream,
+then re-fires all events afterward.</p><div class="fullcomment"><div class="comment cmt"><p>Creates a new EventStream that ignores the first <code>count</code> events fired by this stream,
+then re-fires all events afterward. The resulting stream will stop when this stream does.
+</p></div><dl class="paramcmts block"><dt class="param">count</dt><dd class="cmt"><p>The number of events to ignore.</p></dd><dt>returns</dt><dd class="cmt"><p>A new stream that fires all events from this stream after having ignored
+<code>count</code> of them.
+</p></dd></dl></div>
+    </li><li name="io.dylemma.frp.EventStream#dropWhile" visbl="pub" data-isabs="true" fullComment="yes" group="Ungrouped">
+      <a id="dropWhile(p:A=&gt;Boolean):io.dylemma.frp.EventStream[A]"></a>
+      <a id="dropWhile((A)⇒Boolean):EventStream[A]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">abstract </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">dropWhile</span><span class="params">(<span name="p">p: (<span class="extype" name="io.dylemma.frp.EventStream.A">A</span>) ⇒ <span class="extype" name="scala.Boolean">Boolean</span></span>)</span><span class="result">: <a href="" class="extype" name="io.dylemma.frp.EventStream">EventStream</a>[<span class="extype" name="io.dylemma.frp.EventStream.A">A</span>]</span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">Creates a new EventStream that will re-fire all events fired by this stream, starting
+as soon as the predicate function <code>p</code> returns <code>true</code> in response to one of the events.</p><div class="fullcomment"><div class="comment cmt"><p>Creates a new EventStream that will re-fire all events fired by this stream, starting
+as soon as the predicate function <code>p</code> returns <code>true</code> in response to one of the events.
+All events prior to the first &quot;passed&quot; event will be ignored. The resulting stream
+will stop when this stream stops.
+</p></div><dl class="paramcmts block"><dt class="param">p</dt><dd class="cmt"><p>The filter predicate function to evaluate events. Once this function returns
+<code>true</code>, all events (including the current one) will be re-fired.</p></dd><dt>returns</dt><dd class="cmt"><p>A new stream that ignores events until one of them causes <code>p</code> to return <code>true</code>.
+</p></dd></dl></div>
+    </li><li name="io.dylemma.frp.EventStream#either" visbl="pub" data-isabs="true" fullComment="yes" group="Ungrouped">
+      <a id="either[B](that:io.dylemma.frp.EventStream[B]):io.dylemma.frp.EventStream[Either[A,B]]"></a>
+      <a id="either[B](EventStream[B]):EventStream[Either[A,B]]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">abstract </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">either</span><span class="tparams">[<span name="B">B</span>]</span><span class="params">(<span name="that">that: <a href="" class="extype" name="io.dylemma.frp.EventStream">EventStream</a>[<span class="extype" name="io.dylemma.frp.EventStream.either.B">B</span>]</span>)</span><span class="result">: <a href="" class="extype" name="io.dylemma.frp.EventStream">EventStream</a>[<span class="extype" name="scala.Either">Either</span>[<span class="extype" name="io.dylemma.frp.EventStream.A">A</span>, <span class="extype" name="io.dylemma.frp.EventStream.either.B">B</span>]]</span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">Creates a new EventStream that fires all events from this stream as <code>Left</code>s, and all
+events from <code>that</code> stream as <code>Right</code>s.</p><div class="fullcomment"><div class="comment cmt"><p>Creates a new EventStream that fires all events from this stream as <code>Left</code>s, and all
+events from <code>that</code> stream as <code>Right</code>s. It is essentially the same as a union, but
+appropriate for when <code>this</code> and <code>that</code> are streams of different types. The resulting
+stream will stop once both parent streams are stopped.
+</p></div><dl class="paramcmts block"><dt class="param">that</dt><dd class="cmt"><p>Any EventStream to be joined with this stream in an &quot;Either&quot; Union.</p></dd><dt>returns</dt><dd class="cmt"><p>A new stream that fires events from <code>this</code> and <code>that</code> as <code>Either</code>s.
+</p></dd></dl></div>
+    </li><li name="io.dylemma.frp.EventStream#filter" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
+      <a id="filter(p:A=&gt;Boolean):io.dylemma.frp.EventStream[A]"></a>
+      <a id="filter((A)⇒Boolean):EventStream[A]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">abstract </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">filter</span><span class="params">(<span name="p">p: (<span class="extype" name="io.dylemma.frp.EventStream.A">A</span>) ⇒ <span class="extype" name="scala.Boolean">Boolean</span></span>)</span><span class="result">: <a href="" class="extype" name="io.dylemma.frp.EventStream">EventStream</a>[<span class="extype" name="io.dylemma.frp.EventStream.A">A</span>]</span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">Alias for <code>withFilter</code></p>
+    </li><li name="io.dylemma.frp.EventStream#flatMap" visbl="pub" data-isabs="true" fullComment="yes" group="Ungrouped">
+      <a id="flatMap[B](f:A=&gt;io.dylemma.frp.EventStream[B]):io.dylemma.frp.EventStream[B]"></a>
+      <a id="flatMap[B]((A)⇒EventStream[B]):EventStream[B]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">abstract </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">flatMap</span><span class="tparams">[<span name="B">B</span>]</span><span class="params">(<span name="f">f: (<span class="extype" name="io.dylemma.frp.EventStream.A">A</span>) ⇒ <a href="" class="extype" name="io.dylemma.frp.EventStream">EventStream</a>[<span class="extype" name="io.dylemma.frp.EventStream.flatMap.B">B</span>]</span>)</span><span class="result">: <a href="" class="extype" name="io.dylemma.frp.EventStream">EventStream</a>[<span class="extype" name="io.dylemma.frp.EventStream.flatMap.B">B</span>]</span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">Creates a new EventStream with the following behavior: for every event
+fired by this stream, a new stream will be created by applying <code>f</code> to that
+event; events from the new stream will be fired by the resulting stream until
+the next event from this stream, when the mapping re-starts.</p><div class="fullcomment"><div class="comment cmt"><p>Creates a new EventStream with the following behavior: for every event
+fired by this stream, a new stream will be created by applying <code>f</code> to that
+event; events from the new stream will be fired by the resulting stream until
+the next event from this stream, when the mapping re-starts. The resulting stream
+will stop when this stream stops.
+</p></div><dl class="paramcmts block"><dt class="param">f</dt><dd class="cmt"><p>A function that returns a new EventStream for every event fired by this stream.</p></dd><dt>returns</dt><dd class="cmt"><p>A new EventStream that fires events from the mapped streams, resetting the
+mapped stream every time this stream fires a new event.
+</p></dd></dl></div>
+    </li><li name="io.dylemma.frp.EventStream#foldLeft" visbl="pub" data-isabs="true" fullComment="yes" group="Ungrouped">
+      <a id="foldLeft[B](z:B)(op:(B,A)=&gt;B):io.dylemma.frp.EventStream[B]"></a>
+      <a id="foldLeft[B](B)((B,A)⇒B):EventStream[B]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">abstract </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">foldLeft</span><span class="tparams">[<span name="B">B</span>]</span><span class="params">(<span name="z">z: <span class="extype" name="io.dylemma.frp.EventStream.foldLeft.B">B</span></span>)</span><span class="params">(<span name="op">op: (<span class="extype" name="io.dylemma.frp.EventStream.foldLeft.B">B</span>, <span class="extype" name="io.dylemma.frp.EventStream.A">A</span>) ⇒ <span class="extype" name="io.dylemma.frp.EventStream.foldLeft.B">B</span></span>)</span><span class="result">: <a href="" class="extype" name="io.dylemma.frp.EventStream">EventStream</a>[<span class="extype" name="io.dylemma.frp.EventStream.foldLeft.B">B</span>]</span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">Creates a new EventStream that updates its state for each new event fired by
+this stream.</p><div class="fullcomment"><div class="comment cmt"><p>Creates a new EventStream that updates its state for each new event fired by
+this stream. The state starts at <code>z</code> and updates along the lines of
+<code>state = op(state, event)</code> for every <code>event</code> fired by this stream. Each time
+the state is updated, the new stream fires an event containing the state.
+</p></div><dl class="paramcmts block"><dt class="param">z</dt><dd class="cmt"><p>The initial state for the fold</p></dd><dt class="param">op</dt><dd class="cmt"><p>The update function, of the form <code>(state, next) =&gt; newState</code></p></dd><dt>returns</dt><dd class="cmt"><p>A new stream that fires events as its state updates according to <code>op</code>
+</p></dd></dl></div>
+    </li><li name="io.dylemma.frp.EventStream#grouped" visbl="pub" data-isabs="true" fullComment="yes" group="Ungrouped">
+      <a id="grouped(size:Int):io.dylemma.frp.EventStream[List[A]]"></a>
+      <a id="grouped(Int):EventStream[List[A]]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">abstract </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">grouped</span><span class="params">(<span name="size">size: <span class="extype" name="scala.Int">Int</span></span>)</span><span class="result">: <a href="" class="extype" name="io.dylemma.frp.EventStream">EventStream</a>[<span class="extype" name="scala.List">List</span>[<span class="extype" name="io.dylemma.frp.EventStream.A">A</span>]]</span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">Creates a new EventStream that accumulates events from this stream in a List,
+re-firing the list once it reaches the specified <code>size</code> (or once this stream stops).</p><div class="fullcomment"><div class="comment cmt"><p>Creates a new EventStream that accumulates events from this stream in a List,
+re-firing the list once it reaches the specified <code>size</code> (or once this stream stops).
+The behavior of the resulting stream is supposed to parallel the behavior of a
+scala standard library collection's <code>grouped</code> method.
+</p></div><dl class="paramcmts block"><dt class="param">size</dt><dd class="cmt"><p>The group size</p></dd><dt>returns</dt><dd class="cmt"><p>A new stream that buffers events into a list, firing them when the list
+reaches the given <code>size</code> or when this stream stops.
+</p></dd></dl></div>
+    </li><li name="io.dylemma.frp.EventStream#map" visbl="pub" data-isabs="true" fullComment="yes" group="Ungrouped">
+      <a id="map[B](f:A=&gt;B):io.dylemma.frp.EventStream[B]"></a>
+      <a id="map[B]((A)⇒B):EventStream[B]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">abstract </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">map</span><span class="tparams">[<span name="B">B</span>]</span><span class="params">(<span name="f">f: (<span class="extype" name="io.dylemma.frp.EventStream.A">A</span>) ⇒ <span class="extype" name="io.dylemma.frp.EventStream.map.B">B</span></span>)</span><span class="result">: <a href="" class="extype" name="io.dylemma.frp.EventStream">EventStream</a>[<span class="extype" name="io.dylemma.frp.EventStream.map.B">B</span>]</span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">Creates a mapped version of this EventStream.</p><div class="fullcomment"><div class="comment cmt"><p>Creates a mapped version of this EventStream. For every event <code>e</code>,
+fired by this stream, the mapped stream will fire an event equal
+to <code>f(e)</code>. The mapped stream will stop with this stream stops.
+</p></div><dl class="paramcmts block"><dt class="param">f</dt><dd class="cmt"><p>The transformation function to be applied to events from this stream.</p></dd><dt>returns</dt><dd class="cmt"><p>A new EventStream that fires events from this stream, transformed by <code>f</code>.
+</p></dd></dl></div>
+    </li><li name="io.dylemma.frp.EventStream#stopped" visbl="pub" data-isabs="true" fullComment="yes" group="Ungrouped">
+      <a id="stopped:Boolean"></a>
+      <a id="stopped:Boolean"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">abstract </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">stopped</span><span class="result">: <span class="extype" name="scala.Boolean">Boolean</span></span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">Marks whether or not this stream is stopped.</p><div class="fullcomment"><div class="comment cmt"><p>Marks whether or not this stream is stopped. A stopped stream will not
+produce any more events.</p></div><dl class="paramcmts block"><dt>returns</dt><dd class="cmt"><p><code>true</code> if this stream is stopped, <code>false</code> otherwise.
+</p></dd></dl></div>
+    </li><li name="io.dylemma.frp.EventStream#take" visbl="pub" data-isabs="true" fullComment="yes" group="Ungrouped">
+      <a id="take(count:Int):io.dylemma.frp.EventStream[A]"></a>
+      <a id="take(Int):EventStream[A]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">abstract </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">take</span><span class="params">(<span name="count">count: <span class="extype" name="scala.Int">Int</span></span>)</span><span class="result">: <a href="" class="extype" name="io.dylemma.frp.EventStream">EventStream</a>[<span class="extype" name="io.dylemma.frp.EventStream.A">A</span>]</span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">Creates a new EventStream that takes the first <code>count</code> events from this stream
+and fires them, then stops.</p><div class="fullcomment"><div class="comment cmt"><p>Creates a new EventStream that takes the first <code>count</code> events from this stream
+and fires them, then stops. The resulting stream will also stop if this stream
+stops anytime before it fires <code>count</code> new events.
+</p></div><dl class="paramcmts block"><dt class="param">count</dt><dd class="cmt"><p>The number of events that the resulting stream will re-fire</p></dd><dt>returns</dt><dd class="cmt"><p>A new stream that re-fires the first <code>count</code> events from this stream.
+</p></dd></dl></div>
+    </li><li name="io.dylemma.frp.EventStream#takeWhile" visbl="pub" data-isabs="true" fullComment="yes" group="Ungrouped">
+      <a id="takeWhile(p:A=&gt;Boolean):io.dylemma.frp.EventStream[A]"></a>
+      <a id="takeWhile((A)⇒Boolean):EventStream[A]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">abstract </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">takeWhile</span><span class="params">(<span name="p">p: (<span class="extype" name="io.dylemma.frp.EventStream.A">A</span>) ⇒ <span class="extype" name="scala.Boolean">Boolean</span></span>)</span><span class="result">: <a href="" class="extype" name="io.dylemma.frp.EventStream">EventStream</a>[<span class="extype" name="io.dylemma.frp.EventStream.A">A</span>]</span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">Creates a new EventStream that re-fires events from this stream as long as the
+event data satisfies <code>p</code>, the filter predicate.</p><div class="fullcomment"><div class="comment cmt"><p>Creates a new EventStream that re-fires events from this stream as long as the
+event data satisfies <code>p</code>, the filter predicate. The first event <code>e</code> that causes
+<code>p(e)</code> to be <code>false</code> will cause the resulting stream to stop. The new stream will
+also stop if this stream is already stopped, or becomes stopped at any time.
+</p></div><dl class="paramcmts block"><dt class="param">p</dt><dd class="cmt"><p>The filter predicate function. Events fired by this stream will be passed
+into <code>p</code>. As soon as the result is <code>false</code>, the new stream will stop.</p></dd><dt>returns</dt><dd class="cmt"><p>A new stream that re-fires events from this stream until the filter
+predicate fails for an event.
+</p></dd></dl></div>
+    </li><li name="io.dylemma.frp.EventStream#until" visbl="pub" data-isabs="true" fullComment="yes" group="Ungrouped">
+      <a id="until(end:io.dylemma.frp.EventStream[_]):io.dylemma.frp.EventStream[A]"></a>
+      <a id="until(EventStream[_]):EventStream[A]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">abstract </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">until</span><span class="params">(<span name="end">end: <a href="" class="extype" name="io.dylemma.frp.EventStream">EventStream</a>[_]</span>)</span><span class="result">: <a href="" class="extype" name="io.dylemma.frp.EventStream">EventStream</a>[<span class="extype" name="io.dylemma.frp.EventStream.A">A</span>]</span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">Creates a new EventStream that will re-fire all events from this stream until the <code>end</code>
+stream fires an event.</p><div class="fullcomment"><div class="comment cmt"><p>Creates a new EventStream that will re-fire all events from this stream until the <code>end</code>
+stream fires an event. The <code>end</code> stream stopping does not count as a fired event in this case.
+The resulting stream will also stop when and if this stream stops.
+</p></div><dl class="paramcmts block"><dt class="param">end</dt><dd class="cmt"><p>An EventStream whose first event marks the end of the resulting stream</p></dd><dt>returns</dt><dd class="cmt"><p>A new stream that re-fires events from this stream until the first event
+from the <code>end</code> stream.
+</p></dd></dl></div>
+    </li><li name="io.dylemma.frp.EventStream#unzip" visbl="pub" data-isabs="true" fullComment="yes" group="Ungrouped">
+      <a id="unzip[A1,A2](implicitasPair:A=&gt;(A1,A2)):(io.dylemma.frp.EventStream[A1],io.dylemma.frp.EventStream[A2])"></a>
+      <a id="unzip[A1,A2]((A)⇒(A1,A2)):(EventStream[A1],EventStream[A2])"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">abstract </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">unzip</span><span class="tparams">[<span name="A1">A1</span>, <span name="A2">A2</span>]</span><span class="params">(<span class="implicit">implicit </span><span name="asPair">asPair: (<span class="extype" name="io.dylemma.frp.EventStream.A">A</span>) ⇒ (<span class="extype" name="io.dylemma.frp.EventStream.unzip.A1">A1</span>, <span class="extype" name="io.dylemma.frp.EventStream.unzip.A2">A2</span>)</span>)</span><span class="result">: (<a href="" class="extype" name="io.dylemma.frp.EventStream">EventStream</a>[<span class="extype" name="io.dylemma.frp.EventStream.unzip.A1">A1</span>], <a href="" class="extype" name="io.dylemma.frp.EventStream">EventStream</a>[<span class="extype" name="io.dylemma.frp.EventStream.unzip.A2">A2</span>])</span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">Where this EventStream's data can be represented as a <code>Tuple2[A1, A2]</code>, this
+method creates two separate EventStreams that each represent a half of that pair,
+respectively.</p><div class="fullcomment"><div class="comment cmt"><p>Where this EventStream's data can be represented as a <code>Tuple2[A1, A2]</code>, this
+method creates two separate EventStreams that each represent a half of that pair,
+respectively.</p><p>Example usage:</p><pre><span class="kw">val</span> x = EventSource[(<span class="std">Int</span>, <span class="std">String</span>)]
+<span class="kw">val</span> (a,b) = x.unzip
+
+<span class="kw">for</span>(i <span class="kw">&lt;-</span> a) println(<span class="lit">"left: "</span> + i)
+<span class="kw">for</span>(s <span class="kw">&lt;-</span> b) println(<span class="lit">"right: + s)
+
+x fire 1 -> "</span>hi<span class="lit">"
+//prints "</span>left: <span class="num">1</span><span class="lit">"
+//prints "</span>right: hi<span class="lit">"
+
+x fire 5 -> "</span>earth<span class="lit">"
+//prints "</span>left: <span class="num">5</span><span class="lit">"
+//prints "</span>right: earth<span class="lit">"</span></pre></div><dl class="paramcmts block"><dt>returns</dt><dd class="cmt"><p>Two new streams that represent the left and right halves of this stream's
+events, respectively.
+</p></dd></dl></div>
+    </li><li name="io.dylemma.frp.EventStream#withFilter" visbl="pub" data-isabs="true" fullComment="yes" group="Ungrouped">
+      <a id="withFilter(p:A=&gt;Boolean):io.dylemma.frp.EventStream[A]"></a>
+      <a id="withFilter((A)⇒Boolean):EventStream[A]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">abstract </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">withFilter</span><span class="params">(<span name="p">p: (<span class="extype" name="io.dylemma.frp.EventStream.A">A</span>) ⇒ <span class="extype" name="scala.Boolean">Boolean</span></span>)</span><span class="result">: <a href="" class="extype" name="io.dylemma.frp.EventStream">EventStream</a>[<span class="extype" name="io.dylemma.frp.EventStream.A">A</span>]</span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">Creates a new EventStream that fires all events from this stream that match
+the filter predicate.</p><div class="fullcomment"><div class="comment cmt"><p>Creates a new EventStream that fires all events from this stream that match
+the filter predicate. The resulting stream will stop when this stream stops.
+</p></div><dl class="paramcmts block"><dt class="param">p</dt><dd class="cmt"><p>The filter predicate. For each event <code>e</code>, fired by this stream, the
+filtered stream will fire <code>e</code> as long as <code>p(e)</code> returns <code>true</code>.</p></dd><dt>returns</dt><dd class="cmt"><p>A filtered version of this stream.
+</p></dd></dl></div>
+    </li><li name="io.dylemma.frp.EventStream#within" visbl="pub" data-isabs="true" fullComment="yes" group="Ungrouped">
+      <a id="within(duration:scala.concurrent.duration.Duration):io.dylemma.frp.EventStream[A]"></a>
+      <a id="within(Duration):EventStream[A]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">abstract </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">within</span><span class="params">(<span name="duration">duration: <span class="extype" name="scala.concurrent.duration.Duration">Duration</span></span>)</span><span class="result">: <a href="" class="extype" name="io.dylemma.frp.EventStream">EventStream</a>[<span class="extype" name="io.dylemma.frp.EventStream.A">A</span>]</span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">Creates a new EventStream that re-fires events from this stream that happen within
+the given <code>duration</code> from the time of creation.</p><div class="fullcomment"><div class="comment cmt"><p>Creates a new EventStream that re-fires events from this stream that happen within
+the given <code>duration</code> from the time of creation. The resulting stream will stop
+when this stream stops, or when the <code>duration</code> runs out. Time-based expiration will
+generally happen on another thread, as it is handled by a <code>ScheduledExecutorService</code>.
+</p></div><dl class="paramcmts block"><dt class="param">duration</dt><dd class="cmt"><p>The amount of time before the resulting stream stops automatically.</p></dd><dt>returns</dt><dd class="cmt"><p>A new stream that represents all events fired by this stream, within the
+given <code>duration</code> from the time of creation.
+</p></dd></dl></div>
+    </li><li name="io.dylemma.frp.EventStream#zip" visbl="pub" data-isabs="true" fullComment="yes" group="Ungrouped">
+      <a id="zip[B](that:io.dylemma.frp.EventStream[B]):io.dylemma.frp.EventStream[(A,B)]"></a>
+      <a id="zip[B](EventStream[B]):EventStream[(A,B)]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">abstract </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">zip</span><span class="tparams">[<span name="B">B</span>]</span><span class="params">(<span name="that">that: <a href="" class="extype" name="io.dylemma.frp.EventStream">EventStream</a>[<span class="extype" name="io.dylemma.frp.EventStream.zip.B">B</span>]</span>)</span><span class="result">: <a href="" class="extype" name="io.dylemma.frp.EventStream">EventStream</a>[(<span class="extype" name="io.dylemma.frp.EventStream.A">A</span>, <span class="extype" name="io.dylemma.frp.EventStream.zip.B">B</span>)]</span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">Creates a new EventStream that joins this stream with <code>that</code> stream, firing events
+as pairs as soon as an event is available from both streams.</p><div class="fullcomment"><div class="comment cmt"><p>Creates a new EventStream that joins this stream with <code>that</code> stream, firing events
+as pairs as soon as an event is available from both streams. The new stream will
+buffer events from both parent streams, so take care to avoid creating a zipped stream
+if one stream is expected to fire significantly more events than the other; the
+buffer for the larger stream will continue to accumulate without being emptied.</p><p>Example usage:</p><pre><span class="kw">val</span> a = EventSource[<span class="std">Int</span>]
+<span class="kw">val</span> b = EventSource[<span class="std">String</span>]
+<span class="kw">val</span> c: EventStream[(<span class="std">Int</span>, <span class="std">String</span>)] = a zip b
+
+c foreach println _
+
+a fire <span class="num">5</span>
+a fire <span class="num">2</span>
+a fire <span class="num">4</span>
+b fire <span class="lit">"A"</span> <span class="cmt">// prints "(5, A)"</span>
+b fire <span class="lit">"B"</span> <span class="cmt">// prints "(2, B)"</span>
+b fire <span class="lit">"C"</span> <span class="cmt">// prints "(4, C)"</span></pre></div><dl class="paramcmts block"><dt class="param">that</dt><dd class="cmt"><p>The event stream to be zipped with this stream.</p></dd><dt>returns</dt><dd class="cmt"><p>A new stream that fires a pair for each corresponding pair of events from
+<code>this</code> stream and <code>that</code> stream.
+</p></dd></dl></div>
+    </li><li name="io.dylemma.frp.EventStream#zipWithIndex" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
+      <a id="zipWithIndex:io.dylemma.frp.EventStream[(A,Int)]"></a>
+      <a id="zipWithIndex:EventStream[(A,Int)]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">abstract </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">zipWithIndex</span><span class="result">: <a href="" class="extype" name="io.dylemma.frp.EventStream">EventStream</a>[(<span class="extype" name="io.dylemma.frp.EventStream.A">A</span>, <span class="extype" name="scala.Int">Int</span>)]</span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">Creates a new EventStream that re-fires events from this stream, paired with the
+zero-based index of the event.</p>
+    </li><li name="io.dylemma.frp.EventStream#zipWithStaleness" visbl="pub" data-isabs="true" fullComment="yes" group="Ungrouped">
+      <a id="zipWithStaleness:io.dylemma.frp.EventStream[(A,()=&gt;Boolean)]"></a>
+      <a id="zipWithStaleness:EventStream[(A,()⇒Boolean)]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">abstract </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">zipWithStaleness</span><span class="result">: <a href="" class="extype" name="io.dylemma.frp.EventStream">EventStream</a>[(<span class="extype" name="io.dylemma.frp.EventStream.A">A</span>, () ⇒ <span class="extype" name="scala.Boolean">Boolean</span>)]</span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">Creates a new EventStream that re-fires events from this stream, paired with a
+function that checks if that event is currently &quot;stale&quot;.</p><div class="fullcomment"><div class="comment cmt"><p>Creates a new EventStream that re-fires events from this stream, paired with a
+function that checks if that event is currently &quot;stale&quot;. A stale event is one that
+is not currently the most recent event fired by the stream.
+</p></div></div>
+    </li><li name="io.dylemma.frp.EventStream#zipWithTime" visbl="pub" data-isabs="true" fullComment="yes" group="Ungrouped">
+      <a id="zipWithTime[T](implicitevidence$1:io.dylemma.frp.Time[T]):io.dylemma.frp.EventStream[(A,T)]"></a>
+      <a id="zipWithTime[T](Time[T]):EventStream[(A,T)]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">abstract </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">zipWithTime</span><span class="tparams">[<span name="T">T</span>]</span><span class="params">(<span class="implicit">implicit </span><span name="arg0">arg0: <a href="Time.html" class="extype" name="io.dylemma.frp.Time">Time</a>[<span class="extype" name="io.dylemma.frp.EventStream.zipWithTime.T">T</span>]</span>)</span><span class="result">: <a href="" class="extype" name="io.dylemma.frp.EventStream">EventStream</a>[(<span class="extype" name="io.dylemma.frp.EventStream.A">A</span>, <span class="extype" name="io.dylemma.frp.EventStream.zipWithTime.T">T</span>)]</span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">Creates a new EventStream that re-fires events from this stream, paired with
+a time stamp representing when the event was fired.</p><div class="fullcomment"><div class="comment cmt"><p>Creates a new EventStream that re-fires events from this stream, paired with
+a time stamp representing when the event was fired.
+</p></div><dl class="paramcmts block"><dt class="tparam">T</dt><dd class="cmt"><p>The type of Time</p></dd><dt class="param">arg0</dt><dd class="cmt"><p>An instance of <code>Time[T]</code> that can generate time stamps. The default
+implementation is <a href="package$$SystemTime$.html" class="extype" name="io.dylemma.frp.SystemTime">SystemTime</a> which generates <code>Long</code> time stamps by calling
+<code>System.currentTimeMillis</code>.
+</p></dd></dl></div>
+    </li><li name="io.dylemma.frp.EventStream#||" visbl="pub" data-isabs="true" fullComment="yes" group="Ungrouped">
+      <a id="||[A1&gt;:A](that:io.dylemma.frp.EventStream[A1]):io.dylemma.frp.EventStream[A1]"></a>
+      <a id="||[A1&gt;:A](EventStream[A1]):EventStream[A1]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">abstract </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span title="gt4s: $bar$bar" class="name">||</span><span class="tparams">[<span name="A1">A1 &gt;: <span class="extype" name="io.dylemma.frp.EventStream.A">A</span></span>]</span><span class="params">(<span name="that">that: <a href="" class="extype" name="io.dylemma.frp.EventStream">EventStream</a>[<span class="extype" name="io.dylemma.frp.EventStream.||.A1">A1</span>]</span>)</span><span class="result">: <a href="" class="extype" name="io.dylemma.frp.EventStream">EventStream</a>[<span class="extype" name="io.dylemma.frp.EventStream.||.A1">A1</span>]</span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">Creates a new EventStream that represents the union of <code>this</code> and <code>that</code> stream.</p><div class="fullcomment"><div class="comment cmt"><p>Creates a new EventStream that represents the union of <code>this</code> and <code>that</code> stream.
+All events from both streams will be re-fired in the order that they are encountered.
+The resulting stream will stop once both parent streams are stopped.
+</p></div><dl class="paramcmts block"><dt class="param">that</dt><dd class="cmt"><p>Any EventStream, to be joined with this stream in a Union.</p></dd><dt>returns</dt><dd class="cmt"><p>The Union of this stream and <code>that</code> stream.
+</p></dd></dl></div>
+    </li></ol>
+            </div>
+
+        <div id="values" class="values members">
+              <h3>Concrete Value Members</h3>
+              <ol><li name="scala.AnyRef#!=" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="!=(x$1:AnyRef):Boolean"></a>
+      <a id="!=(AnyRef):Boolean"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span title="gt4s: $bang$eq" class="name">!=</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="scala.AnyRef">AnyRef</span></span>)</span><span class="result">: <span class="extype" name="scala.Boolean">Boolean</span></span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
+    </li><li name="scala.Any#!=" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="!=(x$1:Any):Boolean"></a>
+      <a id="!=(Any):Boolean"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span title="gt4s: $bang$eq" class="name">!=</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="scala.Any">Any</span></span>)</span><span class="result">: <span class="extype" name="scala.Boolean">Boolean</span></span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Any</dd></dl></div>
+    </li><li name="scala.AnyRef###" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="##():Int"></a>
+      <a id="##():Int"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span title="gt4s: $hash$hash" class="name">##</span><span class="params">()</span><span class="result">: <span class="extype" name="scala.Int">Int</span></span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
+    </li><li name="scala.Predef.any2stringadd#+" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="+(other:String):String"></a>
+      <a id="+(String):String"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span title="gt4s: $plus" class="implicit">+</span><span class="params">(<span name="other">other: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="result">: <span class="extype" name="java.lang.String">String</span></span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt class="implicit">Implicit information</dt><dd>
+            This member is added by an implicit conversion from <a href="" class="extype" name="io.dylemma.frp.EventStream">EventStream</a>[<span class="extype" name="io.dylemma.frp.EventStream.A">A</span>] to
+            <span class="extype" name="scala.runtime.StringAdd">StringAdd</span> performed by method any2stringadd in scala.Predef.
+            
+          </dd><dt>Definition Classes</dt><dd>StringAdd</dd></dl></div>
+    </li><li name="scala.Predef.any2ArrowAssoc#-&gt;" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="-&gt;[B](y:B):(A,B)"></a>
+      <a id="-&gt;[B](B):(EventStream[A],B)"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span title="gt4s: $minus$greater" class="implicit">-&gt;</span><span class="tparams">[<span name="B">B</span>]</span><span class="params">(<span name="y">y: <span class="extype" name="scala.Predef.ArrowAssoc.-&gt;.B">B</span></span>)</span><span class="result">: (<a href="" class="extype" name="io.dylemma.frp.EventStream">EventStream</a>[<span class="extype" name="io.dylemma.frp.EventStream.A">A</span>], <span class="extype" name="scala.Predef.ArrowAssoc.-&gt;.B">B</span>)</span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt class="implicit">Implicit information</dt><dd>
+            This member is added by an implicit conversion from <a href="" class="extype" name="io.dylemma.frp.EventStream">EventStream</a>[<span class="extype" name="io.dylemma.frp.EventStream.A">A</span>] to
+            <span class="extype" name="scala.Predef.ArrowAssoc">ArrowAssoc</span>[<a href="" class="extype" name="io.dylemma.frp.EventStream">EventStream</a>[<span class="extype" name="io.dylemma.frp.EventStream.A">A</span>]] performed by method any2ArrowAssoc in scala.Predef.
+            
+          </dd><dt>Definition Classes</dt><dd>ArrowAssoc</dd><dt>Annotations</dt><dd>
+                <span class="name">@inline</span><span class="args">()</span>
+              
+        </dd></dl></div>
+    </li><li name="scala.AnyRef#==" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="==(x$1:AnyRef):Boolean"></a>
+      <a id="==(AnyRef):Boolean"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span title="gt4s: $eq$eq" class="name">==</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="scala.AnyRef">AnyRef</span></span>)</span><span class="result">: <span class="extype" name="scala.Boolean">Boolean</span></span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
+    </li><li name="scala.Any#==" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="==(x$1:Any):Boolean"></a>
+      <a id="==(Any):Boolean"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span title="gt4s: $eq$eq" class="name">==</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="scala.Any">Any</span></span>)</span><span class="result">: <span class="extype" name="scala.Boolean">Boolean</span></span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Any</dd></dl></div>
+    </li><li name="scala.Any#asInstanceOf" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="asInstanceOf[T0]:T0"></a>
+      <a id="asInstanceOf[T0]:T0"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">asInstanceOf</span><span class="tparams">[<span name="T0">T0</span>]</span><span class="result">: <span class="extype" name="scala.Any.asInstanceOf.T0">T0</span></span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Any</dd></dl></div>
+    </li><li name="scala.AnyRef#clone" visbl="prt" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="clone():Object"></a>
+      <a id="clone():AnyRef"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">clone</span><span class="params">()</span><span class="result">: <span class="extype" name="scala.AnyRef">AnyRef</span></span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>protected[<a href="../../../java$lang.html" class="extype" name="java.lang">java.lang</a>] </dd><dt>Definition Classes</dt><dd>AnyRef</dd><dt>Annotations</dt><dd>
+                <span class="name">@throws</span><span class="args">(<span>
+      
+      <span class="defval" name="classOf[java.lang.CloneNotSupportedException]">...</span>
+    </span>)</span>
+              
+        </dd></dl></div>
+    </li><li name="io.dylemma.frp.EventStreamFutures#end" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="end[T](implicitobs:io.dylemma.frp.Observer,implicittime:io.dylemma.frp.Time[T]):scala.concurrent.Future[T]"></a>
+      <a id="end[T](Observer,Time[T]):Future[T]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="implicit">end</span><span class="tparams">[<span name="T">T</span>]</span><span class="params">(<span class="implicit">implicit </span><span name="obs">obs: <a href="Observer.html" class="extype" name="io.dylemma.frp.Observer">Observer</a></span>, <span name="time">time: <a href="Time.html" class="extype" name="io.dylemma.frp.Time">Time</a>[<span class="extype" name="io.dylemma.frp.EventStreamFutures.end.T">T</span>]</span>)</span><span class="result">: <span class="extype" name="scala.concurrent.Future">Future</span>[<span class="extype" name="io.dylemma.frp.EventStreamFutures.end.T">T</span>]</span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">Returns a <code>Future</code> that will complete when this stream <code>stop</code>s.</p><div class="fullcomment"><div class="comment cmt"><p>Returns a <code>Future</code> that will complete when this stream <code>stop</code>s. The
+resulting value will be a rough estimate (<code>System.currentTimeMillis</code>)
+of when the stream ended. If the stream never ends, the resulting
+Future will never complete.
+</p></div><dl class="paramcmts block"><dt>returns</dt><dd class="cmt"><p>A <code>Future</code> containing a time stamp describing when this stream stopped.
+</p></dd></dl><dl class="attributes block"> <dt class="implicit">Implicit information</dt><dd>
+            This member is added by an implicit conversion from <a href="" class="extype" name="io.dylemma.frp.EventStream">EventStream</a>[<span class="extype" name="io.dylemma.frp.EventStream.A">A</span>] to
+            <a href="package$$EventStreamFutures.html" class="extype" name="io.dylemma.frp.EventStreamFutures">EventStreamFutures</a>[<span class="extype" name="io.dylemma.frp.EventStream.A">A</span>] performed by method EventStreamFutures in <a href="package.html" class="extype" name="io.dylemma.frp">io.dylemma.frp</a>.
+            
+          </dd><dt>Definition Classes</dt><dd><a href="package$$EventStreamFutures.html" class="extype" name="io.dylemma.frp.EventStreamFutures">EventStreamFutures</a></dd></dl></div>
+    </li><li name="scala.Predef.any2Ensuring#ensuring" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="ensuring(cond:A=&gt;Boolean,msg:=&gt;Any):A"></a>
+      <a id="ensuring((EventStream[A])⇒Boolean,⇒Any):EventStream[A]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="implicit">ensuring</span><span class="params">(<span name="cond">cond: (<a href="" class="extype" name="io.dylemma.frp.EventStream">EventStream</a>[<span class="extype" name="io.dylemma.frp.EventStream.A">A</span>]) ⇒ <span class="extype" name="scala.Boolean">Boolean</span></span>, <span name="msg">msg: ⇒ <span class="extype" name="scala.Any">Any</span></span>)</span><span class="result">: <a href="" class="extype" name="io.dylemma.frp.EventStream">EventStream</a>[<span class="extype" name="io.dylemma.frp.EventStream.A">A</span>]</span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt class="implicit">Implicit information</dt><dd>
+            This member is added by an implicit conversion from <a href="" class="extype" name="io.dylemma.frp.EventStream">EventStream</a>[<span class="extype" name="io.dylemma.frp.EventStream.A">A</span>] to
+            <span class="extype" name="scala.Predef.Ensuring">Ensuring</span>[<a href="" class="extype" name="io.dylemma.frp.EventStream">EventStream</a>[<span class="extype" name="io.dylemma.frp.EventStream.A">A</span>]] performed by method any2Ensuring in scala.Predef.
+            
+          </dd><dt>Definition Classes</dt><dd>Ensuring</dd></dl></div>
+    </li><li name="scala.Predef.any2Ensuring#ensuring" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="ensuring(cond:A=&gt;Boolean):A"></a>
+      <a id="ensuring((EventStream[A])⇒Boolean):EventStream[A]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="implicit">ensuring</span><span class="params">(<span name="cond">cond: (<a href="" class="extype" name="io.dylemma.frp.EventStream">EventStream</a>[<span class="extype" name="io.dylemma.frp.EventStream.A">A</span>]) ⇒ <span class="extype" name="scala.Boolean">Boolean</span></span>)</span><span class="result">: <a href="" class="extype" name="io.dylemma.frp.EventStream">EventStream</a>[<span class="extype" name="io.dylemma.frp.EventStream.A">A</span>]</span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt class="implicit">Implicit information</dt><dd>
+            This member is added by an implicit conversion from <a href="" class="extype" name="io.dylemma.frp.EventStream">EventStream</a>[<span class="extype" name="io.dylemma.frp.EventStream.A">A</span>] to
+            <span class="extype" name="scala.Predef.Ensuring">Ensuring</span>[<a href="" class="extype" name="io.dylemma.frp.EventStream">EventStream</a>[<span class="extype" name="io.dylemma.frp.EventStream.A">A</span>]] performed by method any2Ensuring in scala.Predef.
+            
+          </dd><dt>Definition Classes</dt><dd>Ensuring</dd></dl></div>
+    </li><li name="scala.Predef.any2Ensuring#ensuring" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="ensuring(cond:Boolean,msg:=&gt;Any):A"></a>
+      <a id="ensuring(Boolean,⇒Any):EventStream[A]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="implicit">ensuring</span><span class="params">(<span name="cond">cond: <span class="extype" name="scala.Boolean">Boolean</span></span>, <span name="msg">msg: ⇒ <span class="extype" name="scala.Any">Any</span></span>)</span><span class="result">: <a href="" class="extype" name="io.dylemma.frp.EventStream">EventStream</a>[<span class="extype" name="io.dylemma.frp.EventStream.A">A</span>]</span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt class="implicit">Implicit information</dt><dd>
+            This member is added by an implicit conversion from <a href="" class="extype" name="io.dylemma.frp.EventStream">EventStream</a>[<span class="extype" name="io.dylemma.frp.EventStream.A">A</span>] to
+            <span class="extype" name="scala.Predef.Ensuring">Ensuring</span>[<a href="" class="extype" name="io.dylemma.frp.EventStream">EventStream</a>[<span class="extype" name="io.dylemma.frp.EventStream.A">A</span>]] performed by method any2Ensuring in scala.Predef.
+            
+          </dd><dt>Definition Classes</dt><dd>Ensuring</dd></dl></div>
+    </li><li name="scala.Predef.any2Ensuring#ensuring" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="ensuring(cond:Boolean):A"></a>
+      <a id="ensuring(Boolean):EventStream[A]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="implicit">ensuring</span><span class="params">(<span name="cond">cond: <span class="extype" name="scala.Boolean">Boolean</span></span>)</span><span class="result">: <a href="" class="extype" name="io.dylemma.frp.EventStream">EventStream</a>[<span class="extype" name="io.dylemma.frp.EventStream.A">A</span>]</span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt class="implicit">Implicit information</dt><dd>
+            This member is added by an implicit conversion from <a href="" class="extype" name="io.dylemma.frp.EventStream">EventStream</a>[<span class="extype" name="io.dylemma.frp.EventStream.A">A</span>] to
+            <span class="extype" name="scala.Predef.Ensuring">Ensuring</span>[<a href="" class="extype" name="io.dylemma.frp.EventStream">EventStream</a>[<span class="extype" name="io.dylemma.frp.EventStream.A">A</span>]] performed by method any2Ensuring in scala.Predef.
+            
+          </dd><dt>Definition Classes</dt><dd>Ensuring</dd></dl></div>
+    </li><li name="scala.AnyRef#eq" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="eq(x$1:AnyRef):Boolean"></a>
+      <a id="eq(AnyRef):Boolean"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">eq</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="scala.AnyRef">AnyRef</span></span>)</span><span class="result">: <span class="extype" name="scala.Boolean">Boolean</span></span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
+    </li><li name="scala.AnyRef#equals" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="equals(x$1:Any):Boolean"></a>
+      <a id="equals(Any):Boolean"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">equals</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="scala.Any">Any</span></span>)</span><span class="result">: <span class="extype" name="scala.Boolean">Boolean</span></span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
+    </li><li name="scala.AnyRef#finalize" visbl="prt" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="finalize():Unit"></a>
+      <a id="finalize():Unit"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">finalize</span><span class="params">()</span><span class="result">: <span class="extype" name="scala.Unit">Unit</span></span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>protected[<a href="../../../java$lang.html" class="extype" name="java.lang">java.lang</a>] </dd><dt>Definition Classes</dt><dd>AnyRef</dd><dt>Annotations</dt><dd>
+                <span class="name">@throws</span><span class="args">(<span>
+      
+      <span class="symbol">classOf[java.lang.Throwable]</span>
+    </span>)</span>
+              
+        </dd></dl></div>
+    </li><li name="io.dylemma.frp.EventStream#foreach" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="foreach[U](f:A=&gt;U)(implicitobs:io.dylemma.frp.Observer):Unit"></a>
+      <a id="foreach[U]((A)⇒U)(Observer):Unit"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">foreach</span><span class="tparams">[<span name="U">U</span>]</span><span class="params">(<span name="f">f: (<span class="extype" name="io.dylemma.frp.EventStream.A">A</span>) ⇒ <span class="extype" name="io.dylemma.frp.EventStream.foreach.U">U</span></span>)</span><span class="params">(<span class="implicit">implicit </span><span name="obs">obs: <a href="Observer.html" class="extype" name="io.dylemma.frp.Observer">Observer</a></span>)</span><span class="result">: <span class="extype" name="scala.Unit">Unit</span></span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">Attach an event handler for data fired by this stream.</p><div class="fullcomment"><div class="comment cmt"><p>Attach an event handler for data fired by this stream.</p></div><dl class="paramcmts block"><dt class="param">f</dt><dd class="cmt"><p>A function that takes in an event data and performs side effects.
+</p></dd></dl></div>
+    </li><li name="scala.Predef.any2stringfmt#formatted" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="formatted(fmtstr:String):String"></a>
+      <a id="formatted(String):String"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="implicit">formatted</span><span class="params">(<span name="fmtstr">fmtstr: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="result">: <span class="extype" name="scala.Predef.String">String</span></span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt class="implicit">Implicit information</dt><dd>
+            This member is added by an implicit conversion from <a href="" class="extype" name="io.dylemma.frp.EventStream">EventStream</a>[<span class="extype" name="io.dylemma.frp.EventStream.A">A</span>] to
+            <span class="extype" name="scala.runtime.StringFormat">StringFormat</span> performed by method any2stringfmt in scala.Predef.
+            
+          </dd><dt>Definition Classes</dt><dd>StringFormat</dd><dt>Annotations</dt><dd>
+                <span class="name">@inline</span><span class="args">()</span>
+              
+        </dd></dl></div>
+    </li><li name="scala.AnyRef#getClass" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="getClass():Class[_]"></a>
+      <a id="getClass():Class[_]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">getClass</span><span class="params">()</span><span class="result">: <span class="extype" name="java.lang.Class">Class</span>[_]</span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
+    </li><li name="scala.AnyRef#hashCode" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="hashCode():Int"></a>
+      <a id="hashCode():Int"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">hashCode</span><span class="params">()</span><span class="result">: <span class="extype" name="scala.Int">Int</span></span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
+    </li><li name="scala.Any#isInstanceOf" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="isInstanceOf[T0]:Boolean"></a>
+      <a id="isInstanceOf[T0]:Boolean"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">isInstanceOf</span><span class="tparams">[<span name="T0">T0</span>]</span><span class="result">: <span class="extype" name="scala.Boolean">Boolean</span></span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Any</dd></dl></div>
+    </li><li name="io.dylemma.frp.EventStreamFutures#last" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="last(implicitobs:io.dylemma.frp.Observer):scala.concurrent.Future[A]"></a>
+      <a id="last(Observer):Future[A]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="implicit">last</span><span class="params">(<span class="implicit">implicit </span><span name="obs">obs: <a href="Observer.html" class="extype" name="io.dylemma.frp.Observer">Observer</a></span>)</span><span class="result">: <span class="extype" name="scala.concurrent.Future">Future</span>[<span class="extype" name="io.dylemma.frp.EventStream.A">A</span>]</span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">Returns a <code>Future</code> that will complete with the value of the last
+event fired by this stream.</p><div class="fullcomment"><div class="comment cmt"><p>Returns a <code>Future</code> that will complete with the value of the last
+event fired by this stream. If the stream is stopped or becomes stopped
+before firing an event, the Future will fail with a <code>NoSuchElementException</code>.
+</p></div><dl class="paramcmts block"><dt>returns</dt><dd class="cmt"><p>A <code>Future</code> containing the last event fired by this stream.
+</p></dd></dl><dl class="attributes block"> <dt class="implicit">Implicit information</dt><dd>
+            This member is added by an implicit conversion from <a href="" class="extype" name="io.dylemma.frp.EventStream">EventStream</a>[<span class="extype" name="io.dylemma.frp.EventStream.A">A</span>] to
+            <a href="package$$EventStreamFutures.html" class="extype" name="io.dylemma.frp.EventStreamFutures">EventStreamFutures</a>[<span class="extype" name="io.dylemma.frp.EventStream.A">A</span>] performed by method EventStreamFutures in <a href="package.html" class="extype" name="io.dylemma.frp">io.dylemma.frp</a>.
+            
+          </dd><dt>Definition Classes</dt><dd><a href="package$$EventStreamFutures.html" class="extype" name="io.dylemma.frp.EventStreamFutures">EventStreamFutures</a></dd></dl></div>
+    </li><li name="scala.AnyRef#ne" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="ne(x$1:AnyRef):Boolean"></a>
+      <a id="ne(AnyRef):Boolean"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">ne</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="scala.AnyRef">AnyRef</span></span>)</span><span class="result">: <span class="extype" name="scala.Boolean">Boolean</span></span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
+    </li><li name="io.dylemma.frp.EventStreamFutures#next" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="next(implicitobs:io.dylemma.frp.Observer):scala.concurrent.Future[A]"></a>
+      <a id="next(Observer):Future[A]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="implicit">next</span><span class="params">(<span class="implicit">implicit </span><span name="obs">obs: <a href="Observer.html" class="extype" name="io.dylemma.frp.Observer">Observer</a></span>)</span><span class="result">: <span class="extype" name="scala.concurrent.Future">Future</span>[<span class="extype" name="io.dylemma.frp.EventStream.A">A</span>]</span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">Returns a <code>Future</code> that will complete with the value of the next
+event fired by this stream.</p><div class="fullcomment"><div class="comment cmt"><p>Returns a <code>Future</code> that will complete with the value of the next
+event fired by this stream. If the stream is stopped, or if it
+stops before firing an event, the Future will fail with a
+<code>NoSuchElementException</code>.
+</p></div><dl class="paramcmts block"><dt>returns</dt><dd class="cmt"><p>A <code>Future</code> containing the next event fired by this stream.
+</p></dd></dl><dl class="attributes block"> <dt class="implicit">Implicit information</dt><dd>
+            This member is added by an implicit conversion from <a href="" class="extype" name="io.dylemma.frp.EventStream">EventStream</a>[<span class="extype" name="io.dylemma.frp.EventStream.A">A</span>] to
+            <a href="package$$EventStreamFutures.html" class="extype" name="io.dylemma.frp.EventStreamFutures">EventStreamFutures</a>[<span class="extype" name="io.dylemma.frp.EventStream.A">A</span>] performed by method EventStreamFutures in <a href="package.html" class="extype" name="io.dylemma.frp">io.dylemma.frp</a>.
+            
+          </dd><dt>Definition Classes</dt><dd><a href="package$$EventStreamFutures.html" class="extype" name="io.dylemma.frp.EventStreamFutures">EventStreamFutures</a></dd></dl></div>
+    </li><li name="scala.AnyRef#notify" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="notify():Unit"></a>
+      <a id="notify():Unit"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">notify</span><span class="params">()</span><span class="result">: <span class="extype" name="scala.Unit">Unit</span></span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
+    </li><li name="scala.AnyRef#notifyAll" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="notifyAll():Unit"></a>
+      <a id="notifyAll():Unit"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">notifyAll</span><span class="params">()</span><span class="result">: <span class="extype" name="scala.Unit">Unit</span></span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
+    </li><li name="io.dylemma.frp.EventStream#onEnd" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="onEnd(f:=&gt;Unit)(implicitobs:io.dylemma.frp.Observer):Unit"></a>
+      <a id="onEnd(⇒Unit)(Observer):Unit"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">onEnd</span><span class="params">(<span name="f">f: ⇒ <span class="extype" name="scala.Unit">Unit</span></span>)</span><span class="params">(<span class="implicit">implicit </span><span name="obs">obs: <a href="Observer.html" class="extype" name="io.dylemma.frp.Observer">Observer</a></span>)</span><span class="result">: <span class="extype" name="scala.Unit">Unit</span></span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">Assign a block of code that will run when this stream <code>stop</code>s.</p><div class="fullcomment"><div class="comment cmt"><p>Assign a block of code that will run when this stream <code>stop</code>s. If this stream
+is already stopped, the block of code will run immediately.</p></div><dl class="paramcmts block"><dt class="param">f</dt><dd class="cmt"><p>A block of code that will run when this stream sends a <code>Stop</code> event.
+</p></dd></dl></div>
+    </li><li name="io.dylemma.frp.EventStream#onNext" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="onNext(f:A=&gt;Unit)(implicitobs:io.dylemma.frp.Observer):Unit"></a>
+      <a id="onNext((A)⇒Unit)(Observer):Unit"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">onNext</span><span class="params">(<span name="f">f: (<span class="extype" name="io.dylemma.frp.EventStream.A">A</span>) ⇒ <span class="extype" name="scala.Unit">Unit</span></span>)</span><span class="params">(<span class="implicit">implicit </span><span name="obs">obs: <a href="Observer.html" class="extype" name="io.dylemma.frp.Observer">Observer</a></span>)</span><span class="result">: <span class="extype" name="scala.Unit">Unit</span></span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">Assign a handler for the next event fired by this stream.</p><div class="fullcomment"><div class="comment cmt"><p>Assign a handler for the next event fired by this stream.</p></div><dl class="paramcmts block"><dt class="param">f</dt><dd class="cmt"><p>A function that takes in an event data and performs side effects.
+It can be assumed that <code>f</code> will be run at most once.
+</p></dd></dl></div>
+    </li><li name="io.dylemma.frp.EventStream#sink" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="sink(handler:io.dylemma.frp.Event[A]=&gt;Boolean)(implicitobs:io.dylemma.frp.Observer):Unit"></a>
+      <a id="sink((Event[A])⇒Boolean)(Observer):Unit"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">sink</span><span class="params">(<span name="handler">handler: (<a href="Event.html" class="extype" name="io.dylemma.frp.Event">Event</a>[<span class="extype" name="io.dylemma.frp.EventStream.A">A</span>]) ⇒ <span class="extype" name="scala.Boolean">Boolean</span></span>)</span><span class="params">(<span class="implicit">implicit </span><span name="obs">obs: <a href="Observer.html" class="extype" name="io.dylemma.frp.Observer">Observer</a></span>)</span><span class="result">: <span class="extype" name="scala.Unit">Unit</span></span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">Add a handler function that acts as a <code>sink</code> for items produced by this
+<code>Source</code>.</p><div class="fullcomment"><div class="comment cmt"><p>Add a handler function that acts as a <code>sink</code> for items produced by this
+<code>Source</code>. The <code>handler</code> is expected to return <code>true</code> as long as it remains
+active. Once the <code>handler</code> function returns <code>false</code> in response to some
+produced item, it will be deactivated and will no longer receive new items.
+There is no guarantee of the order that handlers will be called.
+</p></div><dl class="paramcmts block"><dt class="param">handler</dt><dd class="cmt"><p>The handler function to receive items produced by this <code>Source</code>.
+Once the <code>handler</code> returns <code>false</code> in response to some produced item, it will
+be deactivated and will no longer receive new items.
+</p></dd><dt class="param">obs</dt><dd class="cmt"><p>An implicit <code>Observer</code> which is required in order to properly
+manage references between this <code>Source</code> and any <code>handler</code>s, avoiding
+reference loops.
+</p></dd></dl></div>
+    </li><li name="scala.AnyRef#synchronized" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="synchronized[T0](x$1:=&gt;T0):T0"></a>
+      <a id="synchronized[T0](⇒T0):T0"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">synchronized</span><span class="tparams">[<span name="T0">T0</span>]</span><span class="params">(<span name="arg0">arg0: ⇒ <span class="extype" name="java.lang.AnyRef.synchronized.T0">T0</span></span>)</span><span class="result">: <span class="extype" name="java.lang.AnyRef.synchronized.T0">T0</span></span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
+    </li><li name="scala.AnyRef#toString" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="toString():String"></a>
+      <a id="toString():String"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">toString</span><span class="params">()</span><span class="result">: <span class="extype" name="java.lang.String">String</span></span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
+    </li><li name="scala.AnyRef#wait" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="wait():Unit"></a>
+      <a id="wait():Unit"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">wait</span><span class="params">()</span><span class="result">: <span class="extype" name="scala.Unit">Unit</span></span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd><dt>Annotations</dt><dd>
+                <span class="name">@throws</span><span class="args">(<span>
+      
+      <span class="defval" name="classOf[java.lang.InterruptedException]">...</span>
+    </span>)</span>
+              
+        </dd></dl></div>
+    </li><li name="scala.AnyRef#wait" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="wait(x$1:Long,x$2:Int):Unit"></a>
+      <a id="wait(Long,Int):Unit"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">wait</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="scala.Long">Long</span></span>, <span name="arg1">arg1: <span class="extype" name="scala.Int">Int</span></span>)</span><span class="result">: <span class="extype" name="scala.Unit">Unit</span></span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd><dt>Annotations</dt><dd>
+                <span class="name">@throws</span><span class="args">(<span>
+      
+      <span class="defval" name="classOf[java.lang.InterruptedException]">...</span>
+    </span>)</span>
+              
+        </dd></dl></div>
+    </li><li name="scala.AnyRef#wait" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="wait(x$1:Long):Unit"></a>
+      <a id="wait(Long):Unit"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">wait</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="scala.Long">Long</span></span>)</span><span class="result">: <span class="extype" name="scala.Unit">Unit</span></span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd><dt>Annotations</dt><dd>
+                <span class="name">@throws</span><span class="args">(<span>
+      
+      <span class="defval" name="classOf[java.lang.InterruptedException]">...</span>
+    </span>)</span>
+              
+        </dd></dl></div>
+    </li><li name="scala.Predef.any2ArrowAssoc#→" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="→[B](y:B):(A,B)"></a>
+      <a id="→[B](B):(EventStream[A],B)"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span title="gt4s: $u2192" class="implicit">→</span><span class="tparams">[<span name="B">B</span>]</span><span class="params">(<span name="y">y: <span class="extype" name="scala.Predef.ArrowAssoc.→.B">B</span></span>)</span><span class="result">: (<a href="" class="extype" name="io.dylemma.frp.EventStream">EventStream</a>[<span class="extype" name="io.dylemma.frp.EventStream.A">A</span>], <span class="extype" name="scala.Predef.ArrowAssoc.→.B">B</span>)</span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt class="implicit">Implicit information</dt><dd>
+            This member is added by an implicit conversion from <a href="" class="extype" name="io.dylemma.frp.EventStream">EventStream</a>[<span class="extype" name="io.dylemma.frp.EventStream.A">A</span>] to
+            <span class="extype" name="scala.Predef.ArrowAssoc">ArrowAssoc</span>[<a href="" class="extype" name="io.dylemma.frp.EventStream">EventStream</a>[<span class="extype" name="io.dylemma.frp.EventStream.A">A</span>]] performed by method any2ArrowAssoc in scala.Predef.
+            
+          </dd><dt>Definition Classes</dt><dd>ArrowAssoc</dd></dl></div>
+    </li></ol>
+            </div>
+
+        <div id="values" class="values members">
+              <h3>Shadowed Implicit Value Members</h3>
+              <ol><li name="scala.Predef.any2stringadd#self" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="self:Any"></a>
+      <a id="self:Any"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">val</span>
+      </span>
+      <span class="symbol">
+        <span class="implicit shadowed">self</span><span class="result">: <span class="extype" name="scala.Any">Any</span></span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt class="implicit">Implicit information</dt><dd>
+            This member is added by an implicit conversion from <a href="" class="extype" name="io.dylemma.frp.EventStream">EventStream</a>[<span class="extype" name="io.dylemma.frp.EventStream.A">A</span>] to
+            <span class="extype" name="scala.runtime.StringAdd">StringAdd</span> performed by method any2stringadd in scala.Predef.
+            
+          </dd><dt class="implicit">Shadowing</dt><dd>This implicitly inherited member is ambiguous. One or more implicitly inherited members have similar signatures, so calling this member may produce an ambiguous implicit conversion compiler error.<br />To access this member you can use a <a href="http://stackoverflow.com/questions/2087250/what-is-the-purpose-of-type-ascription-in-scala" target="_blank">type ascription</a>:<br /><div class="cmt"><pre>(eventStream: StringAdd).self</pre></div></dd><dt>Definition Classes</dt><dd>StringAdd</dd></dl></div>
+    </li><li name="scala.Predef.any2stringfmt#self" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="self:Any"></a>
+      <a id="self:Any"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">val</span>
+      </span>
+      <span class="symbol">
+        <span class="implicit shadowed">self</span><span class="result">: <span class="extype" name="scala.Any">Any</span></span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt class="implicit">Implicit information</dt><dd>
+            This member is added by an implicit conversion from <a href="" class="extype" name="io.dylemma.frp.EventStream">EventStream</a>[<span class="extype" name="io.dylemma.frp.EventStream.A">A</span>] to
+            <span class="extype" name="scala.runtime.StringFormat">StringFormat</span> performed by method any2stringfmt in scala.Predef.
+            
+          </dd><dt class="implicit">Shadowing</dt><dd>This implicitly inherited member is ambiguous. One or more implicitly inherited members have similar signatures, so calling this member may produce an ambiguous implicit conversion compiler error.<br />To access this member you can use a <a href="http://stackoverflow.com/questions/2087250/what-is-the-purpose-of-type-ascription-in-scala" target="_blank">type ascription</a>:<br /><div class="cmt"><pre>(eventStream: StringFormat).self</pre></div></dd><dt>Definition Classes</dt><dd>StringFormat</dd></dl></div>
+    </li></ol>
+            </div>
+
+        <div id="values" class="values members">
+              <h3>Deprecated Value Members</h3>
+              <ol><li name="scala.Predef.any2ArrowAssoc#x" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="x:A"></a>
+      <a id="x:EventStream[A]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="implicit shadowed deprecated" title="Deprecated: (Since version 2.10.0) Use leftOfArrow instead">x</span><span class="result">: <a href="" class="extype" name="io.dylemma.frp.EventStream">EventStream</a>[<span class="extype" name="io.dylemma.frp.EventStream.A">A</span>]</span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt class="implicit">Implicit information</dt><dd>
+            This member is added by an implicit conversion from <a href="" class="extype" name="io.dylemma.frp.EventStream">EventStream</a>[<span class="extype" name="io.dylemma.frp.EventStream.A">A</span>] to
+            <span class="extype" name="scala.Predef.ArrowAssoc">ArrowAssoc</span>[<a href="" class="extype" name="io.dylemma.frp.EventStream">EventStream</a>[<span class="extype" name="io.dylemma.frp.EventStream.A">A</span>]] performed by method any2ArrowAssoc in scala.Predef.
+            
+          </dd><dt class="implicit">Shadowing</dt><dd>This implicitly inherited member is ambiguous. One or more implicitly inherited members have similar signatures, so calling this member may produce an ambiguous implicit conversion compiler error.<br />To access this member you can use a <a href="http://stackoverflow.com/questions/2087250/what-is-the-purpose-of-type-ascription-in-scala" target="_blank">type ascription</a>:<br /><div class="cmt"><pre>(eventStream: ArrowAssoc[EventStream[A]]).x</pre></div></dd><dt>Definition Classes</dt><dd>ArrowAssoc</dd><dt>Annotations</dt><dd>
+                <span class="name">@deprecated</span>
+              
+        </dd><dt>Deprecated</dt><dd class="cmt"><p><i>(Since version 2.10.0)</i> Use <code><u>leftOfArrow<code> instead</code></u></code></p></dd></dl></div>
+    </li><li name="scala.Predef.any2Ensuring#x" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="x:A"></a>
+      <a id="x:EventStream[A]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="implicit shadowed deprecated" title="Deprecated: (Since version 2.10.0) Use resultOfEnsuring instead">x</span><span class="result">: <a href="" class="extype" name="io.dylemma.frp.EventStream">EventStream</a>[<span class="extype" name="io.dylemma.frp.EventStream.A">A</span>]</span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt class="implicit">Implicit information</dt><dd>
+            This member is added by an implicit conversion from <a href="" class="extype" name="io.dylemma.frp.EventStream">EventStream</a>[<span class="extype" name="io.dylemma.frp.EventStream.A">A</span>] to
+            <span class="extype" name="scala.Predef.Ensuring">Ensuring</span>[<a href="" class="extype" name="io.dylemma.frp.EventStream">EventStream</a>[<span class="extype" name="io.dylemma.frp.EventStream.A">A</span>]] performed by method any2Ensuring in scala.Predef.
+            
+          </dd><dt class="implicit">Shadowing</dt><dd>This implicitly inherited member is ambiguous. One or more implicitly inherited members have similar signatures, so calling this member may produce an ambiguous implicit conversion compiler error.<br />To access this member you can use a <a href="http://stackoverflow.com/questions/2087250/what-is-the-purpose-of-type-ascription-in-scala" target="_blank">type ascription</a>:<br /><div class="cmt"><pre>(eventStream: Ensuring[EventStream[A]]).x</pre></div></dd><dt>Definition Classes</dt><dd>Ensuring</dd><dt>Annotations</dt><dd>
+                <span class="name">@deprecated</span>
+              
+        </dd><dt>Deprecated</dt><dd class="cmt"><p><i>(Since version 2.10.0)</i> Use <code><u>resultOfEnsuring<code> instead</code></u></code></p></dd></dl></div>
+    </li></ol>
+            </div>
+        </div>
+
+        <div id="inheritedMembers">
+        <div class="parent" name="scala.AnyRef">
+              <h3>Inherited from <span class="extype" name="scala.AnyRef">AnyRef</span></h3>
+            </div><div class="parent" name="scala.Any">
+              <h3>Inherited from <span class="extype" name="scala.Any">Any</span></h3>
+            </div>
+        <div class="conversion" name="io.dylemma.frp.EventStreamFutures">
+              <h3>Inherited by implicit conversion EventStreamFutures from
+                <a href="" class="extype" name="io.dylemma.frp.EventStream">EventStream</a>[<span class="extype" name="io.dylemma.frp.EventStream.A">A</span>] to <a href="package$$EventStreamFutures.html" class="extype" name="io.dylemma.frp.EventStreamFutures">EventStreamFutures</a>[<span class="extype" name="io.dylemma.frp.EventStream.A">A</span>]
+              </h3>
+            </div><div class="conversion" name="scala.Predef.any2stringadd">
+              <h3>Inherited by implicit conversion any2stringadd from
+                <a href="" class="extype" name="io.dylemma.frp.EventStream">EventStream</a>[<span class="extype" name="io.dylemma.frp.EventStream.A">A</span>] to <span class="extype" name="scala.runtime.StringAdd">StringAdd</span>
+              </h3>
+            </div><div class="conversion" name="scala.Predef.any2stringfmt">
+              <h3>Inherited by implicit conversion any2stringfmt from
+                <a href="" class="extype" name="io.dylemma.frp.EventStream">EventStream</a>[<span class="extype" name="io.dylemma.frp.EventStream.A">A</span>] to <span class="extype" name="scala.runtime.StringFormat">StringFormat</span>
+              </h3>
+            </div><div class="conversion" name="scala.Predef.any2ArrowAssoc">
+              <h3>Inherited by implicit conversion any2ArrowAssoc from
+                <a href="" class="extype" name="io.dylemma.frp.EventStream">EventStream</a>[<span class="extype" name="io.dylemma.frp.EventStream.A">A</span>] to <span class="extype" name="scala.Predef.ArrowAssoc">ArrowAssoc</span>[<a href="" class="extype" name="io.dylemma.frp.EventStream">EventStream</a>[<span class="extype" name="io.dylemma.frp.EventStream.A">A</span>]]
+              </h3>
+            </div><div class="conversion" name="scala.Predef.any2Ensuring">
+              <h3>Inherited by implicit conversion any2Ensuring from
+                <a href="" class="extype" name="io.dylemma.frp.EventStream">EventStream</a>[<span class="extype" name="io.dylemma.frp.EventStream.A">A</span>] to <span class="extype" name="scala.Predef.Ensuring">Ensuring</span>[<a href="" class="extype" name="io.dylemma.frp.EventStream">EventStream</a>[<span class="extype" name="io.dylemma.frp.EventStream.A">A</span>]]
+              </h3>
+            </div>
+        </div>
+
+        <div id="groupedMembers">
+        <div class="group" name="Ungrouped">
+              <h3>Ungrouped</h3>
+              
+            </div>
+        </div>
+
+      </div>
+
+      <div id="tooltip"></div>
+
+      <div id="footer">  </div>
+      <script defer="defer" type="text/javascript" id="jquery-js" src="../../../lib/jquery.js"></script><script defer="defer" type="text/javascript" id="jquery-ui-js" src="../../../lib/jquery-ui.js"></script><script defer="defer" type="text/javascript" id="tools-tooltip-js" src="../../../lib/tools.tooltip.js"></script><script defer="defer" type="text/javascript" id="template-js" src="../../../lib/template.js"></script>
+    </body>
+      </html>

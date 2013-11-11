@@ -1,0 +1,296 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html>
+        <head>
+          <title>frp - io.dylemma.frp</title>
+          <meta name="description" content="frp - io.dylemma.frp" />
+          <meta name="keywords" content="frp io.dylemma.frp" />
+          <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+          
+      <link href="../../../lib/template.css" media="screen" type="text/css" rel="stylesheet" />
+      <link href="../../../lib/diagrams.css" media="screen" type="text/css" rel="stylesheet" id="diagrams-css" />
+      <script type="text/javascript">
+         if(top === self) {
+            var url = '../../../index.html';
+            var hash = 'io.dylemma.frp.package';
+            var anchor = window.location.hash;
+            var anchor_opt = '';
+            if (anchor.length >= 1)
+              anchor_opt = '@' + anchor.substring(1);
+            window.location.href = url + '#' + hash + anchor_opt;
+         }
+   	  </script>
+    
+        </head>
+        <body class="value">
+      <div id="definition">
+        <img src="../../../lib/package_big.png" />
+        <p id="owner"><a href="../../package.html" class="extype" name="io">io</a>.<a href="../package.html" class="extype" name="io.dylemma">dylemma</a></p>
+        <h1>frp</h1>
+      </div>
+
+      <h4 id="signature" class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">package</span>
+      </span>
+      <span class="symbol">
+        <span class="name">frp</span>
+      </span>
+      </h4>
+      
+          <div id="comment" class="fullcommenttop"><div class="toggleContainer block">
+          <span class="toggle">Linear Supertypes</span>
+          <div class="superTypes hiddenContent"><span class="extype" name="scala.AnyRef">AnyRef</span>, <span class="extype" name="scala.Any">Any</span></div>
+        </div></div>
+        
+
+      <div id="mbrsel">
+        <div id="textfilter"><span class="pre"></span><span class="input"><input id="mbrsel-input" type="text" accesskey="/" /></span><span class="post"></span></div>
+        <div id="order">
+              <span class="filtertype">Ordering</span>
+              <ol>
+                
+                <li class="alpha in"><span>Alphabetic</span></li>
+                <li class="inherit out"><span>By inheritance</span></li>
+              </ol>
+            </div>
+        <div id="ancestors">
+                <span class="filtertype">Inherited<br />
+                </span>
+                <ol id="linearization">
+                  <li class="in" name="io.dylemma.frp"><span>frp</span></li><li class="in" name="scala.AnyRef"><span>AnyRef</span></li><li class="in" name="scala.Any"><span>Any</span></li>
+                </ol>
+              </div><div id="ancestors">
+            <span class="filtertype"></span>
+            <ol>
+              <li class="hideall out"><span>Hide All</span></li>
+              <li class="showall in"><span>Show all</span></li>
+            </ol>
+            <a href="http://docs.scala-lang.org/overviews/scaladoc/usage.html#members" target="_blank">Learn more about member selection</a>
+          </div>
+        <div id="visbl">
+            <span class="filtertype">Visibility</span>
+            <ol><li class="public in"><span>Public</span></li><li class="all out"><span>All</span></li></ol>
+          </div>
+      </div>
+
+      <div id="template">
+        <div id="allMembers">
+        
+
+        <div id="types" class="types members">
+              <h3>Type Members</h3>
+              <ol><li name="io.dylemma.frp.Event" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
+      <a id="Event[+A]extendsAnyRef"></a>
+      <a id="Event[+A]:Event[A]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">sealed abstract </span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="Event.html"><span class="name">Event</span></a><span class="tparams">[<span name="A">+A</span>]</span><span class="result"> extends <span class="extype" name="scala.AnyRef">AnyRef</span></span>
+      </span>
+      </h4>
+      <p class="comment cmt">Represents an event emitted by a <code>Publisher</code> class.</p>
+    </li><li name="io.dylemma.frp.EventJoin" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
+      <a id="EventJoin[A,B,C]extendsEventSource[C]"></a>
+      <a id="EventJoin[A,B,C]:EventJoin[A,B,C]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">trait</span>
+      </span>
+      <span class="symbol">
+        <a href="EventJoin.html"><span class="name">EventJoin</span></a><span class="tparams">[<span name="A">A</span>, <span name="B">B</span>, <span name="C">C</span>]</span><span class="result"> extends <a href="EventSource.html" class="extype" name="io.dylemma.frp.EventSource">EventSource</a>[<span class="extype" name="io.dylemma.frp.EventJoin.C">C</span>]</span>
+      </span>
+      </h4>
+      <p class="comment cmt">An EventJoin is a transformer that takes in events of type <code>A</code>
+and <code>B</code> from two parent <a href="EventStream.html" class="extype" name="io.dylemma.frp.EventStream">EventStream</a>s and produces any number
+of new events of type <code>C</code> in response.</p>
+    </li><li name="io.dylemma.frp.EventPipe" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
+      <a id="EventPipe[A,B]extendsEventSource[B]"></a>
+      <a id="EventPipe[A,B]:EventPipe[A,B]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">trait</span>
+      </span>
+      <span class="symbol">
+        <a href="EventPipe.html"><span class="name">EventPipe</span></a><span class="tparams">[<span name="A">A</span>, <span name="B">B</span>]</span><span class="result"> extends <a href="EventSource.html" class="extype" name="io.dylemma.frp.EventSource">EventSource</a>[<span class="extype" name="io.dylemma.frp.EventPipe.B">B</span>]</span>
+      </span>
+      </h4>
+      <p class="comment cmt">An EventPipe is a transformer that takes in events of type <code>A</code>
+from a single parent <a href="EventStream.html" class="extype" name="io.dylemma.frp.EventStream">EventStream</a> and produces any number of
+new events of type <code>B</code> in response.</p>
+    </li><li name="io.dylemma.frp.EventSource" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
+      <a id="EventSource[A]extendsEventStream[A]withEventSourceImpl[A]"></a>
+      <a id="EventSource[A]:EventSource[A]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">trait</span>
+      </span>
+      <span class="symbol">
+        <a href="EventSource.html"><span class="name">EventSource</span></a><span class="tparams">[<span name="A">A</span>]</span><span class="result"> extends <a href="EventStream.html" class="extype" name="io.dylemma.frp.EventStream">EventStream</a>[<span class="extype" name="io.dylemma.frp.EventSource.A">A</span>] with <span class="extype" name="io.dylemma.frp.impl.EventSourceImpl">EventSourceImpl</span>[<span class="extype" name="io.dylemma.frp.EventSource.A">A</span>]</span>
+      </span>
+      </h4>
+      <p class="comment cmt">EventSource is an implementation of <a href="EventStream.html" class="extype" name="io.dylemma.frp.EventStream">EventStream</a> that adds <code>fire</code> and <code>stop</code> methods.</p>
+    </li><li name="io.dylemma.frp.EventStream" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
+      <a id="EventStream[+A]extendsAnyRef"></a>
+      <a id="EventStream[+A]:EventStream[A]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">trait</span>
+      </span>
+      <span class="symbol">
+        <a href="EventStream.html"><span class="name">EventStream</span></a><span class="tparams">[<span name="A">+A</span>]</span><span class="result"> extends <span class="extype" name="scala.AnyRef">AnyRef</span></span>
+      </span>
+      </h4>
+      <p class="comment cmt">An EventStream represents a (potentially finite) series of events that may occur at
+any time in the future.</p>
+    </li><li name="io.dylemma.frp.EventStreamFutures" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="EventStreamFutures[A]extendsAnyRef"></a>
+      <a id="EventStreamFutures[A]:EventStreamFutures[A]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">implicit </span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="package$$EventStreamFutures.html"><span class="name">EventStreamFutures</span></a><span class="tparams">[<span name="A">A</span>]</span><span class="result"> extends <span class="extype" name="scala.AnyRef">AnyRef</span></span>
+      </span>
+      </h4>
+      
+    </li><li name="io.dylemma.frp.Fire" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="Fire[A]extendsEvent[A]withProductwithSerializable"></a>
+      <a id="Fire[A]:Fire[A]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="Fire.html"><span class="name">Fire</span></a><span class="tparams">[<span name="A">A</span>]</span><span class="params">(<span name="event">event: <span class="extype" name="io.dylemma.frp.Fire.A">A</span></span>)</span><span class="result"> extends <a href="Event.html" class="extype" name="io.dylemma.frp.Event">Event</a>[<span class="extype" name="io.dylemma.frp.Fire.A">A</span>] with <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      </h4>
+      <p class="comment cmt">Represents a single item from a stream of events.</p>
+    </li><li name="io.dylemma.frp.Observer" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
+      <a id="ObserverextendsAnyRef"></a>
+      <a id="Observer:Observer"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">trait</span>
+      </span>
+      <span class="symbol">
+        <a href="Observer.html"><span class="name">Observer</span></a><span class="result"> extends <span class="extype" name="scala.AnyRef">AnyRef</span></span>
+      </span>
+      </h4>
+      <p class="comment cmt">A memory management assistant.</p>
+    </li><li name="io.dylemma.frp.Time" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
+      <a id="Time[T]extendsAnyRef"></a>
+      <a id="Time[T]:Time[T]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">trait</span>
+      </span>
+      <span class="symbol">
+        <a href="Time.html"><span class="name">Time</span></a><span class="tparams">[<span name="T">T</span>]</span><span class="result"> extends <span class="extype" name="scala.AnyRef">AnyRef</span></span>
+      </span>
+      </h4>
+      <p class="comment cmt">Typeclass for types that can get the current time.</p>
+    </li></ol>
+            </div>
+
+        
+
+        <div id="values" class="values members">
+              <h3>Value Members</h3>
+              <ol><li name="io.dylemma.frp.EventSource" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="EventSource"></a>
+      <a id="EventSource:EventSource"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a href="EventSource$.html"><span class="name">EventSource</span></a>
+      </span>
+      </h4>
+      
+    </li><li name="io.dylemma.frp.EventStream" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="EventStream"></a>
+      <a id="EventStream:EventStream"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a href="EventStream$.html"><span class="name">EventStream</span></a>
+      </span>
+      </h4>
+      
+    </li><li name="io.dylemma.frp.Stop" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="Stop"></a>
+      <a id="Stop:Stop"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a href="Stop$.html"><span class="name">Stop</span></a><span class="result"> extends <a href="Event.html" class="extype" name="io.dylemma.frp.Event">Event</a>[<span class="extype" name="scala.Nothing">Nothing</span>] with <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      </h4>
+      <p class="comment cmt">Represents the end of a stream of events.</p>
+    </li><li name="io.dylemma.frp.SystemTime" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="SystemTime"></a>
+      <a id="SystemTime:SystemTime"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">implicit </span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a href="package$$SystemTime$.html"><span class="name">SystemTime</span></a><span class="result"> extends <a href="Time.html" class="extype" name="io.dylemma.frp.Time">Time</a>[<span class="extype" name="scala.Long">Long</span>]</span>
+      </span>
+      </h4>
+      <p class="comment cmt">An instance of the <code>Time</code> typeclass, for <code>Long</code> times.</p>
+    </li></ol>
+            </div>
+
+        
+
+        
+        </div>
+
+        <div id="inheritedMembers">
+        <div class="parent" name="scala.AnyRef">
+              <h3>Inherited from <span class="extype" name="scala.AnyRef">AnyRef</span></h3>
+            </div><div class="parent" name="scala.Any">
+              <h3>Inherited from <span class="extype" name="scala.Any">Any</span></h3>
+            </div>
+        
+        </div>
+
+        <div id="groupedMembers">
+        <div class="group" name="Ungrouped">
+              <h3>Ungrouped</h3>
+              
+            </div>
+        </div>
+
+      </div>
+
+      <div id="tooltip"></div>
+
+      <div id="footer">  </div>
+      <script defer="defer" type="text/javascript" id="jquery-js" src="../../../lib/jquery.js"></script><script defer="defer" type="text/javascript" id="jquery-ui-js" src="../../../lib/jquery-ui.js"></script><script defer="defer" type="text/javascript" id="tools-tooltip-js" src="../../../lib/tools.tooltip.js"></script><script defer="defer" type="text/javascript" id="template-js" src="../../../lib/template.js"></script>
+    </body>
+      </html>
