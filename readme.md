@@ -9,9 +9,9 @@ Scala FRP (stands for **F**unctional **R**eactive **P**rogramming) is a library 
 
 ###Getting it
 
-Scala FRP is built for Scala 2.10.0; as long as your project is using Scala 2.10, you can simply add the following to your sbt settings:
+Scala FRP is built for Scala 2.10.3; as long as your project is using Scala 2.10, you can simply add the following to your sbt settings:
 
-	libraryDependencies += "io.dylemma" %% "scala-frp" % "1.0"
+	libraryDependencies += "io.dylemma" %% "scala-frp" % "1.1"
 
 ###Example Usage
 
