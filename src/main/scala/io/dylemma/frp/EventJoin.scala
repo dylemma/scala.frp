@@ -49,6 +49,15 @@ trait EventJoin[A, B, C] extends EventSource[C] {
 	  */
 	protected def handle(event: Either[Event[A], Event[B]]): Boolean
 
+	/** This is needed so that the respective closure is not
+	  * garbage-collected.
+	  */
+	protected lazy val leftHandlerFunc = { e: Event[A] => handle(Left(e)) }
+	/** This is needed so that the respective closure is not
+	  * garbage-collected.
+	  */
+	protected lazy val rightHandlerFunc = { e: Event[B] => handle(Right(e)) }
+
 	/** Checks whether both parent streams are stopped.
 	  * @return `true` if and only if both the `leftParent` and
 	  * `rightParent` streams are `stopped`.
@@ -62,12 +71,8 @@ trait EventJoin[A, B, C] extends EventSource[C] {
 		stop
 	} else {
 		//wrap leftParent's events in a Left
-		leftParent addHandler {
-			case e => handle(Left(e))
-		}
+		leftParent addHandler leftHandlerFunc
 		//wrap rightParent's events in a Right
-		rightParent addHandler {
-			case e => handle(Right(e))
-		}
+		rightParent addHandler rightHandlerFunc
 	}
 }

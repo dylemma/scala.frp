@@ -35,12 +35,17 @@ trait EventPipe[A, B] extends EventSource[B] {
 	  */
 	protected def handle(event: Event[A]): Boolean
 
+	/** This is needed to prevent eta-expanded method
+	  * from being garbage-collected.
+	  */
+	protected lazy val handleFunc = handle _
+
 	if (parent.stopped) {
 		// if the parent is stopped, then so should this
 		stop
 	} else {
 		// automatically attach the handler to the parent
-		parent addHandler handle _
+		parent addHandler handleFunc
 	}
 
 }
