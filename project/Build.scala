@@ -3,14 +3,14 @@ import Keys._
 
 object BuildDef extends Build {
 
-	val scalaTest = "org.scalatest" %% "scalatest" % "1.9.1"
+	val scalaTest = "org.scalatest" %% "scalatest" % "2.2.6"
 
 	lazy val scalaFRP = Project("scala-frp", file("."))
 		//project settings
 		.settings(
 			organization := "io.dylemma",
-			version := "1.1",
-			scalaVersion := "2.10.3",
+			version := "1.2",
+			scalaVersion := "2.11.8",
 			libraryDependencies += scalaTest % "test",
 			scalacOptions in (Compile, doc) += "-implicits"
 		)
@@ -28,7 +28,7 @@ object BuildDef extends Build {
 					Some("releases" at nexus + "service/local/staging/deploy/maven2")
 			}
 		)
-		
+
 	lazy val pomExtraXml = (
 		<url>https://github.com/dylemma/scala.frp</url>
 		<licenses>
