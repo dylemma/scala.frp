@@ -62,12 +62,9 @@ private[frp] trait EventSourceImpl[A] { self: EventSource[A] =>
 	}
 
 	def within(duration: Duration): EventStream[A] = duration match {
-		case d: FiniteDuration =>
-			new DeadlinedEventStream(this, Deadline.now + d)
-		case d if (d > Duration.Zero) => //infinite and positive
-			this
-		case _ =>
-			EventStream.Nil
+		case d: FiniteDuration      => new DeadlinedEventStream(this, Deadline.now + d)
+		case d if d > Duration.Zero => this //infinite and positive
+		case _                      => EventStream.Nil
 	}
 
 	def before(deadline: Deadline): EventStream[A] = {

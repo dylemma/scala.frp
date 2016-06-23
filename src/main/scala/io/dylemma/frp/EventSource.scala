@@ -27,7 +27,7 @@ trait EventSource[A] extends EventStream[A] with EventSourceImpl[A] {
 	private val _stopped = new AtomicBoolean(false)
 
 	def stopped: Boolean = _stopped.get
-	def stop: Unit = if (_stopped.compareAndSet(false, true)) produce(Stop)
+	def stop(): Unit = if (_stopped.compareAndSet(false, true)) produce(Stop)
 	def fire(event: A): Unit = {
 		if (stopped) throw new IllegalStateException("Cannot fire events from a stopped EventSource")
 		else produce(Fire(event))
@@ -63,19 +63,19 @@ trait EventSource[A] extends EventStream[A] with EventSourceImpl[A] {
 
 				//run the handler: if it returns false, count it as a dead reference
 				case handle if !handle(item) =>
-					ref.clear
+					ref.clear()
 					deadCount += 1
 				case _ =>
 			}
 		} finally {
 			//purge is considered expensive: only do it if there are a lot of dead refs
-			if (deadCount >= purgeThreshold) purge
+			if (deadCount >= purgeThreshold) purge()
 		}
 	}
 
 	/* Removes dead handler references */
-	private def purge = {
-		var deadRefs = refs.filter(_.get == null)
+	private def purge() = {
+		val deadRefs = refs.filter(_.get == null)
 		for (r <- deadRefs) refs -= r
 	}
 }

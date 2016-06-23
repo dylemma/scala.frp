@@ -42,7 +42,7 @@ trait EventPipe[A, B] extends EventSource[B] {
 
 	if (parent.stopped) {
 		// if the parent is stopped, then so should this
-		stop
+		stop()
 	} else {
 		// automatically attach the handler to the parent
 		parent addHandler handleFunc

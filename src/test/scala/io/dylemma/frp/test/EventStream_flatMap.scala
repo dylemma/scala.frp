@@ -6,8 +6,8 @@ import io.dylemma.frp._
 class EventStream_flatMap extends FunSuite with TestHelpers with Observer {
 
 	test("EventStream.flatMap basic functionality") {
-		val s = EventSource[Int]
-		val t = EventSource[Int]
+		val s = EventSource[Int]()
+		val t = EventSource[Int]()
 
 		val x = for {
 			i <- s
@@ -29,9 +29,9 @@ class EventStream_flatMap extends FunSuite with TestHelpers with Observer {
 	}
 
 	test("EventStream.flatMap over multiple layers") {
-		val s = EventSource[Int]
-		val t = EventSource[Int]
-		val u = EventSource[Int]
+		val s = EventSource[Int]()
+		val t = EventSource[Int]()
+		val u = EventSource[Int]()
 
 		val x = for {
 			i <- s
@@ -57,8 +57,8 @@ class EventStream_flatMap extends FunSuite with TestHelpers with Observer {
 	}
 
 	test("EventStream.flatMap encounters nothing when the second stream fires nothing") {
-		val s = EventSource[Int]
-		val t = EventSource[Int]
+		val s = EventSource[Int]()
+		val t = EventSource[Int]()
 
 		val x = for {
 			i <- s
@@ -76,8 +76,8 @@ class EventStream_flatMap extends FunSuite with TestHelpers with Observer {
 	}
 
 	test("EventStream.flatMap does not end if the mapped stream ends") {
-		val s = EventSource[Int]
-		val t = EventSource[Int]
+		val s = EventSource[Int]()
+		val t = EventSource[Int]()
 		val x = for {
 			i <- s
 			j <- t
@@ -87,15 +87,15 @@ class EventStream_flatMap extends FunSuite with TestHelpers with Observer {
 
 		s fire 1
 		t fire 2
-		t.stop
+		t.stop()
 
 		assert(!stopped())
 		assert(results.toList == List(1 -> 2))
 	}
 
 	test("EventStream.flatMap ends when the base stream ends") {
-		val s = EventSource[Int]
-		val t = EventSource[Int]
+		val s = EventSource[Int]()
+		val t = EventSource[Int]()
 		val x = for {
 			i <- s
 			j <- t
@@ -106,15 +106,15 @@ class EventStream_flatMap extends FunSuite with TestHelpers with Observer {
 
 		s fire 1
 		t fire 2
-		s.stop
+		s.stop()
 		assert(stopped())
 		assert(results.toList == List(1 -> 2))
 	}
 
 	test("EventStream.flatMap on a stopped stream results in a stopped stream") {
-		val s = EventSource[Int]
-		val t = EventSource[Int]
-		s.stop
+		val s = EventSource[Int]()
+		val t = EventSource[Int]()
+		s.stop()
 
 		val x = for {
 			i <- s

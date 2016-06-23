@@ -8,7 +8,7 @@ import java.util.concurrent.atomic.AtomicBoolean
   *
   * To create an EventJoin, implement the three required methods:
   * {{{
-  * protected def leftPparent: EventStream[A]
+  * protected def leftParent: EventStream[A]
   * protected def rightParent: EventStream[B]
   * protected def handle(event: Either[Event[A], Event[B]]): Boolean
   * }}}
@@ -68,7 +68,7 @@ trait EventJoin[A, B, C] extends EventSource[C] {
 
 	if (parentsStopped) {
 		// if both parents are stopped, automatically stop this and skip the handler setup
-		stop
+		stop()
 	} else {
 		//wrap leftParent's events in a Left
 		leftParent addHandler leftHandlerFunc

@@ -8,7 +8,7 @@ class EventStreamTests extends FunSuite with TestHelpers {
 	implicit object observer extends Observer
 
 	test("EventStream.map basic functionality") {
-		val s = EventSource[Int]
+		val s = EventSource[Int]()
 
 		val results = accumulateEvents(s.map { _ * 2 })
 
@@ -20,8 +20,8 @@ class EventStreamTests extends FunSuite with TestHelpers {
 	}
 
 	test("EventStream.withFilter basic functionality") {
-		val s = EventSource[Int]
-		val t = EventSource[Int]
+		val s = EventSource[Int]()
+		val t = EventSource[Int]()
 		val x = for {
 			i <- s if i % 2 == 0
 			j <- t
@@ -39,11 +39,11 @@ class EventStreamTests extends FunSuite with TestHelpers {
 		t fire 3 // yields 4 -> 3
 		t fire 4 // yields 4 -> 4
 
-		assert(results == List(2 -> 1, 2 -> 2, 4 -> 3, 4 -> 4))
+		assert(results.toList == List(2 -> 1, 2 -> 2, 4 -> 3, 4 -> 4))
 	}
 
 	test("EventStream.collect basic functionality") {
-		val s = EventSource[Int]
+		val s = EventSource[Int]()
 		val x = s collect {
 			case i if i % 2 == 0 => i / 2
 		}
@@ -54,11 +54,11 @@ class EventStreamTests extends FunSuite with TestHelpers {
 		s fire 3
 		s fire 4 // yield 2
 
-		assert(results == List(1, 2))
+		assert(results.toList == List(1, 2))
 	}
 
 	test("EventStream.foldLeft basic functionality") {
-		val s = EventSource[Int]
+		val s = EventSource[Int]()
 		val x = s.foldLeft(0) { _ + _ } //accumulate a sum
 		val results = accumulateEvents(x)
 
@@ -67,11 +67,11 @@ class EventStreamTests extends FunSuite with TestHelpers {
 		s fire 3 // yield 6
 		s fire 4 // yield 10
 
-		assert(results == List(1, 3, 6, 10))
+		assert(results.toList == List(1, 3, 6, 10))
 	}
 
 	test("EventStream.take basic functionality") {
-		val s = EventSource[Int]
+		val s = EventSource[Int]()
 		val x = s.take(3)
 
 		val results = accumulateEvents(x)
@@ -90,7 +90,7 @@ class EventStreamTests extends FunSuite with TestHelpers {
 	}
 
 	test("EventStream.takeWhile basic functionality") {
-		val s = EventSource[Int]
+		val s = EventSource[Int]()
 		val x = s takeWhile { _ < 4 }
 		val results = accumulateEvents(x)
 		val gotEnd = awaitStop(x)
@@ -102,7 +102,7 @@ class EventStreamTests extends FunSuite with TestHelpers {
 	}
 
 	test("EventStream.dropWhile basic functionality") {
-		val s = EventSource[Int]
+		val s = EventSource[Int]()
 		val x = s dropWhile { _ < 3 }
 		val results = accumulateEvents(x)
 
@@ -116,7 +116,7 @@ class EventStreamTests extends FunSuite with TestHelpers {
 	}
 
 	test("EventStream.drop basic functionality") {
-		val s = EventSource[Int]
+		val s = EventSource[Int]()
 		val x = s drop 3
 		val results = accumulateEvents(x)
 
@@ -126,14 +126,14 @@ class EventStreamTests extends FunSuite with TestHelpers {
 	}
 
 	test("EventStream.++ basic functionality") {
-		val s = EventSource[Int]
-		val t = EventSource[Int]
+		val s = EventSource[Int]()
+		val t = EventSource[Int]()
 		val results = accumulateEvents(s ++ t)
 
 		s fire 1
 		t fire 2 //ignored because s isn't done
 		s fire 3
-		s.stop
+		s.stop()
 		t fire 4
 		t fire 5
 
@@ -141,23 +141,23 @@ class EventStreamTests extends FunSuite with TestHelpers {
 	}
 
 	test("EventStream.++ encounters end when both parents end") {
-		val s = EventSource[Int]
-		val t = EventSource[Int]
+		val s = EventSource[Int]()
+		val t = EventSource[Int]()
 		var gotEnd = false
 
 		s ++ t onEnd { gotEnd = true }
 
 		s fire 1
-		s.stop
+		s.stop()
 		t fire 2
-		t.stop
+		t.stop()
 
 		assert(gotEnd)
 	}
 
 	test("EventStream.until basic functionality") {
-		val s = EventSource[Int]
-		val end = EventSource[String]
+		val s = EventSource[Int]()
+		val end = EventSource[String]()
 		val results = accumulateEvents(s until end)
 
 		s fire 1
@@ -171,8 +171,8 @@ class EventStreamTests extends FunSuite with TestHelpers {
 	}
 
 	test("EventStream.|| basic functionality") {
-		val s = EventSource[Int]
-		val t = EventSource[Int]
+		val s = EventSource[Int]()
+		val t = EventSource[Int]()
 		val results = accumulateEvents(s || t)
 
 		s fire 1
@@ -184,8 +184,8 @@ class EventStreamTests extends FunSuite with TestHelpers {
 	}
 
 	test("EventStream.either basic functionality") {
-		val s = EventSource[Int]
-		val t = EventSource[String]
+		val s = EventSource[Int]()
+		val t = EventSource[String]()
 		val results = accumulateEvents(s either t)
 
 		s fire 1
@@ -197,7 +197,7 @@ class EventStreamTests extends FunSuite with TestHelpers {
 	}
 
 	test("EventStream.zipWithIndex basic functionality") {
-		val s = EventSource[Char]
+		val s = EventSource[Char]()
 		val results = accumulateEvents(s.zipWithIndex)
 
 		s fire 'a'
@@ -208,7 +208,7 @@ class EventStreamTests extends FunSuite with TestHelpers {
 	}
 
 	test("EventStream.zipWithStaleness basic functionality") {
-		val s = EventSource[Int]
+		val s = EventSource[Int]()
 		val x = s.zipWithStaleness
 
 		var a: (Int, () => Boolean) = null
@@ -230,11 +230,11 @@ class EventStreamTests extends FunSuite with TestHelpers {
 
 		assert(a._2(), "The first event should be stale")
 		assert(b._2(), "The second event should be stale")
-		assert(!c._2(), "The thrid event should be fresh")
+		assert(!c._2(), "The third event should be fresh")
 	}
 
 	test("EventStream.zipWithTime basic functionality") {
-		val s = EventSource[Int]
+		val s = EventSource[Int]()
 		val fakeTime = new FakeTime
 
 		//use fakeTime instead of SystemTime, so we can guarantee the values
@@ -255,8 +255,8 @@ class EventStreamTests extends FunSuite with TestHelpers {
 	}
 
 	test("EventStream.zip basic functionality") {
-		val s = EventSource[Int]
-		val t = EventSource[String]
+		val s = EventSource[Int]()
+		val t = EventSource[String]()
 		val results = accumulateEvents(s zip t)
 
 		s fire 1
@@ -270,7 +270,7 @@ class EventStreamTests extends FunSuite with TestHelpers {
 	}
 
 	test("EventStream.unzip basic functionality") {
-		val x = EventSource[(Int, String)]
+		val x = EventSource[(Int, String)]()
 		val (a, b) = x.unzip
 
 		val aResults = accumulateEvents(a)
@@ -283,7 +283,7 @@ class EventStreamTests extends FunSuite with TestHelpers {
 	}
 
 	test("EventStream.grouped basic functionality") {
-		val x = EventSource[Int]
+		val x = EventSource[Int]()
 		val results = accumulateEvents(x grouped 3)
 
 		//group 1: (1,2,3)
@@ -298,7 +298,7 @@ class EventStreamTests extends FunSuite with TestHelpers {
 
 		//group 3: (7, <end>)
 		x fire 7
-		x.stop
+		x.stop()
 
 		assert(results.toList == List(1, 2, 3) :: List(4, 5, 6) :: List(7) :: Nil)
 	}
