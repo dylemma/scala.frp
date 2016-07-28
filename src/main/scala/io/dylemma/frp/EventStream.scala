@@ -83,6 +83,8 @@ trait EventStream[+A] {
 		addHandler(handler)
 	}
 
+	def clear(): Unit
+
 	/** Marks whether or not this stream is stopped. A stopped stream will not
 	  * produce any more events.
 	  * @return `true` if this stream is stopped, `false` otherwise.

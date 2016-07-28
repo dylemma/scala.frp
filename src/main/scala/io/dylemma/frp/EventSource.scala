@@ -26,6 +26,7 @@ object EventSource {
 trait EventSource[A] extends EventStream[A] with EventSourceImpl[A] {
 	private val _stopped = new AtomicBoolean(false)
 
+	def clear(): Unit = refs.clear()
 	def stopped: Boolean = _stopped.get
 	def stop(): Unit = if (_stopped.compareAndSet(false, true)) produce(Stop)
 	def fire(event: A): Unit = {

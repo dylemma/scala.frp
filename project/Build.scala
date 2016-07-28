@@ -10,7 +10,7 @@ object BuildDef extends Build {
 		//project settings
 		.settings(
 			organization := "com.github.thangiee",
-			version := "1.2",
+			version := "1.2.1",
 			scalaVersion := "2.11.8",
 			libraryDependencies += scalaTest % "test",
 			scalacOptions in (Compile, doc) += "-implicits",
