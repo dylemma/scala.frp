@@ -22,13 +22,13 @@ private[frp] class FlatMappedEventStream[A, B](val parent: EventStream[A], f: A 
 
 	def handle(event: Event[A]) = event match {
 		case Stop =>
-			stop
+			stop()
 			false
 		case Fire(e) =>
 			val b = f(e)
 
 			//cancel the old stream
-			_b getAndSet (b) match {
+			_b getAndSet b match {
 				case null => //no op
 				case old => old removeHandler handler
 			}
@@ -44,7 +44,7 @@ private[frp] class WithFilterEventStream[A](protected val parent: EventStream[A]
 			if (f(e)) fire(e)
 			true
 		case Stop =>
-			stop
+			stop()
 			false
 	}
 
@@ -61,7 +61,7 @@ private[frp] class FoldLeftEventStream[A, B](protected val parent: EventStream[A
 
 	protected def handle(item: Event[A]) = item match {
 		case Stop =>
-			stop
+			stop()
 			false
 		case Fire(e) =>
 			accum = op(accum, e)
@@ -78,7 +78,7 @@ private[frp] class MappedEventStream[A, B](protected val parent: EventStream[A],
 			fire(f(e))
 			true
 		case Stop =>
-			stop
+			stop()
 			false
 	}
 }
@@ -88,7 +88,7 @@ private[frp] class CollectedEventStream[A, B](protected val parent: EventStream[
 
 	protected def handle(item: Event[A]) = item match {
 		case Stop =>
-			stop
+			stop()
 			false
 		case Fire(e) =>
 			if (f isDefinedAt e) fire(f(e))
@@ -101,14 +101,14 @@ private[frp] class TakeWhileEventStream[A](protected val parent: EventStream[A],
 
 	protected def handle(event: Event[A]) = event match {
 		case Stop =>
-			stop
+			stop()
 			false
 		case Fire(e) =>
 			if (p(e)) {
 				fire(e)
 				true
 			} else {
-				stop
+				stop()
 				false
 			}
 	}
@@ -122,14 +122,14 @@ private[frp] class TakeCountEventStream[A](protected val parent: EventStream[A],
 
 	protected def handle(event: Event[A]) = event match {
 		case Stop =>
-			stop
+			stop()
 			false
 		case Fire(e) =>
 			numSeen += 1
 			fire(e)
 
 			if (numSeen >= count) {
-				stop
+				stop()
 				false
 			} else {
 				true
@@ -144,7 +144,7 @@ private[frp] class DropWhileEventStream[A](protected val parent: EventStream[A],
 
 	protected def handle(event: Event[A]) = event match {
 		case Stop =>
-			stop
+			stop()
 			false
 		case Fire(e) =>
 			if (dropping && !p(e)) {
@@ -164,7 +164,7 @@ private[frp] class DropCountEventStream[A](protected val parent: EventStream[A],
 
 	protected def handle(event: Event[A]) = event match {
 		case Stop =>
-			stop
+			stop()
 			false
 		case Fire(e) =>
 			numSeen += 1
@@ -194,7 +194,7 @@ private[frp] class ConcatenatedEventStream[A](protected val leftParent: EventStr
 			advanced = true
 			false
 		case Right(Stop) =>
-			stop
+			stop()
 			false
 	}
 }
@@ -207,12 +207,12 @@ private[frp] class TakeUntilEventStream[A](val leftParent: EventStream[A], val r
 
 	def handle(event: Either[Event[A], Event[Any]]): Boolean = event match {
 		case Right(Fire(_)) =>
-			stop
+			stop()
 			false
 		case Right(Stop) => false
 		case Left(_) if stopped => false
 		case Left(Stop) =>
-			stop
+			stop()
 			false
 		case Left(Fire(e)) =>
 			fire(e)
@@ -225,7 +225,7 @@ private[frp] class UnionEventStream[A](val leftParent: EventStream[A], val right
 
 	def handle(event: Either[Event[A], Event[A]]) = event match {
 		case Left(Stop) | Right(Stop) =>
-			if (parentsStopped) stop
+			if (parentsStopped) stop()
 			false
 		case Left(Fire(x)) =>
 			fire(x)
@@ -242,7 +242,7 @@ private[frp] class EitherEventStream[A, B](val leftParent: EventStream[A], val r
 
 	def handle(event: Either[Event[A], Event[B]]) = event match {
 		case Left(Stop) | Right(Stop) =>
-			if (parentsStopped) stop
+			if (parentsStopped) stop()
 			false
 		case Left(Fire(x)) =>
 			fire(Left(x))
@@ -256,14 +256,14 @@ private[frp] class EitherEventStream[A, B](val leftParent: EventStream[A], val r
 private[frp] class DeadlinedEventStream[A](val parent: EventStream[A], deadline: Deadline)
 	extends EventPipe[A, A] {
 
-	TimeBasedFutures.after(deadline, stop)
+	TimeBasedFutures.after(deadline, stop())
 
 	def handle(event: Event[A]) = event match {
 		case Stop =>
-			stop
+			stop()
 			false
 		case Fire(_) if deadline.isOverdue =>
-			stop
+			stop()
 			false
 		case Fire(e) =>
 			fire(e)
@@ -277,7 +277,7 @@ private[frp] class ZipWithIndexEventStream[A](val parent: EventStream[A]) extend
 
 	def handle(event: Event[A]) = event match {
 		case Stop =>
-			stop
+			stop()
 			false
 		case Fire(e) =>
 			val index = _index.getAndIncrement
@@ -291,7 +291,7 @@ private[frp] class ZipWithStalenessEventStream[A](val parent: EventStream[A]) ex
 
 	def handle(event: Event[A]) = event match {
 		case Stop =>
-			stop
+			stop()
 			false
 		case Fire(e) =>
 			val index = _index.incrementAndGet
@@ -303,30 +303,31 @@ private[frp] class ZipWithStalenessEventStream[A](val parent: EventStream[A]) ex
 
 private[frp] class ZippedEventStream[A, B](val leftParent: EventStream[A], val rightParent: EventStream[B])
 	extends EventJoin[A, B, (A, B)] {
-
-	private val leftQueue = new collection.mutable.SynchronizedQueue[A]
-	private val rightQueue = new collection.mutable.SynchronizedQueue[B]
+	import scala.collection.JavaConversions._
+	
+	private val leftQueue = new java.util.concurrent.ConcurrentLinkedQueue[A]
+	private val rightQueue = new java.util.concurrent.ConcurrentLinkedQueue[B]
 
 	//if there are elements available from both queues, dequeue them and fire the pair
-	private def tryDequeue = {
-		if (!leftQueue.isEmpty && !rightQueue.isEmpty) {
-			val l = leftQueue.dequeue
-			val r = rightQueue.dequeue
+	private def tryDequeue() = {
+		if (leftQueue.nonEmpty && rightQueue.nonEmpty) {
+			val l = leftQueue.remove()
+			val r = rightQueue.remove()
 			fire(l -> r)
 		}
 	}
 
 	def handle(event: Either[Event[A], Event[B]]) = event match {
 		case Left(Stop) | Right(Stop) =>
-			if (parentsStopped) stop
+			if (parentsStopped) stop()
 			false
 		case Left(Fire(e)) =>
-			leftQueue += e
-			tryDequeue
+			leftQueue.add(e)
+			tryDequeue()
 			true
 		case Right(Fire(e)) =>
-			rightQueue += e
-			tryDequeue
+			rightQueue.add(e)
+			tryDequeue()
 			true
 	}
 }
@@ -339,12 +340,12 @@ private[frp] class GroupedEventStream[A](val parent: EventStream[A], val groupSi
 	//put `event` in the buffer, then fire the buffer if needed
 	private def add(event: A) = {
 		buf += event
-		if (buf.size >= groupSize) fireBuffer
+		if (buf.size >= groupSize) fireBuffer()
 	}
 
 	//how to fire the buffer (and clear it too)
-	private def fireBuffer = {
-		if (!buf.isEmpty) {
+	private def fireBuffer() = {
+		if (buf.nonEmpty) {
 			val list = buf.result
 			buf.clear
 			fire(list)
@@ -353,8 +354,8 @@ private[frp] class GroupedEventStream[A](val parent: EventStream[A], val groupSi
 
 	def handle(event: Event[A]) = event match {
 		case Stop =>
-			fireBuffer
-			stop
+			fireBuffer()
+			stop()
 			false
 		case Fire(e) =>
 			add(e)

@@ -2,3 +2,5 @@ target/
 .cache
 .classpath
 .project
+.idea/
+project/project/

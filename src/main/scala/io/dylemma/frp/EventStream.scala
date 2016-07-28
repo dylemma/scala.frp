@@ -69,7 +69,7 @@ trait EventStream[+A] {
 	  * reference loops.
 	  */
 	def sink(handler: Event[A] => Boolean)(implicit obs: Observer): Unit = {
-		/* Keep a reference to both `this` and the `handler` in memory, via the 
+		/* Keep a reference to both `this` and the `handler` in memory, via the
 		 * implicit `Observer`. This way, neither can be garbage collected until
 		 * the `Observer` can.
 		 */
@@ -82,6 +82,8 @@ trait EventStream[+A] {
 		 */
 		addHandler(handler)
 	}
+
+	def clear(): Unit
 
 	/** Marks whether or not this stream is stopped. A stopped stream will not
 	  * produce any more events.
@@ -377,8 +379,8 @@ trait EventStream[+A] {
 object EventStream {
 	/** An EventStream that will never fire any events, and is currently `stopped`. */
 	val Nil: EventStream[Nothing] = {
-		val s = EventSource[Nothing]
-		s.stop
+		val s = EventSource[Nothing]()
+		s.stop()
 		s
 	}
 
