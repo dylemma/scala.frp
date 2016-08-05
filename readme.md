@@ -1,25 +1,18 @@
 Scala FRP
 =========
 
-This library replaces the idea of `Publishers` and `Subscribers` with `EventStreams`. An `EventStream`
-can be treated like a collection of events; it can be transformed similarly to any other Scala collection, and
-instead of needing to call `publisher.addEventListener(new EventListener(){...})`, you simply call `eventStream.foreach{...}`
+This library replaces the idea of `Publishers` and `Subscribers` with `EventStreams`. An `EventStream` can be treated like a collection of events; it can be transformed similarly to any other Scala collection, and instead of needing to call `publisher.addEventListener(new EventListener(){...})`, you simply call `eventStream.foreach{...}`
 
 ###Background
 
-Scala FRP (stands for **F**unctional **R**eactive **P**rogramming) is a library inspired by
-[Ingo Maier's](http://lampwww.epfl.ch/~imaier/) paper, [Deprecating the Observer Pattern](http://lampwww.epfl.ch/~imaier/pub/DeprecatingObserversTR2010.pdf).
-Ingo Maier made an implementation of his "scala.react" framework which is available [on Github](https://github.com/ingoem/scala-react)
-in its original form. I also made a version of the same library that works with SBT to manage its dependencies,
-available [here](https://github.com/dylemma/scala.react).
+Scala FRP (stands for **F**unctional **R**eactive **P**rogramming) is a library inspired by [Ingo Maier's](http://lampwww.epfl.ch/~imaier/) paper, [Deprecating the Observer Pattern](http://lampwww.epfl.ch/~imaier/pub/DeprecatingObserversTR2010.pdf). Ingo Maier made an implementation of his "scala.react" framework which is available [on Github](https://github.com/ingoem/scala-react) in its original form. I also made a version of the same library that works with SBT to manage its dependencies, available [here](https://github.com/dylemma/scala.react).
 
 ###Getting it
 
-Scala FRP is built for Scala 2.11.8; as long as your project is using Scala 2.10, you can simply add the following to your sbt settings:
+Add the following to your `build.sbt` file:
 
 ```
-resolvers += "jcenter" at "https://jcenter.bintray.com/"
-libraryDependencies += "com.github.thangiee" %% "scala-frp" % "1.2"
+libraryDependencies += "io.dylemma" %% "scala-frp" % "1.2"
 ```
 
 ###Example Usage

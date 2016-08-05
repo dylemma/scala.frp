@@ -1,6 +1,5 @@
 import sbt._
 import Keys._
-import bintray.BintrayPlugin.autoImport._
 
 object BuildDef extends Build {
 
@@ -9,14 +8,46 @@ object BuildDef extends Build {
 	lazy val scalaFRP = Project("scala-frp", file("."))
 		//project settings
 		.settings(
-			organization := "com.github.thangiee",
-			version := "1.2.1",
+			organization := "io.dylemma",
+			version := "1.2",
 			scalaVersion := "2.11.8",
+			crossScalaVersions := Seq("2.10.6", "2.11.8"),
 			libraryDependencies += scalaTest % "test",
-			scalacOptions in (Compile, doc) += "-implicits",
-			publishMavenStyle := true,
-			resolvers += Resolver.jcenterRepo,
-      licenses += ("MIT", url("http://opensource.org/licenses/MIT")),
-      bintrayVcsUrl := Some("https://github.com/Thangiee/scala.frp")
+			scalacOptions in (Compile, doc) += "-implicits"
 		)
+	  .settings(publishingSettings: _*)
+
+	lazy val publishingSettings = Seq(
+		publishMavenStyle := true,
+		publishTo := {
+			val nexus = "https://oss.sonatype.org/"
+			if(isSnapshot.value)
+				Some("snapshots" at nexus + "content/repositories/snapshots")
+			else
+				Some("releases" at nexus + "service/local/staging/deploy/maven2")
+		},
+		publishArtifact in Test := false,
+		pomIncludeRepository := { _ => false },
+		pomExtra := (
+			<url>https://github.com/dylemma/scala.frp</url>
+				<licenses>
+					<license>
+						<name>MIT License</name>
+						<url>http://opensource.org/licenses/mit-license.php</url>
+						<distribution>repo</distribution>
+					</license>
+				</licenses>
+				<scm>
+					<url>git@github.com:dylemma/scala.frp.git</url>
+					<connection>scm:git:git@github.com:dylemma/scala.frp.git</connection>
+				</scm>
+				<developers>
+					<developer>
+						<id>dylemma</id>
+						<name>Dylan Halperin</name>
+						<url>http://dylemma.io/</url>
+					</developer>
+				</developers>
+			)
+	)
 }
