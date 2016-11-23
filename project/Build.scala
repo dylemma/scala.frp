@@ -3,15 +3,15 @@ import Keys._
 
 object BuildDef extends Build {
 
-	val scalaTest = "org.scalatest" %% "scalatest" % "2.2.6"
+	val scalaTest = "org.scalatest" %% "scalatest" % "3.0.0"
 
 	lazy val scalaFRP = Project("scala-frp", file("."))
 		//project settings
 		.settings(
 			organization := "io.dylemma",
-			version := "1.2",
-			scalaVersion := "2.11.8",
-			crossScalaVersions := Seq("2.10.6", "2.11.8"),
+			version := "1.3",
+			scalaVersion := "2.12.0",
+			crossScalaVersions := Seq("2.10.6", "2.11.8", "2.12.0"),
 			libraryDependencies += scalaTest % "test",
 			scalacOptions in (Compile, doc) += "-implicits"
 		)
