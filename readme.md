@@ -5,7 +5,7 @@ This library replaces the idea of `Publishers` and `Subscribers` with `EventStre
 
 ###Background
 
-Scala FRP (stands for **F**unctional **R**eactive **P**rogramming) is a library inspired by [Ingo Maier's](http://lampwww.epfl.ch/~imaier/) paper, [Deprecating the Observer Pattern](http://lampwww.epfl.ch/~imaier/pub/DeprecatingObserversTR2010.pdf). Ingo Maier made an implementation of his "scala.react" framework which is available [on Github](https://github.com/ingoem/scala-react) in its original form. I also made a version of the same library that works with SBT to manage its dependencies, available [here](https://github.com/dylemma/scala.react).
+Scala FRP (stands for **F**unctional **R**eactive **P**rogramming) is a library inspired by [Ingo Maier's](https://github.com/ingoem) paper, [Deprecating the Observer Pattern](https://infoscience.epfl.ch/record/176887/files/DeprecatingObservers2012.pdf). Ingo Maier made an implementation of his "scala.react" framework which is available [on Github](https://github.com/ingoem/scala-react) in its original form. I also made a version of the same library that works with SBT to manage its dependencies, available [here](https://github.com/dylemma/scala.react).
 
 ###Getting it
 
