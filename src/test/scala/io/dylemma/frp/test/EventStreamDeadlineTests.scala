@@ -1,11 +1,12 @@
 package io.dylemma.frp.test
 
-import org.scalatest._
-import org.scalatest.concurrent.AsyncAssertions
 import io.dylemma.frp._
+import org.scalatest._
+import org.scalatest.concurrent.Waiters
+
 import scala.concurrent.duration._
 
-class EventStreamDeadlineTests extends FunSuite with TestHelpers with AsyncAssertions with Observer {
+class EventStreamDeadlineTests extends FunSuite with TestHelpers with Waiters with Observer {
 
 	test("EventStream.before only encounters events before the deadline") {
 		val w = new Waiter

@@ -303,14 +303,13 @@ private[frp] class ZipWithStalenessEventStream[A](val parent: EventStream[A]) ex
 
 private[frp] class ZippedEventStream[A, B](val leftParent: EventStream[A], val rightParent: EventStream[B])
 	extends EventJoin[A, B, (A, B)] {
-	import scala.collection.JavaConversions._
-	
+
 	private val leftQueue = new java.util.concurrent.ConcurrentLinkedQueue[A]
 	private val rightQueue = new java.util.concurrent.ConcurrentLinkedQueue[B]
 
 	//if there are elements available from both queues, dequeue them and fire the pair
 	private def tryDequeue() = {
-		if (leftQueue.nonEmpty && rightQueue.nonEmpty) {
+		if (!leftQueue.isEmpty && !rightQueue.isEmpty) {
 			val l = leftQueue.remove()
 			val r = rightQueue.remove()
 			fire(l -> r)
